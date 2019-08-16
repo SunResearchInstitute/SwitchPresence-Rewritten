@@ -66,106 +66,108 @@ namespace SwitchPresence_Rewritten
             }
             else
             {
-
                 rpc.Dispose();
                 t.Abort();
                 t = new Thread(DataListen);
-                client.Disconnect(false);
-                client.Dispose();
+                client.Close();
                 //small workaround for race condition on reconnect :(
                 Thread.Sleep(800);
                 button1.Text = "Connect";
-                client.Close();
             }
         }
 
         private void DataListen()
         {
+            string LastGame= "";
+            Timestamps time = null;
             while (true)
             {
                 try
                 {
-                    byte[] bytes = new byte[900];
+                    byte[] bytes = new byte[800];
                     int cnt = client.Receive(bytes);
                     TitlePacket title = Utils.ByteArrayToStructure<TitlePacket>(bytes);
-                    if (title.magic == 0xffaadd23)
+                    if (rpc.CurrentPresence == null || LastGame != title.name)
                     {
-                        if (rpc.CurrentPresence == null || (title.name != "NULL" && title.name != rpc.CurrentPresence.Details.Remove(0, 8)) || ManualUpdate)
+                        time = Timestamps.Now;
+                    }
+                    if (title.magic == 0xffaadd23 && (rpc.CurrentPresence == null || LastGame != title.name) || ManualUpdate)
+                    {
+                        
+                        //ManualUpdate needs to be put somewhere
+                        if (title.name == "NULL")
                         {
-                            if (title.name == "NULL")
+                            Assets ass = new Assets()
                             {
-                                Assets ass = new Assets()
-                                {
-                                    LargeImageText = "Home Menu",
-                                    SmallImageKey = smallKeyBox.Text,
-                                    SmallImageText = "Switch-Presence Rewritten"
-                                };
-
-                                if (!string.IsNullOrWhiteSpace(bigTextBox.Text))
-                                    ass.LargeImageText = bigTextBox.Text;
-                                else
-                                    ass.LargeImageText = "Home Menu";
-
-                                if (!string.IsNullOrWhiteSpace(bigKeyBox.Text))
-                                    ass.LargeImageKey = bigKeyBox.Text;
-                                else
-                                    ass.LargeImageKey = string.Format("0{0:x}", 0x0100000000001000);
-
-                                RichPresence presence = new RichPresence()
-                                {
-
-                                    Details = "In the home menu",
-                                    State = stateBox.Text,
-                                    Assets = ass
-                                };
-
-                                if (checkTime.Checked) presence.Timestamps = Timestamps.Now;
-                                rpc.SetPresence(presence);
-                                ManualUpdate = false;
-                            }
-                            else
-                            {
-                                Assets ass = new Assets()
-                                {
-                                    SmallImageKey = smallKeyBox.Text,
-                                    SmallImageText = "Switch-Presence Rewritten"
-                                };
-
-                                if (!string.IsNullOrWhiteSpace(bigTextBox.Text))
-                                    ass.LargeImageText = bigTextBox.Text;
-                                else
-                                    ass.LargeImageText = title.name;
-
-                                if (!string.IsNullOrWhiteSpace(bigKeyBox.Text))
-                                    ass.LargeImageKey = bigKeyBox.Text;
-                                else
-                                    ass.LargeImageKey = string.Format("0{0:x}", title.tid);
-
-                                RichPresence presence = new RichPresence()
-                                {
-
-                                    Details = $"Playing {title.name}",
-                                    State = stateBox.Text,
-                                    Assets = ass
-                                };
-
-                                if (checkTime.Checked) presence.Timestamps = Timestamps.Now;
-                                rpc.SetPresence(presence);
-                                ManualUpdate = false;
-                            }
-
-                            Config cfg = new Config()
-                            {
-                                ip = ipBox.Text,
-                                client = clientBox.Text,
-                                bigKey = bigKeyBox.Text,
-                                smallKey = smallKeyBox.Text,
-                                state = stateBox.Text,
-                                bigText = bigTextBox.Text,
-                                timer = checkTime.Checked
+                                LargeImageText = "Home Menu",
+                                SmallImageKey = smallKeyBox.Text,
+                                SmallImageText = "Switch-Presence Rewritten"
                             };
-                            File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
+
+                            if (!string.IsNullOrWhiteSpace(bigTextBox.Text))
+                                ass.LargeImageText = bigTextBox.Text;
+                            else
+                                ass.LargeImageText = "Home Menu";
+
+                            if (!string.IsNullOrWhiteSpace(bigKeyBox.Text))
+                                ass.LargeImageKey = bigKeyBox.Text;
+                            else
+                                ass.LargeImageKey = string.Format("0{0:x}", 0x0100000000001000);
+
+                            RichPresence presence = new RichPresence()
+                            {
+
+                                Details = "In the home menu",
+                                State = stateBox.Text,
+                                Assets = ass
+                            };
+
+                            if (checkTime.Checked) presence.Timestamps = time;
+                            rpc.SetPresence(presence);
+                            ManualUpdate = false;
                         }
+                        else
+                        {
+                            Assets ass = new Assets()
+                            {
+                                SmallImageKey = smallKeyBox.Text,
+                                SmallImageText = "Switch-Presence Rewritten"
+                            };
+
+                            if (!string.IsNullOrWhiteSpace(bigTextBox.Text))
+                                ass.LargeImageText = bigTextBox.Text;
+                            else
+                                ass.LargeImageText = title.name;
+
+                            if (!string.IsNullOrWhiteSpace(bigKeyBox.Text))
+                                ass.LargeImageKey = bigKeyBox.Text;
+                            else
+                                ass.LargeImageKey = string.Format("0{0:x}", title.tid);
+
+                            RichPresence presence = new RichPresence()
+                            {
+
+                                Details = $"Playing {title.name}",
+                                State = stateBox.Text,
+                                Assets = ass
+                            };
+
+                            if (checkTime.Checked) presence.Timestamps = time;
+                            rpc.SetPresence(presence);
+                            ManualUpdate = false;
+                        }
+                        LastGame = title.name;
+                        Config cfg = new Config()
+                        {
+                            ip = ipBox.Text,
+                            client = clientBox.Text,
+                            bigKey = bigKeyBox.Text,
+                            smallKey = smallKeyBox.Text,
+                            state = stateBox.Text,
+                            bigText = bigTextBox.Text,
+                            timer = checkTime.Checked
+                        };
+                        File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
                     }
                 }
                 catch (SocketException)
@@ -179,7 +181,6 @@ namespace SwitchPresence_Rewritten
                     return;
                 }
             }
-
         }
 
         private void CheckTime_CheckedChanged(object sender, EventArgs e) => ManualUpdate = true;
