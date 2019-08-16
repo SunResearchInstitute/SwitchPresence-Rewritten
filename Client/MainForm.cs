@@ -65,6 +65,7 @@ namespace SwitchPresence_Rewritten
                 }
                 button1.Text = "Disconnect";
                 ipBox.Enabled = false;
+                clientBox.Enabled = false;
 
                 rpc = new DiscordRpcClient(clientBox.Text);
                 rpc.Initialize();
@@ -80,6 +81,7 @@ namespace SwitchPresence_Rewritten
                 Thread.Sleep(800);
                 button1.Text = "Connect";
                 ipBox.Enabled = true;
+                clientBox.Enabled = true;
             }
         }
 
@@ -187,6 +189,7 @@ namespace SwitchPresence_Rewritten
                     {
                         button1.Text = "Connect";
                         ipBox.Enabled = true;
+                        clientBox.Enabled = true;
                     };
                     Invoke(inv);
                     return;
