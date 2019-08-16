@@ -204,8 +204,8 @@ namespace SwitchPresence_Rewritten
         [StructLayout(LayoutKind.Sequential)]
         public struct TitlePacket
         {
-            [MarshalAs(UnmanagedType.U8)]
-            public ulong magic;
+            [MarshalAs(UnmanagedType.U4)]
+            public uint magic;
             [MarshalAs(UnmanagedType.U8)]
             public ulong tid;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 512)]
