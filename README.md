@@ -15,10 +15,11 @@ The protocol for the sysmodule is a very simple struct sent via TCP<br>
 ```
 struct titlepacket
 {
-    u32 magic;
+    u32 magic; //Padded to 8 bytes by the compiler
     u64 tid;
     char name[512];
 };
 ```
+**Please note that magic is padded to 8 bytes which can be read into a u64 if wanted**<br>
 The Packet is sent about every 5 seconds to the client from the server (in this case the switch).<br>
-If a client is not connect it will not send anything and wait for a new connection.<br>
+If a client is not connect it will not send anything.<br>
