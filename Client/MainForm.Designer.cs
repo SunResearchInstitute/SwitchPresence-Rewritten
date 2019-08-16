@@ -214,7 +214,9 @@
             this.Controls.Add(this.clientBox);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.ipBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "SwitchPresence-Rewritten";
             this.Load += new System.EventHandler(this.MainForm_Load);

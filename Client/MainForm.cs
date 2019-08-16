@@ -26,6 +26,11 @@ namespace SwitchPresence_Rewritten
 
         private void OnProcessExit(object sender, EventArgs e)
         {
+            try
+            {
+                client.Close();
+            }
+            catch { }
             if (rpc != null)
                 if (!rpc.IsDisposed)
                     rpc.Dispose();
@@ -59,6 +64,7 @@ namespace SwitchPresence_Rewritten
                     client.EndConnect(result);
                 }
                 button1.Text = "Disconnect";
+                ipBox.Enabled = false;
 
                 rpc = new DiscordRpcClient(clientBox.Text);
                 rpc.Initialize();
@@ -73,12 +79,13 @@ namespace SwitchPresence_Rewritten
                 //small workaround for race condition on reconnect :(
                 Thread.Sleep(800);
                 button1.Text = "Connect";
+                ipBox.Enabled = true;
             }
         }
 
         private void DataListen()
         {
-            string LastGame= "";
+            string LastGame = "";
             Timestamps time = null;
             while (true)
             {
@@ -93,7 +100,7 @@ namespace SwitchPresence_Rewritten
                     }
                     if (title.magic == 0xffaadd23 && (rpc.CurrentPresence == null || LastGame != title.name) || ManualUpdate)
                     {
-                        
+
                         //ManualUpdate needs to be put somewhere
                         if (title.name == "NULL")
                         {
@@ -176,7 +183,11 @@ namespace SwitchPresence_Rewritten
                     rpc.Dispose();
                     t = new Thread(DataListen);
                     MessageBox.Show("A socket error occured please try again.", "Socket", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    MethodInvoker inv = () => button1.Text = "Connect";
+                    MethodInvoker inv = () =>
+                    {
+                        button1.Text = "Connect";
+                        ipBox.Enabled = true;
+                    };
                     Invoke(inv);
                     return;
                 }
