@@ -1,0 +1,11 @@
+prefix=/opt/devkitpro/portlibs/switch
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: gd
+Description: GD graphics library
+Version: 2.2.5
+Cflags: -I${includedir}
+Libs.private: -lm -lnx  -L/opt/devkitpro/portlibs/switch/lib -lz   -L/opt/devkitpro/portlibs/switch/lib -lpng16 -lm -lnx -lz   -L/opt/devkitpro/portlibs/switch/lib -lfreetype -lbz2 -L/opt/devkitpro/portlibs/switch/lib -L/opt/devkitpro/portlibs/switch/lib -lz -lpng16 -lm -lnx -lz    -ljpeg   -lwebp 
+Libs: -L${libdir} -lgd
