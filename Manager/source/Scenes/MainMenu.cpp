@@ -41,7 +41,7 @@ void MainMenu::Display(u64 kDown)
             scene = 1;
             selection = 0;
             printf(CONSOLE_ESC(2J));
-            printf("\x1b[21;%dHDumping Icons...", center(80, 10));
+            printf("\x1b[21;%dHDumping Icons...", center(80, 16));
             printf("\x1b[22;%dHPlease Wait!", center(80, 12));
             consoleUpdate(nullptr);
             Result rc = Utils::DumpIcons();
