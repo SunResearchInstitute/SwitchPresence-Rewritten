@@ -1,4 +1,6 @@
 build/*
+dist/*
+*.zip
 *.elf
 *.nso
 *.nsp

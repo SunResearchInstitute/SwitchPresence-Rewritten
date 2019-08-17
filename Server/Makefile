@@ -158,6 +158,13 @@ endif
 .PHONY: $(BUILD) clean all
 
 #---------------------------------------------------------------------------------
+dist: $(BUILD)
+	@mkdir -p dist/atmosphere/titles/0100000000000464/flags
+	@cp $(TARGET).nsp dist/atmosphere/titles/0100000000000464/exefs.nsp
+	@cd dist; zip -r ../Sysmodule.zip ./*; cd ../
+	@rm -fr dist
+	@echo built ... dist
+#---------------------------------------------------------------------------------
 all: $(BUILD)
 
 $(BUILD):
@@ -172,6 +179,9 @@ ifeq ($(strip $(APP_JSON)),)
 else
 	@rm -fr $(BUILD) $(TARGET).nsp $(TARGET).nso $(TARGET).npdm $(TARGET).elf
 endif
+	@rm -fr dist
+	@rm -fr Sysmodule.zip
+	
 
 
 #---------------------------------------------------------------------------------
