@@ -1,4 +1,7 @@
 ﻿using DiscordRPC;
+#if DEBUG
+using DiscordRPC.Logging;
+#endif
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
@@ -20,20 +23,7 @@ namespace SwitchPresence_Rewritten
         public MainForm()
         {
             InitializeComponent();
-            AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
             t = new Thread(DataListen);
-        }
-
-        private void OnProcessExit(object sender, EventArgs e)
-        {
-            try
-            {
-                client.Close();
-            }
-            catch { }
-            if (rpc != null)
-                if (!rpc.IsDisposed)
-                    rpc.Dispose();
         }
 
         private void Button1_Click(object sender, EventArgs e)
@@ -68,6 +58,19 @@ namespace SwitchPresence_Rewritten
                 clientBox.Enabled = false;
 
                 rpc = new DiscordRpcClient(clientBox.Text);
+#if DEBUG
+                rpc.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
+                //Subscribe to events
+                rpc.OnReady += (s, obj) =>
+                {
+                    Console.WriteLine("Received Ready from user {0}", obj.User.Username);
+                };
+
+                rpc.OnPresenceUpdate += (s, obj) =>
+                {
+                    Console.WriteLine("Received Update! {0}", obj.Presence);
+                };
+#endif
                 rpc.Initialize();
                 t.Start();
             }
@@ -77,8 +80,6 @@ namespace SwitchPresence_Rewritten
                 t.Abort();
                 t = new Thread(DataListen);
                 client.Close();
-                //small workaround for race condition on reconnect :(
-                Thread.Sleep(800);
                 button1.Text = "Connect";
                 ipBox.Enabled = true;
                 clientBox.Enabled = true;
@@ -102,8 +103,6 @@ namespace SwitchPresence_Rewritten
                     }
                     if (title.magic == 0xffaadd23 && (rpc.CurrentPresence == null || LastGame != title.name) || ManualUpdate)
                     {
-
-                        //ManualUpdate needs to be put somewhere
                         if (title.name == "NULL")
                         {
                             Assets ass = new Assets()
@@ -166,17 +165,6 @@ namespace SwitchPresence_Rewritten
                             ManualUpdate = false;
                         }
                         LastGame = title.name;
-                        Config cfg = new Config()
-                        {
-                            ip = ipBox.Text,
-                            client = clientBox.Text,
-                            bigKey = bigKeyBox.Text,
-                            smallKey = smallKeyBox.Text,
-                            state = stateBox.Text,
-                            bigText = bigTextBox.Text,
-                            timer = checkTime.Checked
-                        };
-                        File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
                     }
                 }
                 catch (SocketException)
@@ -233,6 +221,34 @@ namespace SwitchPresence_Rewritten
                 stateBox.Text = cfg.state;
                 clientBox.Text = cfg.client;
             }
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            t.Abort();
+            try
+            {
+                client.Close();
+            }
+            catch { }
+            if (rpc != null)
+                if (!rpc.IsDisposed)
+                    rpc.Dispose();
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Config cfg = new Config()
+            {
+                ip = ipBox.Text,
+                client = clientBox.Text,
+                bigKey = bigKeyBox.Text,
+                smallKey = smallKeyBox.Text,
+                state = stateBox.Text,
+                bigText = bigTextBox.Text,
+                timer = checkTime.Checked
+            };
+            File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
         }
     }
 
