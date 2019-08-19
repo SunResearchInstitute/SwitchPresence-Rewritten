@@ -250,6 +250,25 @@ namespace SwitchPresence_Rewritten
             };
             File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
         }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            if (FormWindowState.Minimized == this.WindowState)
+            {
+                this.Hide();
+            }
+        }
+
+        private void NotifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+        }
+
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 
     public class Config
