@@ -253,22 +253,24 @@ namespace SwitchPresence_Rewritten
 
         private void MainForm_Resize(object sender, EventArgs e)
         {
-            if (FormWindowState.Minimized == this.WindowState)
+            if (checkTray.Checked && FormWindowState.Minimized == this.WindowState)
             {
                 this.Hide();
             }
         }
 
-        private void NotifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void TrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             this.Show();
             this.WindowState = FormWindowState.Normal;
+            this.Activate();
         }
 
-        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TrayExitMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
+
     }
 
     public class Config

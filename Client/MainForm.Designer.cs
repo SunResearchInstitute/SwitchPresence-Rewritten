@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.ipBox = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -44,11 +45,11 @@
             this.label5 = new System.Windows.Forms.Label();
             this.bigTextBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.components = new System.ComponentModel.Container();
-            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStrip1.SuspendLayout();
+            this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.trayContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.trayExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkTray = new System.Windows.Forms.CheckBox();
+            this.trayContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // ipBox
@@ -199,33 +200,44 @@
             this.label6.Text = "If you go to sleep while connected\r\n you will have to reconnect!";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // notifyIcon1
+            // trayIcon
             // 
-            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-            this.notifyIcon1.Text = "SwitchPresence";
-            this.notifyIcon1.Visible = true;
-            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.NotifyIcon1_MouseDoubleClick);
-            this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
+            this.trayIcon.ContextMenuStrip = this.trayContextMenu;
+            this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.trayIcon.Text = "SwitchPresence";
+            this.trayIcon.Visible = true;
+            this.trayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TrayIcon_MouseDoubleClick);
             // 
-            // contextMenuStrip1
+            // trayContextMenu
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exitToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 48);
+            this.trayContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.trayExitMenuItem});
+            this.trayContextMenu.Name = "trayContextMenu";
+            this.trayContextMenu.Size = new System.Drawing.Size(93, 26);
             // 
-            // exitToolStripMenuItem
+            // trayExitMenuItem
             // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
+            this.trayExitMenuItem.Name = "trayExitMenuItem";
+            this.trayExitMenuItem.Size = new System.Drawing.Size(92, 22);
+            this.trayExitMenuItem.Text = "Exit";
+            this.trayExitMenuItem.Click += new System.EventHandler(this.TrayExitMenuItem_Click);
+            // 
+            // checkTray
+            // 
+            this.checkTray.AutoSize = true;
+            this.checkTray.Location = new System.Drawing.Point(100, 416);
+            this.checkTray.Name = "checkTray";
+            this.checkTray.Size = new System.Drawing.Size(80, 17);
+            this.checkTray.TabIndex = 15;
+            this.checkTray.Text = "Minimize to Tray";
+            this.checkTray.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(314, 455);
+            this.Controls.Add(this.checkTray);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.bigTextBox);
@@ -250,7 +262,7 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.trayContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -273,9 +285,10 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox bigTextBox;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.NotifyIcon notifyIcon1;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.NotifyIcon trayIcon;
+        private System.Windows.Forms.ContextMenuStrip trayContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem trayExitMenuItem;
+        private System.Windows.Forms.CheckBox checkTray;
     }
 }
 
