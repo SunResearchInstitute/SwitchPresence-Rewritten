@@ -220,6 +220,7 @@ namespace SwitchPresence_Rewritten
                 ipBox.Text = cfg.ip;
                 stateBox.Text = cfg.state;
                 clientBox.Text = cfg.client;
+                checkTray.Checked = cfg.tray;
             }
         }
 
@@ -246,7 +247,8 @@ namespace SwitchPresence_Rewritten
                 smallKey = smallKeyBox.Text,
                 state = stateBox.Text,
                 bigText = bigTextBox.Text,
-                timer = checkTime.Checked
+                timer = checkTime.Checked,
+                tray = checkTray.Checked
             };
             File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
         }
@@ -282,6 +284,7 @@ namespace SwitchPresence_Rewritten
         public string smallKey;
         public string state;
         public bool timer;
+        public bool tray;
 
         public Config() { }
     }
