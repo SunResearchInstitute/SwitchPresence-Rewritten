@@ -255,11 +255,7 @@ namespace SwitchPresence_Rewritten
 
         private void MainForm_Resize(object sender, EventArgs e)
         {
-            if (checkTray.Checked 
-                && FormWindowState.Minimized == this.WindowState)
-            {
-                this.Hide();
-            }
+            if (checkTray.Checked && FormWindowState.Minimized == this.WindowState) { this.Hide(); }
         }
 
         private void TrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -273,7 +269,6 @@ namespace SwitchPresence_Rewritten
         {
             Application.Exit();
         }
-
     }
 
     public class Config
