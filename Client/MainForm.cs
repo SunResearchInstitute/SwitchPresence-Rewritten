@@ -213,14 +213,14 @@ namespace SwitchPresence_Rewritten
             if (File.Exists("Config.json"))
             {
                 Config cfg = JsonConvert.DeserializeObject<Config>(File.ReadAllText("Config.json"));
-                checkTime.Checked = cfg.timer;
-                bigKeyBox.Text = cfg.bigKey;
-                bigTextBox.Text = cfg.bigText;
-                smallKeyBox.Text = cfg.smallKey;
-                ipBox.Text = cfg.ip;
-                stateBox.Text = cfg.state;
-                clientBox.Text = cfg.client;
-                checkTray.Checked = cfg.tray;
+                checkTime.Checked = cfg.DisplayTimer;
+                bigKeyBox.Text = cfg.BigKey;
+                bigTextBox.Text = cfg.BigText;
+                smallKeyBox.Text = cfg.SmallKey;
+                ipBox.Text = cfg.IP;
+                stateBox.Text = cfg.State;
+                clientBox.Text = cfg.Client;
+                checkTray.Checked = cfg.AllowTray;
             }
         }
 
@@ -232,55 +232,51 @@ namespace SwitchPresence_Rewritten
                 client.Close();
             }
             catch { }
-            if (rpc != null)
-                if (!rpc.IsDisposed)
-                    rpc.Dispose();
+            if (rpc != null && !rpc.IsDisposed)
+                rpc.Dispose();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Config cfg = new Config()
+            if (e.CloseReason == CloseReason.UserClosing)
             {
-                ip = ipBox.Text,
-                client = clientBox.Text,
-                bigKey = bigKeyBox.Text,
-                smallKey = smallKeyBox.Text,
-                state = stateBox.Text,
-                bigText = bigTextBox.Text,
-                timer = checkTime.Checked,
-                tray = checkTray.Checked
-            };
-            File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
-        }
-
-        private void MainForm_Resize(object sender, EventArgs e)
-        {
-            if (checkTray.Checked && FormWindowState.Minimized == this.WindowState) { this.Hide(); }
+                if (checkTray.Checked)
+                {
+                    e.Cancel = true;
+                    Hide();
+                }
+            }
+            else
+            {
+                Config cfg = new Config()
+                {
+                    IP = ipBox.Text,
+                    Client = clientBox.Text,
+                    BigKey = bigKeyBox.Text,
+                    SmallKey = smallKeyBox.Text,
+                    State = stateBox.Text,
+                    BigText = bigTextBox.Text,
+                    DisplayTimer = checkTime.Checked,
+                    AllowTray = checkTray.Checked
+                };
+                File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
+            }
         }
 
         private void TrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            this.Show();
-            this.WindowState = FormWindowState.Normal;
-            this.Activate();
+            Show();
+            WindowState = FormWindowState.Normal;
+            Activate();
         }
 
-        private void TrayExitMenuItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
+        private void TrayExitMenuItem_Click(object sender, EventArgs e) => Application.Exit();
     }
 
     public class Config
     {
-        public string ip;
-        public string client;
-        public string bigKey;
-        public string bigText;
-        public string smallKey;
-        public string state;
-        public bool timer;
-        public bool tray;
+        public string IP, Client, BigKey, BigText, SmallKey, State;
+        public bool DisplayTimer, AllowTray;
 
         public Config() { }
     }
