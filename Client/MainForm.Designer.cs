@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.ipBox = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -44,6 +45,11 @@
             this.label5 = new System.Windows.Forms.Label();
             this.bigTextBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.trayContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.trayExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkTray = new System.Windows.Forms.CheckBox();
+            this.trayContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // ipBox
@@ -101,9 +107,9 @@
             this.checkTime.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkTime.Location = new System.Drawing.Point(100, 393);
             this.checkTime.Name = "checkTime";
-            this.checkTime.Size = new System.Drawing.Size(115, 17);
+            this.checkTime.Size = new System.Drawing.Size(117, 17);
             this.checkTime.TabIndex = 5;
-            this.checkTime.Text = "Show time elapsed";
+            this.checkTime.Text = "Show Time Lapsed";
             this.checkTime.UseVisualStyleBackColor = true;
             this.checkTime.CheckedChanged += new System.EventHandler(this.CheckTime_CheckedChanged);
             // 
@@ -194,11 +200,44 @@
             this.label6.Text = "If you go to sleep while connected\r\n you will have to reconnect!";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // trayIcon
+            // 
+            this.trayIcon.ContextMenuStrip = this.trayContextMenu;
+            this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
+            this.trayIcon.Text = "SwitchPresence";
+            this.trayIcon.Visible = true;
+            this.trayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TrayIcon_MouseDoubleClick);
+            // 
+            // trayContextMenu
+            // 
+            this.trayContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.trayExitMenuItem});
+            this.trayContextMenu.Name = "trayContextMenu";
+            this.trayContextMenu.Size = new System.Drawing.Size(94, 26);
+            // 
+            // trayExitMenuItem
+            // 
+            this.trayExitMenuItem.Name = "trayExitMenuItem";
+            this.trayExitMenuItem.Size = new System.Drawing.Size(93, 22);
+            this.trayExitMenuItem.Text = "Exit";
+            this.trayExitMenuItem.Click += new System.EventHandler(this.TrayExitMenuItem_Click);
+            // 
+            // checkTray
+            // 
+            this.checkTray.AutoSize = true;
+            this.checkTray.Location = new System.Drawing.Point(100, 416);
+            this.checkTray.Name = "checkTray";
+            this.checkTray.Size = new System.Drawing.Size(102, 17);
+            this.checkTray.TabIndex = 15;
+            this.checkTray.Text = "Minimize to Tray";
+            this.checkTray.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(314, 455);
+            this.Controls.Add(this.checkTray);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.bigTextBox);
@@ -222,6 +261,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.trayContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -244,6 +284,10 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox bigTextBox;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NotifyIcon trayIcon;
+        private System.Windows.Forms.ContextMenuStrip trayContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem trayExitMenuItem;
+        private System.Windows.Forms.CheckBox checkTray;
     }
 }
 
