@@ -103,45 +103,28 @@ namespace SwitchPresence_Rewritten
                     }
                     if (title.magic == 0xffaadd23 && (rpc.CurrentPresence == null || LastGame != title.name) || ManualUpdate)
                     {
+                        Assets ass = new Assets
+                        {
+                            SmallImageKey = smallKeyBox.Text,
+                            SmallImageText = "Switch-Presence Rewritten"
+                        };
+                        RichPresence presence = new RichPresence
+                        {
+                            State = stateBox.Text
+                        };
+
                         if (title.name == "NULL")
                         {
-                            Assets ass = new Assets()
-                            {
-                                LargeImageText = "Home Menu",
-                                SmallImageKey = smallKeyBox.Text,
-                                SmallImageText = "Switch-Presence Rewritten"
-                            };
+                            ass.LargeImageText = "Home Menu";
 
-                            if (!string.IsNullOrWhiteSpace(bigTextBox.Text))
-                                ass.LargeImageText = bigTextBox.Text;
-                            else
-                                ass.LargeImageText = "Home Menu";
+                            ass.LargeImageText = !string.IsNullOrWhiteSpace(bigTextBox.Text) ? bigTextBox.Text : "Home Menu";
 
-                            if (!string.IsNullOrWhiteSpace(bigKeyBox.Text))
-                                ass.LargeImageKey = bigKeyBox.Text;
-                            else
-                                ass.LargeImageKey = string.Format("0{0:x}", 0x0100000000001000);
+                            ass.LargeImageKey = !string.IsNullOrWhiteSpace(bigKeyBox.Text) ? bigKeyBox.Text : string.Format("0{0:x}", 0x0100000000001000);
 
-                            RichPresence presence = new RichPresence()
-                            {
-
-                                Details = "In the home menu",
-                                State = stateBox.Text,
-                                Assets = ass
-                            };
-
-                            if (checkTime.Checked) presence.Timestamps = time;
-                            rpc.SetPresence(presence);
-                            ManualUpdate = false;
+                            presence.Details = "In the home menu";
                         }
                         else
                         {
-                            Assets ass = new Assets()
-                            {
-                                SmallImageKey = smallKeyBox.Text,
-                                SmallImageText = "Switch-Presence Rewritten"
-                            };
-
                             if (!string.IsNullOrWhiteSpace(bigTextBox.Text))
                                 ass.LargeImageText = bigTextBox.Text;
                             else
@@ -152,18 +135,12 @@ namespace SwitchPresence_Rewritten
                             else
                                 ass.LargeImageKey = string.Format("0{0:x}", title.tid);
 
-                            RichPresence presence = new RichPresence()
-                            {
-
-                                Details = $"Playing {title.name}",
-                                State = stateBox.Text,
-                                Assets = ass
-                            };
-
-                            if (checkTime.Checked) presence.Timestamps = time;
-                            rpc.SetPresence(presence);
-                            ManualUpdate = false;
+                            presence.Details = $"Playing {title.name}";
                         }
+                        presence.Assets = ass;
+                        if (checkTime.Checked) presence.Timestamps = time;
+                        rpc.SetPresence(presence);
+                        ManualUpdate = false;
                         LastGame = title.name;
                     }
                 }
