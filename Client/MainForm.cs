@@ -114,7 +114,7 @@ namespace SwitchPresence_Rewritten
                         {
                             time = Timestamps.Now;
                         }
-                        if ((rpc.CurrentPresence == null || LastGame != title.name) || ManualUpdate)
+                        if (rpc.CurrentPresence == null || LastGame != title.name || ManualUpdate)
                         {
                             Assets ass = new Assets
                             {
