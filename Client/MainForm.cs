@@ -26,6 +26,17 @@ namespace SwitchPresence_Rewritten
             t = new Thread(DataListen);
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct TitlePacket
+        {
+            [MarshalAs(UnmanagedType.U8)]
+            public ulong magic;
+            [MarshalAs(UnmanagedType.U8)]
+            public ulong tid;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 512)]
+            public string name;
+        }
+
         private void Button1_Click(object sender, EventArgs e)
         {
             if (button1.Text == "Connect")
@@ -97,51 +108,43 @@ namespace SwitchPresence_Rewritten
                     byte[] bytes = new byte[800];
                     int cnt = client.Receive(bytes);
                     TitlePacket title = Utils.ByteArrayToStructure<TitlePacket>(bytes);
-                    if (rpc.CurrentPresence == null || LastGame != title.name)
+                    if (title.magic == 0xffaadd23)
                     {
-                        time = Timestamps.Now;
-                    }
-                    if (title.magic == 0xffaadd23 && (rpc.CurrentPresence == null || LastGame != title.name) || ManualUpdate)
-                    {
-                        Assets ass = new Assets
+                        if (rpc.CurrentPresence == null || LastGame != title.name)
                         {
-                            SmallImageKey = smallKeyBox.Text,
-                            SmallImageText = "Switch-Presence Rewritten"
-                        };
-                        RichPresence presence = new RichPresence
-                        {
-                            State = stateBox.Text
-                        };
-
-                        if (title.name == "NULL")
-                        {
-                            ass.LargeImageText = "Home Menu";
-
-                            ass.LargeImageText = !string.IsNullOrWhiteSpace(bigTextBox.Text) ? bigTextBox.Text : "Home Menu";
-
-                            ass.LargeImageKey = !string.IsNullOrWhiteSpace(bigKeyBox.Text) ? bigKeyBox.Text : string.Format("0{0:x}", 0x0100000000001000);
-
-                            presence.Details = "In the home menu";
+                            time = Timestamps.Now;
                         }
-                        else
+                        if ((rpc.CurrentPresence == null || LastGame != title.name) || ManualUpdate)
                         {
-                            if (!string.IsNullOrWhiteSpace(bigTextBox.Text))
-                                ass.LargeImageText = bigTextBox.Text;
-                            else
-                                ass.LargeImageText = title.name;
+                            Assets ass = new Assets
+                            {
+                                SmallImageKey = smallKeyBox.Text,
+                                SmallImageText = "Switch-Presence Rewritten"
+                            };
+                            RichPresence presence = new RichPresence
+                            {
+                                State = stateBox.Text
+                            };
 
-                            if (!string.IsNullOrWhiteSpace(bigKeyBox.Text))
-                                ass.LargeImageKey = bigKeyBox.Text;
+                            if (title.name == "NULL")
+                            {
+                                ass.LargeImageText = "Home Menu";
+                                ass.LargeImageText = !string.IsNullOrWhiteSpace(bigTextBox.Text) ? bigTextBox.Text : "Home Menu";
+                                ass.LargeImageKey = !string.IsNullOrWhiteSpace(bigKeyBox.Text) ? bigKeyBox.Text : string.Format("0{0:x}", 0x0100000000001000);
+                                presence.Details = "In the home menu";
+                            }
                             else
-                                ass.LargeImageKey = string.Format("0{0:x}", title.tid);
-
-                            presence.Details = $"Playing {title.name}";
+                            {
+                                ass.LargeImageText = !string.IsNullOrWhiteSpace(bigTextBox.Text) ? bigTextBox.Text : title.name;
+                                ass.LargeImageKey = !string.IsNullOrWhiteSpace(bigKeyBox.Text) ? bigKeyBox.Text : string.Format("0{0:x}", title.tid);
+                                presence.Details = $"Playing {title.name}";
+                            }
+                            presence.Assets = ass;
+                            if (checkTime.Checked) presence.Timestamps = time;
+                            rpc.SetPresence(presence);
+                            ManualUpdate = false;
+                            LastGame = title.name;
                         }
-                        presence.Assets = ass;
-                        if (checkTime.Checked) presence.Timestamps = time;
-                        rpc.SetPresence(presence);
-                        ManualUpdate = false;
-                        LastGame = title.name;
                     }
                 }
                 catch (SocketException)
@@ -165,17 +168,6 @@ namespace SwitchPresence_Rewritten
         private void CheckTime_CheckedChanged(object sender, EventArgs e) => ManualUpdate = true;
 
         private void LinkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start($"https://discordapp.com/developers/applications/{clientBox.Text}");
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct TitlePacket
-        {
-            [MarshalAs(UnmanagedType.U8)]
-            public ulong magic;
-            [MarshalAs(UnmanagedType.U8)]
-            public ulong tid;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 512)]
-            public string name;
-        }
 
         private void BigKeyBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
 
