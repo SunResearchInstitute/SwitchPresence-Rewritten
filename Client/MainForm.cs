@@ -11,6 +11,7 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace SwitchPresence_Rewritten
 {
@@ -43,12 +44,12 @@ namespace SwitchPresence_Rewritten
             {
                 if (!IPAddress.TryParse(ipBox.Text, out IPAddress ip))
                 {
-                    UpdateStatus("Invalid IP", System.Drawing.Color.DarkRed);
+                    UpdateStatus("Invalid IP", Color.DarkRed);
                     return;
                 }
                 if (string.IsNullOrWhiteSpace(clientBox.Text))
                 {
-                    UpdateStatus("Client ID cannot be empty", System.Drawing.Color.DarkRed);
+                    UpdateStatus("Client ID cannot be empty", Color.DarkRed);
                     return;
                 }
 
@@ -71,7 +72,7 @@ namespace SwitchPresence_Rewritten
                 listenThread.Abort();
                 listenThread = new Thread(TryConnect);
 
-                UpdateStatus("", System.Drawing.Color.Gray);
+                UpdateStatus("", Color.Gray);
                 connectButton.Text = "Connect";
                 ipBox.Enabled = true;
                 clientBox.Enabled = true;
@@ -84,22 +85,24 @@ namespace SwitchPresence_Rewritten
             IPEndPoint localEndPoint = new IPEndPoint(ip, 0xCAFE);
             while (true)
             {
-                
-                client = new Socket(SocketType.Stream, ProtocolType.Tcp);
-                client.ReceiveTimeout = 10000;
+
+                client = new Socket(SocketType.Stream, ProtocolType.Tcp)
+                {
+                    ReceiveTimeout = 10000
+                };
                 IAsyncResult result = client.BeginConnect(localEndPoint, null, null);
 
-                UpdateStatus("Connecting to server...", System.Drawing.Color.Gray);
+                UpdateStatus("Connecting to server...", Color.Gray);
                 bool success = result.AsyncWaitHandle.WaitOne(2000, true);
                 if (!success)
                 {
-                    //UpdateStatus("Could not connect to Server! Retrying...", System.Drawing.Color.DarkRed);
+                    //UpdateStatus("Could not connect to Server! Retrying...", Color.DarkRed);
                     client.Close();
                 }
                 else
                 {
                     client.EndConnect(result);
-                    UpdateStatus("Connected to the server!", System.Drawing.Color.Green);
+                    UpdateStatus("Connected to the server!", Color.Green);
                     try
                     {
                         StartListening();
@@ -133,7 +136,7 @@ namespace SwitchPresence_Rewritten
             DataListen();
         }
 
-        private void UpdateStatus(string text, System.Drawing.Color color)
+        private void UpdateStatus(string text, Color color)
         {
             MethodInvoker inv = () =>
             {
