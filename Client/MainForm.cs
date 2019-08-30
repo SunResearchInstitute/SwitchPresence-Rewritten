@@ -163,36 +163,32 @@ namespace SwitchPresence_Rewritten
                         }
                         if ((rpc != null && rpc.CurrentPresence == null) || LastGame != title.name || ManualUpdate)
                         {
+                            Assets ass = new Assets
+                            {
+                                SmallImageKey = smallKeyBox.Text,
+                                SmallImageText = "Switch-Presence Rewritten"
+                            };
+                            RichPresence presence = new RichPresence
+                            {
+                                State = stateBox.Text
+                            };
+
                             if (title.name == "NULL")
                             {
-                                /*
                                 ass.LargeImageText = "Home Menu";
                                 ass.LargeImageText = !string.IsNullOrWhiteSpace(bigTextBox.Text) ? bigTextBox.Text : "Home Menu";
                                 ass.LargeImageKey = !string.IsNullOrWhiteSpace(bigKeyBox.Text) ? bigKeyBox.Text : string.Format("0{0:x}", 0x0100000000001000);
                                 presence.Details = "In the home menu";
-                                */
-                                rpc.SetPresence(null);
-
                             }
                             else
                             {
-                                Assets ass = new Assets
-                                {
-                                    SmallImageKey = smallKeyBox.Text,
-                                    SmallImageText = "Switch-Presence Rewritten"
-                                };
-                                RichPresence presence = new RichPresence
-                                {
-                                    State = stateBox.Text
-                                };
-
                                 ass.LargeImageText = !string.IsNullOrWhiteSpace(bigTextBox.Text) ? bigTextBox.Text : title.name;
                                 ass.LargeImageKey = !string.IsNullOrWhiteSpace(bigKeyBox.Text) ? bigKeyBox.Text : string.Format("0{0:x}", title.tid);
                                 presence.Details = $"Playing {title.name}";
-                                presence.Assets = ass;
-                                if (checkTime.Checked) presence.Timestamps = time;
-                                rpc.SetPresence(presence);
                             }
+                            presence.Assets = ass;
+                            if (checkTime.Checked) presence.Timestamps = time;
+                            rpc.SetPresence(presence);
                             ManualUpdate = false;
                             LastGame = title.name;
                         }
