@@ -16,14 +16,14 @@ namespace SwitchPresence_Rewritten
 {
     public partial class MainForm : Form
     {
-        Thread t;
+        Thread listenThread;
         static Socket client;
         static DiscordRpcClient rpc;
         bool ManualUpdate = false;
         public MainForm()
         {
             InitializeComponent();
-            t = new Thread(DataListen);
+            listenThread = new Thread(TryConnect);
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -39,36 +39,83 @@ namespace SwitchPresence_Rewritten
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            if (button1.Text == "Connect")
+            if (connectButton.Text == "Connect")
             {
                 if (!IPAddress.TryParse(ipBox.Text, out IPAddress ip))
                 {
-                    MessageBox.Show("Invalid IP", "IP", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    UpdateStatus("Invalid IP", System.Drawing.Color.DarkRed);
                     return;
                 }
                 if (string.IsNullOrWhiteSpace(clientBox.Text))
                 {
-                    MessageBox.Show("Client ID cannot be empty", "Client ID", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    UpdateStatus("Client ID cannot be empty", System.Drawing.Color.DarkRed);
                     return;
                 }
+
+                
+                listenThread.Start();
+                
+                connectButton.Text = "Disconnect";
+                ipBox.Enabled = false;
+                clientBox.Enabled = false;
+            }
+            else
+            {
+                if (rpc != null && !rpc.IsDisposed)
+                {
+                    rpc.SetPresence(null);
+                    rpc.Dispose();
+                }
+                
+                if (client != null) client.Close();
+                listenThread.Abort();
+                listenThread = new Thread(TryConnect);
+
+                UpdateStatus("", System.Drawing.Color.Gray);
+                connectButton.Text = "Connect";
+                ipBox.Enabled = true;
+                clientBox.Enabled = true;
+            }
+        }
+
+        private void TryConnect()
+        {
+            IPAddress.TryParse(ipBox.Text, out IPAddress ip);
+            IPEndPoint localEndPoint = new IPEndPoint(ip, 0xCAFE);
+            while (true)
+            {
+                
                 client = new Socket(SocketType.Stream, ProtocolType.Tcp);
-                IPEndPoint localEndPoint = new IPEndPoint(ip, 0xCAFE);
+                client.ReceiveTimeout = 10000;
                 IAsyncResult result = client.BeginConnect(localEndPoint, null, null);
+
+                UpdateStatus("Connecting to server...", System.Drawing.Color.Gray);
                 bool success = result.AsyncWaitHandle.WaitOne(2000, true);
                 if (!success)
                 {
-                    MessageBox.Show("Could not connect to Server!", "Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    //UpdateStatus("Could not connect to Server! Retrying...", System.Drawing.Color.DarkRed);
+                    client.Close();
                 }
                 else
                 {
                     client.EndConnect(result);
+                    UpdateStatus("Connected to the server!", System.Drawing.Color.Green);
+                    try
+                    {
+                        StartListening();
+                    }
+                    catch(SocketException)
+                    {
+                        client.Close();
+                        if (rpc != null && !rpc.IsDisposed) rpc.Dispose();
+                    }
                 }
-                button1.Text = "Disconnect";
-                ipBox.Enabled = false;
-                clientBox.Enabled = false;
+            }
+        }
 
-                rpc = new DiscordRpcClient(clientBox.Text);
+        private void StartListening()
+        {
+            rpc = new DiscordRpcClient(clientBox.Text);
 #if DEBUG
                 rpc.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
                 //Subscribe to events
@@ -82,19 +129,19 @@ namespace SwitchPresence_Rewritten
                     Console.WriteLine("Received Update! {0}", obj.Presence);
                 };
 #endif
-                rpc.Initialize();
-                t.Start();
-            }
-            else
+            rpc.Initialize();
+            DataListen();
+        }
+
+        private void UpdateStatus(string text, System.Drawing.Color color)
+        {
+            MethodInvoker inv = () =>
             {
-                rpc.Dispose();
-                t.Abort();
-                t = new Thread(DataListen);
-                client.Close();
-                button1.Text = "Connect";
-                ipBox.Enabled = true;
-                clientBox.Enabled = true;
-            }
+                statusLabel.Text = text;
+                statusLabel.ForeColor = color;
+            };
+            Invoke(inv);
+
         }
 
         private void DataListen()
@@ -110,38 +157,42 @@ namespace SwitchPresence_Rewritten
                     TitlePacket title = Utils.ByteArrayToStructure<TitlePacket>(bytes);
                     if (title.magic == 0xffaadd23)
                     {
-                        if (rpc.CurrentPresence == null || LastGame != title.name)
+                        if ((rpc != null && rpc.CurrentPresence == null) || LastGame != title.name)
                         {
                             time = Timestamps.Now;
                         }
-                        if (rpc.CurrentPresence == null || LastGame != title.name || ManualUpdate)
+                        if ((rpc != null && rpc.CurrentPresence == null) || LastGame != title.name || ManualUpdate)
                         {
-                            Assets ass = new Assets
-                            {
-                                SmallImageKey = smallKeyBox.Text,
-                                SmallImageText = "Switch-Presence Rewritten"
-                            };
-                            RichPresence presence = new RichPresence
-                            {
-                                State = stateBox.Text
-                            };
-
                             if (title.name == "NULL")
                             {
+                                /*
                                 ass.LargeImageText = "Home Menu";
                                 ass.LargeImageText = !string.IsNullOrWhiteSpace(bigTextBox.Text) ? bigTextBox.Text : "Home Menu";
                                 ass.LargeImageKey = !string.IsNullOrWhiteSpace(bigKeyBox.Text) ? bigKeyBox.Text : string.Format("0{0:x}", 0x0100000000001000);
                                 presence.Details = "In the home menu";
+                                */
+                                rpc.SetPresence(null);
+
                             }
                             else
                             {
+                                Assets ass = new Assets
+                                {
+                                    SmallImageKey = smallKeyBox.Text,
+                                    SmallImageText = "Switch-Presence Rewritten"
+                                };
+                                RichPresence presence = new RichPresence
+                                {
+                                    State = stateBox.Text
+                                };
+
                                 ass.LargeImageText = !string.IsNullOrWhiteSpace(bigTextBox.Text) ? bigTextBox.Text : title.name;
                                 ass.LargeImageKey = !string.IsNullOrWhiteSpace(bigKeyBox.Text) ? bigKeyBox.Text : string.Format("0{0:x}", title.tid);
                                 presence.Details = $"Playing {title.name}";
+                                presence.Assets = ass;
+                                if (checkTime.Checked) presence.Timestamps = time;
+                                rpc.SetPresence(presence);
                             }
-                            presence.Assets = ass;
-                            if (checkTime.Checked) presence.Timestamps = time;
-                            rpc.SetPresence(presence);
                             ManualUpdate = false;
                             LastGame = title.name;
                         }
@@ -149,17 +200,8 @@ namespace SwitchPresence_Rewritten
                 }
                 catch (SocketException)
                 {
-                    client.Close();
                     rpc.Dispose();
-                    t = new Thread(DataListen);
-                    MessageBox.Show("A socket error occured please try again.", "Socket", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    MethodInvoker inv = () =>
-                    {
-                        button1.Text = "Connect";
-                        ipBox.Enabled = true;
-                        clientBox.Enabled = true;
-                    };
-                    Invoke(inv);
+                    client.Close();
                     return;
                 }
             }
@@ -195,7 +237,7 @@ namespace SwitchPresence_Rewritten
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            t.Abort();
+            listenThread.Abort();
             try
             {
                 client.Close();
