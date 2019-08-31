@@ -55,9 +55,9 @@ namespace SwitchPresence_Rewritten
                     return;
                 }
 
-                
+
                 listenThread.Start();
-                
+
                 connectButton.Text = "Disconnect";
                 ipBox.Enabled = false;
                 clientBox.Enabled = false;
@@ -69,7 +69,7 @@ namespace SwitchPresence_Rewritten
                     rpc.SetPresence(null);
                     rpc.Dispose();
                 }
-                
+
                 if (client != null) client.Close();
                 listenThread.Abort();
                 listenThread = new Thread(TryConnect);
@@ -108,7 +108,7 @@ namespace SwitchPresence_Rewritten
                     {
                         StartListening();
                     }
-                    catch(SocketException)
+                    catch (SocketException)
                     {
                         client.Close();
                         if (rpc != null && !rpc.IsDisposed) rpc.Dispose();
@@ -121,17 +121,17 @@ namespace SwitchPresence_Rewritten
         {
             rpc = new DiscordRpcClient(clientBox.Text);
 #if DEBUG
-                rpc.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
-                //Subscribe to events
-                rpc.OnReady += (s, obj) =>
-                {
-                    Console.WriteLine("Received Ready from user {0}", obj.User.Username);
-                };
+            rpc.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
+            //Subscribe to events
+            rpc.OnReady += (s, obj) =>
+            {
+                Console.WriteLine("Received Ready from user {0}", obj.User.Username);
+            };
 
-                rpc.OnPresenceUpdate += (s, obj) =>
-                {
-                    Console.WriteLine("Received Update! {0}", obj.Presence);
-                };
+            rpc.OnPresenceUpdate += (s, obj) =>
+            {
+                Console.WriteLine("Received Update! {0}", obj.Presence);
+            };
 #endif
             rpc.Initialize();
             DataListen();
