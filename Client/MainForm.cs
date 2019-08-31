@@ -45,11 +45,13 @@ namespace SwitchPresence_Rewritten
                 if (!IPAddress.TryParse(ipBox.Text, out IPAddress ip))
                 {
                     UpdateStatus("Invalid IP", Color.DarkRed);
+                    System.Media.SystemSounds.Exclamation.Play();
                     return;
                 }
                 if (string.IsNullOrWhiteSpace(clientBox.Text))
                 {
                     UpdateStatus("Client ID cannot be empty", Color.DarkRed);
+                    System.Media.SystemSounds.Exclamation.Play();
                     return;
                 }
 
@@ -88,11 +90,11 @@ namespace SwitchPresence_Rewritten
 
                 client = new Socket(SocketType.Stream, ProtocolType.Tcp)
                 {
-                    ReceiveTimeout = 10000
+                    ReceiveTimeout = 5500
                 };
                 IAsyncResult result = client.BeginConnect(localEndPoint, null, null);
 
-                UpdateStatus("Connecting to server...", Color.Gray);
+                UpdateStatus("Attemping to connect to server...", Color.Gray);
                 bool success = result.AsyncWaitHandle.WaitOne(2000, true);
                 if (!success)
                 {
