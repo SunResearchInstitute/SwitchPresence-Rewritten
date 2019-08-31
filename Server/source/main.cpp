@@ -108,8 +108,6 @@ int main(int argc, char **argv)
     int src;
     while (true)
     {
-        svcSleepThread(5e+9);
-
         Result rc;
         u64 pid;
         u64 tid;
@@ -131,5 +129,7 @@ int main(int argc, char **argv)
             sock = setupSocketServer();
             connection = accept(sock, (struct sockaddr *)&client_addr, &client_len);
         }
+		
+		svcSleepThread(5e+9);
     }
 }
