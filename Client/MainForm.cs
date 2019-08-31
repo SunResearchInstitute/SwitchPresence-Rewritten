@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using System.Drawing;
+using SwitchPresence_Rewritten.Properties;
 
 namespace SwitchPresence_Rewritten
 {
@@ -44,12 +45,16 @@ namespace SwitchPresence_Rewritten
             {
                 if (!IPAddress.TryParse(ipBox.Text, out IPAddress ip))
                 {
+                    Show();
+                    Activate();
                     UpdateStatus("Invalid IP", Color.DarkRed);
                     System.Media.SystemSounds.Exclamation.Play();
                     return;
                 }
                 if (string.IsNullOrWhiteSpace(clientBox.Text))
                 {
+                    Show();
+                    Activate();
                     UpdateStatus("Client ID cannot be empty", Color.DarkRed);
                     System.Media.SystemSounds.Exclamation.Play();
                     return;
@@ -58,6 +63,7 @@ namespace SwitchPresence_Rewritten
                 listenThread.Start();
 
                 connectButton.Text = "Disconnect";
+                connectToolStripMenuItem.Text = "Disconnect";
                 ipBox.Enabled = false;
                 clientBox.Enabled = false;
             }
@@ -72,9 +78,11 @@ namespace SwitchPresence_Rewritten
                 if (client != null) client.Close();
                 listenThread.Abort();
                 listenThread = new Thread(TryConnect);
-
                 UpdateStatus("", Color.Gray);
                 connectButton.Text = "Connect";
+                connectToolStripMenuItem.Text = "Connect";
+                trayIcon.Icon = Resources.Disconnected;
+                trayIcon.Text = "SwitchPresence (Disconnected)";
                 ipBox.Enabled = true;
                 clientBox.Enabled = true;
             }
@@ -93,6 +101,8 @@ namespace SwitchPresence_Rewritten
                 IAsyncResult result = client.BeginConnect(localEndPoint, null, null);
 
                 UpdateStatus("Attemping to connect to server...", Color.Gray);
+                trayIcon.Text = "SwitchPresence (Connecting...)";
+
                 bool success = result.AsyncWaitHandle.WaitOne(2000, true);
                 if (!success)
                 {
@@ -156,6 +166,8 @@ namespace SwitchPresence_Rewritten
                     byte[] bytes = new byte[800];
                     int cnt = client.Receive(bytes);
                     UpdateStatus("Connected to the server!", Color.Green);
+                    trayIcon.Icon = Resources.Connected;
+                    trayIcon.Text = "SwitchPresence (Connected)";
                     TitlePacket title = Utils.ByteArrayToStructure<TitlePacket>(bytes);
                     if (title.magic == 0xffaadd23)
                     {
@@ -272,7 +284,6 @@ namespace SwitchPresence_Rewritten
         private void TrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             Show();
-            WindowState = FormWindowState.Normal;
             Activate();
         }
 

@@ -49,6 +49,7 @@
             this.trayContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.trayExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkTray = new System.Windows.Forms.CheckBox();
+            this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -202,21 +203,22 @@
             // 
             this.trayIcon.ContextMenuStrip = this.trayContextMenu;
             this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
-            this.trayIcon.Text = "SwitchPresence";
+            this.trayIcon.Text = "SwitchPresence (Disconnected)";
             this.trayIcon.Visible = true;
             this.trayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TrayIcon_MouseDoubleClick);
             // 
             // trayContextMenu
             // 
             this.trayContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.connectToolStripMenuItem,
             this.trayExitMenuItem});
             this.trayContextMenu.Name = "trayContextMenu";
-            this.trayContextMenu.Size = new System.Drawing.Size(93, 26);
+            this.trayContextMenu.Size = new System.Drawing.Size(181, 70);
             // 
             // trayExitMenuItem
             // 
             this.trayExitMenuItem.Name = "trayExitMenuItem";
-            this.trayExitMenuItem.Size = new System.Drawing.Size(92, 22);
+            this.trayExitMenuItem.Size = new System.Drawing.Size(180, 22);
             this.trayExitMenuItem.Text = "Exit";
             this.trayExitMenuItem.Click += new System.EventHandler(this.TrayExitMenuItem_Click);
             // 
@@ -229,6 +231,13 @@
             this.checkTray.TabIndex = 15;
             this.checkTray.Text = "Minimize to Tray";
             this.checkTray.UseVisualStyleBackColor = true;
+            // 
+            // connectToolStripMenuItem
+            // 
+            this.connectToolStripMenuItem.Name = "connectToolStripMenuItem";
+            this.connectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.connectToolStripMenuItem.Text = "Connect";
+            this.connectToolStripMenuItem.Click += new System.EventHandler(this.ConnectButton_Click);
             // 
             // MainForm
             // 
@@ -286,6 +295,7 @@
         private System.Windows.Forms.ContextMenuStrip trayContextMenu;
         private System.Windows.Forms.ToolStripMenuItem trayExitMenuItem;
         private System.Windows.Forms.CheckBox checkTray;
+        private System.Windows.Forms.ToolStripMenuItem connectToolStripMenuItem;
     }
 }
 
