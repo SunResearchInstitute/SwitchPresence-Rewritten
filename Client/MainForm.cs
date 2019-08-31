@@ -21,6 +21,7 @@ namespace SwitchPresence_Rewritten
         Thread listenThread;
         static Socket client;
         static DiscordRpcClient rpc;
+        IPAddress ipAddress;
         bool ManualUpdate = false;
         public MainForm()
         {
@@ -43,7 +44,7 @@ namespace SwitchPresence_Rewritten
         {
             if (connectButton.Text == "Connect")
             {
-                if (!IPAddress.TryParse(ipBox.Text, out IPAddress ip))
+                if (!IPAddress.TryParse(ipBox.Text, out ipAddress))
                 {
                     Show();
                     Activate();
@@ -85,8 +86,7 @@ namespace SwitchPresence_Rewritten
 
         private void TryConnect()
         {
-            IPAddress.TryParse(ipBox.Text, out IPAddress ip);
-            IPEndPoint localEndPoint = new IPEndPoint(ip, 0xCAFE);
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 0xCAFE);
 
             if (rpc != null && !rpc.IsDisposed) rpc.Dispose();
             rpc = new DiscordRpcClient(clientBox.Text);
@@ -272,7 +272,7 @@ namespace SwitchPresence_Rewritten
                     AllowTray = checkTray.Checked
                 };
                 File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
-                this.trayIcon.Dispose();
+                trayIcon.Dispose();
             }
         }
 
