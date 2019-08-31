@@ -99,6 +99,9 @@ extern "C"
 
 int main(int argc, char **argv)
 {
+	// Band-aid solution to prevent unnecessary connections during sleep mode
+	svcSleepThread(5e+9);
+
     int sock = setupSocketServer();
     struct sockaddr_in client_addr;
     socklen_t client_len = sizeof(client_addr);
@@ -108,8 +111,6 @@ int main(int argc, char **argv)
     int src;
     while (true)
     {
-        svcSleepThread(5e+9);
-
         Result rc;
         u64 pid;
         u64 tid;
@@ -131,5 +132,7 @@ int main(int argc, char **argv)
             sock = setupSocketServer();
             connection = accept(sock, (struct sockaddr *)&client_addr, &client_len);
         }
+		
+		svcSleepThread(5e+9);
     }
 }

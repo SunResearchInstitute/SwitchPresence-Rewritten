@@ -102,7 +102,6 @@ namespace SwitchPresence_Rewritten
                 else
                 {
                     client.EndConnect(result);
-                    UpdateStatus("Connected to the server!", Color.Green);
                     try
                     {
                         StartListening();
@@ -157,6 +156,7 @@ namespace SwitchPresence_Rewritten
                 {
                     byte[] bytes = new byte[800];
                     int cnt = client.Receive(bytes);
+                    UpdateStatus("Connected to the server!", Color.Green);
                     TitlePacket title = Utils.ByteArrayToStructure<TitlePacket>(bytes);
                     if (title.magic == 0xffaadd23)
                     {
