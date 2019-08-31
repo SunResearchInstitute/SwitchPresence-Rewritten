@@ -21,6 +21,7 @@ namespace SwitchPresence_Rewritten
         Thread listenThread;
         static Socket client;
         static DiscordRpcClient rpc;
+        IPAddress ipAddress;
         bool ManualUpdate = false;
         public MainForm()
         {
@@ -43,7 +44,7 @@ namespace SwitchPresence_Rewritten
         {
             if (connectButton.Text == "Connect")
             {
-                if (!IPAddress.TryParse(ipBox.Text, out IPAddress ip))
+                if (!IPAddress.TryParse(ipBox.Text, out ipAddress))
                 {
                     Show();
                     Activate();
@@ -69,12 +70,7 @@ namespace SwitchPresence_Rewritten
             }
             else
             {
-                if (rpc != null && !rpc.IsDisposed)
-                {
-                    rpc.SetPresence(null);
-                    rpc.Dispose();
-                }
-
+                if (rpc != null && !rpc.IsDisposed) rpc.Dispose();
                 if (client != null) client.Close();
                 listenThread.Abort();
                 listenThread = new Thread(TryConnect);
@@ -90,8 +86,25 @@ namespace SwitchPresence_Rewritten
 
         private void TryConnect()
         {
-            IPAddress.TryParse(ipBox.Text, out IPAddress ip);
-            IPEndPoint localEndPoint = new IPEndPoint(ip, 0xCAFE);
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 0xCAFE);
+
+            if (rpc != null && !rpc.IsDisposed) rpc.Dispose();
+            rpc = new DiscordRpcClient(clientBox.Text);
+            rpc.Initialize();
+#if DEBUG
+            rpc.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
+            //Subscribe to events
+            rpc.OnReady += (s, obj) =>
+            {
+                Console.WriteLine("Received Ready from user {0}", obj.User.Username);
+            };
+
+            rpc.OnPresenceUpdate += (s, obj) =>
+            {
+                Console.WriteLine("Received Update! {0}", obj.Presence);
+            };
+#endif
+
             while (true)
             {
                 client = new Socket(SocketType.Stream, ProtocolType.Tcp)
@@ -114,36 +127,17 @@ namespace SwitchPresence_Rewritten
                     client.EndConnect(result);
                     try
                     {
-                        StartListening();
+                        DataListen();
                     }
                     catch (SocketException)
                     {
                         client.Close();
-                        if (rpc != null && !rpc.IsDisposed) rpc.Dispose();
+                        if (rpc != null && !rpc.IsDisposed) rpc.SetPresence(null);
                     }
                 }
             }
         }
 
-        private void StartListening()
-        {
-            rpc = new DiscordRpcClient(clientBox.Text);
-#if DEBUG
-            rpc.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
-            //Subscribe to events
-            rpc.OnReady += (s, obj) =>
-            {
-                Console.WriteLine("Received Ready from user {0}", obj.User.Username);
-            };
-
-            rpc.OnPresenceUpdate += (s, obj) =>
-            {
-                Console.WriteLine("Received Update! {0}", obj.Presence);
-            };
-#endif
-            rpc.Initialize();
-            DataListen();
-        }
 
         private void UpdateStatus(string text, Color color)
         {
@@ -210,7 +204,7 @@ namespace SwitchPresence_Rewritten
                 }
                 catch (SocketException)
                 {
-                    rpc.Dispose();
+                    if (rpc != null && !rpc.IsDisposed) rpc.SetPresence(null);
                     client.Close();
                     return;
                 }
@@ -278,6 +272,7 @@ namespace SwitchPresence_Rewritten
                     AllowTray = checkTray.Checked
                 };
                 File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
+                trayIcon.Dispose();
             }
         }
 
