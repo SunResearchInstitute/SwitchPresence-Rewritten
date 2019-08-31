@@ -38,7 +38,7 @@ namespace SwitchPresence_Rewritten
             public string name;
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void ConnectButton_Click(object sender, EventArgs e)
         {
             if (connectButton.Text == "Connect")
             {
@@ -54,7 +54,6 @@ namespace SwitchPresence_Rewritten
                     System.Media.SystemSounds.Exclamation.Play();
                     return;
                 }
-
 
                 listenThread.Start();
 
@@ -87,7 +86,6 @@ namespace SwitchPresence_Rewritten
             IPEndPoint localEndPoint = new IPEndPoint(ip, 0xCAFE);
             while (true)
             {
-
                 client = new Socket(SocketType.Stream, ProtocolType.Tcp)
                 {
                     ReceiveTimeout = 5500
@@ -145,7 +143,6 @@ namespace SwitchPresence_Rewritten
                 statusLabel.ForeColor = color;
             };
             Invoke(inv);
-
         }
 
         private void DataListen()
@@ -250,13 +247,10 @@ namespace SwitchPresence_Rewritten
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing)
+            if (e.CloseReason == CloseReason.UserClosing && checkTray.Checked)
             {
-                if (checkTray.Checked)
-                {
-                    e.Cancel = true;
-                    Hide();
-                }
+                e.Cancel = true;
+                Hide();
             }
             else
             {
