@@ -272,7 +272,7 @@ namespace SwitchPresence_Rewritten
                     AllowTray = checkTray.Checked
                 };
                 File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
-                this.trayIcon.Visible = false;
+                this.trayIcon.Dispose();
             }
         }
 
