@@ -3,16 +3,17 @@
 using DiscordRPC.Logging;
 #endif
 using Newtonsoft.Json;
+using SwitchPresence_Rewritten.Properties;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
+using System.Media;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using System.Drawing;
-using SwitchPresence_Rewritten.Properties;
 
 namespace SwitchPresence_Rewritten
 {
@@ -48,7 +49,7 @@ namespace SwitchPresence_Rewritten
                     Show();
                     Activate();
                     UpdateStatus("Invalid IP", Color.DarkRed);
-                    System.Media.SystemSounds.Exclamation.Play();
+                    SystemSounds.Exclamation.Play();
                     return;
                 }
                 if (string.IsNullOrWhiteSpace(clientBox.Text))
@@ -56,7 +57,7 @@ namespace SwitchPresence_Rewritten
                     Show();
                     Activate();
                     UpdateStatus("Client ID cannot be empty", Color.DarkRed);
-                    System.Media.SystemSounds.Exclamation.Play();
+                    SystemSounds.Exclamation.Play();
                     return;
                 }
 
