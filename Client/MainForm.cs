@@ -160,6 +160,10 @@ namespace SwitchPresence_Rewritten
                 {
                     byte[] bytes = new byte[800];
                     int cnt = client.Receive(bytes);
+                    if (cnt == 0)
+                    {
+                        throw new SocketException();
+                    }
                     UpdateStatus("Connected to the server!", Color.Green);
                     trayIcon.Icon = Resources.Connected;
                     trayIcon.Text = "SwitchPresence (Connected)";
