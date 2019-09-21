@@ -10,6 +10,7 @@ using System.Drawing;
 using System.IO;
 using System.Media;
 using System.Net;
+using System.Timers;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -17,6 +18,7 @@ using System.Windows.Forms;
 using System.Net.NetworkInformation;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Timer = System.Timers.Timer;
 
 namespace SwitchPresence_Rewritten
 {
@@ -112,7 +114,7 @@ namespace SwitchPresence_Rewritten
             }
         }
 
-        private void OnConnectTimeout(object source, System.Timers.ElapsedEventArgs e)
+        private void OnConnectTimeout(object source, ElapsedEventArgs e)
         {
             LastGame = "";
             time = null;
@@ -126,13 +128,13 @@ namespace SwitchPresence_Rewritten
             rpc = new DiscordRpcClient(clientBox.Text);
             rpc.Initialize();
 
-            System.Timers.Timer timer = new System.Timers.Timer()
+            Timer timer = new Timer()
             {
                 Interval = 15000,
                 SynchronizingObject = this,
                 Enabled = false,
             };
-            timer.Elapsed += new System.Timers.ElapsedEventHandler(OnConnectTimeout);
+            timer.Elapsed += new ElapsedEventHandler(OnConnectTimeout);
 
 #if DEBUG
             rpc.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
