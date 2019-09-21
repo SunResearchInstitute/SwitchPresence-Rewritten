@@ -32,6 +32,7 @@ namespace SwitchPresence_Rewritten
         bool ManualUpdate = false;
         string LastGame = "";
         Timestamps time = null;
+        Timer timer;
         public MainForm()
         {
             InitializeComponent();
@@ -96,6 +97,7 @@ namespace SwitchPresence_Rewritten
                 listenThread.Abort();
                 if (rpc != null && !rpc.IsDisposed) rpc.Dispose();
                 if (client != null) client.Close();
+                if (timer != null) timer.Dispose();
                 listenThread = new Thread(TryConnect);
                 UpdateStatus("", Color.Gray);
                 connectButton.Text = "Connect";
@@ -128,7 +130,7 @@ namespace SwitchPresence_Rewritten
             rpc = new DiscordRpcClient(clientBox.Text);
             rpc.Initialize();
 
-            Timer timer = new Timer()
+            timer = new Timer()
             {
                 Interval = 15000,
                 SynchronizingObject = this,
