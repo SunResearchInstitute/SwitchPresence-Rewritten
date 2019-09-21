@@ -24,15 +24,15 @@ namespace SwitchPresence_Rewritten
 {
     public partial class MainForm : Form
     {
-        Thread listenThread;
+        private Thread listenThread;
         static Socket client;
         static DiscordRpcClient rpc;
-        IPAddress ipAddress;
-        PhysicalAddress macAddress;
+        private IPAddress ipAddress;
+        private PhysicalAddress macAddress;
         bool ManualUpdate = false;
         string LastGame = "";
-        Timestamps time = null;
-        Timer timer;
+        private Timestamps time = null;
+        private Timer timer;
         public MainForm()
         {
             InitializeComponent();

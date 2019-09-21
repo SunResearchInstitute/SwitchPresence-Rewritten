@@ -18,7 +18,5 @@ namespace SwitchPresence_Rewritten
             }
             return stuff;
         }
-
-        //public static void WriteAllBytes(this FileInfo f, byte[] data) => File.WriteAllBytes(f.FullName, data);
     }
 }
