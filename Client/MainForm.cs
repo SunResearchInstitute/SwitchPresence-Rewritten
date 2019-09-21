@@ -3,16 +3,17 @@
 using DiscordRPC.Logging;
 #endif
 using Newtonsoft.Json;
+using SwitchPresence_Rewritten.Properties;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
+using System.Media;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using System.Drawing;
-using SwitchPresence_Rewritten.Properties;
 using System.Net.NetworkInformation;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -50,12 +51,13 @@ namespace SwitchPresence_Rewritten
         {
             if (connectButton.Text == "Connect")
             {
+
                 if (string.IsNullOrWhiteSpace(clientBox.Text))
                 {
                     Show();
                     Activate();
                     UpdateStatus("Client ID cannot be empty", Color.DarkRed);
-                    System.Media.SystemSounds.Exclamation.Play();
+                    SystemSounds.Exclamation.Play();
                     return;
                 }
 
@@ -72,7 +74,7 @@ namespace SwitchPresence_Rewritten
                         Show();
                         Activate();
                         UpdateStatus("Invalid IP or MAC Address", Color.DarkRed);
-                        System.Media.SystemSounds.Exclamation.Play();
+                        SystemSounds.Exclamation.Play();
                         return;
                     }
                 }
@@ -90,11 +92,7 @@ namespace SwitchPresence_Rewritten
             else
             {
                 listenThread.Abort();
-                if (rpc != null && !rpc.IsDisposed)
-                {
-                    rpc.SetPresence(null);
-                    rpc.Dispose();
-                }
+                if (rpc != null && !rpc.IsDisposed) rpc.Dispose();
                 if (client != null) client.Close();
                 listenThread = new Thread(TryConnect);
                 UpdateStatus("", Color.Gray);
@@ -181,7 +179,7 @@ namespace SwitchPresence_Rewritten
                         DataListen();
                     }
                 }
-                catch (SocketException e)
+                catch (SocketException)
                 {
                     client.Close();
                     if (rpc != null && !rpc.IsDisposed) rpc.SetPresence(null);
