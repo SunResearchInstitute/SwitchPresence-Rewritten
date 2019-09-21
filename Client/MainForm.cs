@@ -310,7 +310,7 @@ namespace SwitchPresence_Rewritten
         public List<MacIpPair> GetAllMacAddressesAndIppairs()
         {
             List<MacIpPair> mip = new List<MacIpPair>();
-            System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
+            Process pProcess = new Process();
             pProcess.StartInfo.FileName = "arp";
             pProcess.StartInfo.Arguments = "-a ";
             pProcess.StartInfo.UseShellExecute = false;
@@ -328,7 +328,7 @@ namespace SwitchPresence_Rewritten
                     IpAddress = m.Groups["ip"].Value
                 });
             }
-
+            pProcess.Dispose();
             return mip;
         }
         public struct MacIpPair
