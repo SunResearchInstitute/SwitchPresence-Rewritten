@@ -19,6 +19,7 @@ using System.Net.NetworkInformation;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Timer = System.Timers.Timer;
+using System.Linq;
 
 namespace SwitchPresence_Rewritten
 {
@@ -284,55 +285,49 @@ namespace SwitchPresence_Rewritten
 
         public string GetMacByIp(string ip)
         {
-            var macIpPairs = GetAllMacAddressesAndIppairs();
-            int index = macIpPairs.FindIndex(x => x.IpAddress == ip);
-            if (index >= 0)
-            {
-                return macIpPairs[index].MacAddress.ToUpper();
-            }
-            else
-            {
-                return null;
-            }
+            List<MacIpPair> macIpPairs = GetAllMacAddressesAndIPPairs();
+            MacIpPair pair = macIpPairs.FirstOrDefault(x => x.IpAddress == ip);
+
+            if (pair.MacAddress != null) return pair.MacAddress;
+            else return "";
         }
 
         public string GetIpByMac(string mac)
         {
             mac = mac.ToLower();
-            var macIpPairs = GetAllMacAddressesAndIppairs();
-            int index = macIpPairs.FindIndex(x => x.MacAddress == mac);
-            if (index >= 0)
+            List<MacIpPair> macIpPairs = GetAllMacAddressesAndIPPairs();
+            MacIpPair pair = macIpPairs.FirstOrDefault(x => x.MacAddress == mac);
+
+            if (pair.IpAddress != null)
             {
-                return macIpPairs[index].IpAddress;
+                return pair.MacAddress;
             }
-            else
-            {
-                return "";
-            }
+            else return "";
         }
 
-        public List<MacIpPair> GetAllMacAddressesAndIppairs()
+        public List<MacIpPair> GetAllMacAddressesAndIPPairs()
         {
             List<MacIpPair> mip = new List<MacIpPair>();
-            Process pProcess = new Process();
-            pProcess.StartInfo.FileName = "arp";
-            pProcess.StartInfo.Arguments = "-a ";
-            pProcess.StartInfo.UseShellExecute = false;
-            pProcess.StartInfo.RedirectStandardOutput = true;
-            pProcess.StartInfo.CreateNoWindow = true;
-            pProcess.Start();
-            string cmdOutput = pProcess.StandardOutput.ReadToEnd();
-            string pattern = @"(?<ip>([0-9]{1,3}\.?){4})\s*(?<mac>([a-f0-9]{2}-?){6})";
-
-            foreach (Match m in Regex.Matches(cmdOutput, pattern, RegexOptions.IgnoreCase))
+            using (Process pProcess = new Process())
             {
-                mip.Add(new MacIpPair()
+                pProcess.StartInfo.FileName = "arp";
+                pProcess.StartInfo.Arguments = "-a ";
+                pProcess.StartInfo.UseShellExecute = false;
+                pProcess.StartInfo.RedirectStandardOutput = true;
+                pProcess.StartInfo.CreateNoWindow = true;
+                pProcess.Start();
+                string cmdOutput = pProcess.StandardOutput.ReadToEnd();
+                string pattern = @"(?<ip>([0-9]{1,3}\.?){4})\s*(?<mac>([a-f0-9]{2}-?){6})";
+
+                foreach (Match m in Regex.Matches(cmdOutput, pattern, RegexOptions.IgnoreCase))
                 {
-                    MacAddress = m.Groups["mac"].Value,
-                    IpAddress = m.Groups["ip"].Value
-                });
+                    mip.Add(new MacIpPair()
+                    {
+                        MacAddress = m.Groups["mac"].Value,
+                        IpAddress = m.Groups["ip"].Value
+                    });
+                }
             }
-            pProcess.Dispose();
             return mip;
         }
         public struct MacIpPair
@@ -340,19 +335,6 @@ namespace SwitchPresence_Rewritten
             public string MacAddress;
             public string IpAddress;
         }
-
-
-        private void CheckTime_CheckedChanged(object sender, EventArgs e) => ManualUpdate = true;
-
-        private void LinkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start($"https://discordapp.com/developers/applications/{clientBox.Text}");
-
-        private void BigKeyBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
-
-        private void SKeyBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
-
-        private void StateBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
-
-        private void BigTextBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
 
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -407,8 +389,6 @@ namespace SwitchPresence_Rewritten
             Activate();
         }
 
-        private void TrayExitMenuItem_Click(object sender, EventArgs e) => Application.Exit();
-
         private void MacButton_Click(object sender, EventArgs e)
         {
             string macAddress = GetMacByIp(ipAddress.ToString());
@@ -422,6 +402,20 @@ namespace SwitchPresence_Rewritten
                 MessageBox.Show("Can't convert to MAC Address! Sorry!");
             }
         }
+
+        private void CheckTime_CheckedChanged(object sender, EventArgs e) => ManualUpdate = true;
+
+        private void LinkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start($"https://discordapp.com/developers/applications/{clientBox.Text}");
+
+        private void BigKeyBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
+
+        private void SKeyBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
+
+        private void StateBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
+
+        private void BigTextBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
+
+        private void TrayExitMenuItem_Click(object sender, EventArgs e) => Application.Exit();
     }
 
     public class Config
