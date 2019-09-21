@@ -16,10 +16,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using System.Net.NetworkInformation;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using Timer = System.Timers.Timer;
-using System.Linq;
 
 namespace SwitchPresence_Rewritten
 {
@@ -34,11 +31,6 @@ namespace SwitchPresence_Rewritten
         string LastGame = "";
         private Timestamps time = null;
         private Timer timer;
-        public MainForm()
-        {
-            InitializeComponent();
-            listenThread = new Thread(TryConnect);
-        }
 
         [StructLayout(LayoutKind.Sequential)]
         public struct TitlePacket
@@ -49,6 +41,18 @@ namespace SwitchPresence_Rewritten
             public ulong tid;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 512)]
             public string name;
+        }
+
+        public struct MacIpPair
+        {
+            public string MacAddress;
+            public string IpAddress;
+        }
+
+        public MainForm()
+        {
+            InitializeComponent();
+            listenThread = new Thread(TryConnect);
         }
 
         private void ConnectButton_Click(object sender, EventArgs e)
@@ -71,7 +75,7 @@ namespace SwitchPresence_Rewritten
                     try
                     {
                         macAddress = PhysicalAddress.Parse(addressBox.Text.ToUpper());
-                        ipAddress = IPAddress.Parse(GetIpByMac(addressBox.Text));
+                        ipAddress = IPAddress.Parse(Utils.GetIpByMac(addressBox.Text));
                     }
                     catch (FormatException)
                     {
@@ -192,25 +196,6 @@ namespace SwitchPresence_Rewritten
             }
         }
 
-        private void UpdateStatus(string text, Color color)
-        {
-            MethodInvoker inv = () =>
-            {
-                statusLabel.Text = text;
-                statusLabel.ForeColor = color;
-            };
-            Invoke(inv);
-        }
-
-        private void EnableMacButton(bool enable)
-        {
-            MethodInvoker inv = () =>
-            {
-                macButton.Enabled = enable;
-            };
-            Invoke(inv);
-        }
-
         private void DataListen()
         {
             while (true)
@@ -283,59 +268,6 @@ namespace SwitchPresence_Rewritten
             }
         }
 
-        public string GetMacByIp(string ip)
-        {
-            List<MacIpPair> macIpPairs = GetAllMacAddressesAndIPPairs();
-            MacIpPair pair = macIpPairs.FirstOrDefault(x => x.IpAddress == ip);
-
-            if (pair.MacAddress != null) return pair.MacAddress;
-            else return "";
-        }
-
-        public string GetIpByMac(string mac)
-        {
-            mac = mac.ToLower();
-            List<MacIpPair> macIpPairs = GetAllMacAddressesAndIPPairs();
-            MacIpPair pair = macIpPairs.FirstOrDefault(x => x.MacAddress == mac);
-
-            if (pair.IpAddress != null)
-            {
-                return pair.MacAddress;
-            }
-            else return "";
-        }
-
-        public List<MacIpPair> GetAllMacAddressesAndIPPairs()
-        {
-            List<MacIpPair> mip = new List<MacIpPair>();
-            using (Process pProcess = new Process())
-            {
-                pProcess.StartInfo.FileName = "arp";
-                pProcess.StartInfo.Arguments = "-a ";
-                pProcess.StartInfo.UseShellExecute = false;
-                pProcess.StartInfo.RedirectStandardOutput = true;
-                pProcess.StartInfo.CreateNoWindow = true;
-                pProcess.Start();
-                string cmdOutput = pProcess.StandardOutput.ReadToEnd();
-                string pattern = @"(?<ip>([0-9]{1,3}\.?){4})\s*(?<mac>([a-f0-9]{2}-?){6})";
-
-                foreach (Match m in Regex.Matches(cmdOutput, pattern, RegexOptions.IgnoreCase))
-                {
-                    mip.Add(new MacIpPair()
-                    {
-                        MacAddress = m.Groups["mac"].Value,
-                        IpAddress = m.Groups["ip"].Value
-                    });
-                }
-            }
-            return mip;
-        }
-        public struct MacIpPair
-        {
-            public string MacAddress;
-            public string IpAddress;
-        }
-
         private void MainForm_Load(object sender, EventArgs e)
         {
             if (File.Exists("Config.json"))
@@ -391,7 +323,7 @@ namespace SwitchPresence_Rewritten
 
         private void MacButton_Click(object sender, EventArgs e)
         {
-            string macAddress = GetMacByIp(ipAddress.ToString());
+            string macAddress = Utils.GetMacByIp(ipAddress.ToString());
             if (macAddress != null)
             {
                 addressBox.Text = macAddress;
@@ -401,6 +333,25 @@ namespace SwitchPresence_Rewritten
             {
                 MessageBox.Show("Can't convert to MAC Address! Sorry!");
             }
+        }
+
+        private void UpdateStatus(string text, Color color)
+        {
+            MethodInvoker inv = () =>
+            {
+                statusLabel.Text = text;
+                statusLabel.ForeColor = color;
+            };
+            Invoke(inv);
+        }
+
+        private void EnableMacButton(bool enable)
+        {
+            MethodInvoker inv = () =>
+            {
+                macButton.Enabled = enable;
+            };
+            Invoke(inv);
         }
 
         private void CheckTime_CheckedChanged(object sender, EventArgs e) => ManualUpdate = true;
@@ -416,13 +367,5 @@ namespace SwitchPresence_Rewritten
         private void BigTextBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
 
         private void TrayExitMenuItem_Click(object sender, EventArgs e) => Application.Exit();
-    }
-
-    public class Config
-    {
-        public string IP, Client, BigKey, BigText, SmallKey, State;
-        public bool DisplayTimer, AllowTray;
-
-        public Config() { }
     }
 }
