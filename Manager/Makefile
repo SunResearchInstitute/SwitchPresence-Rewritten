@@ -39,13 +39,13 @@ include $(DEVKITPRO)/libnx/switch_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	SwitchPresence-Rewritten-Manager
 BUILD		:=	build
-SOURCES		:=	source source/Scenes libs/LibGD
+SOURCES		:=	source source/Scenes
 DATA		:=	data
 INCLUDES	:=	include
 
 APP_TITLE   := SwitchPresence-Rewritten Manager
 APP_AUTHOR  := Sun
-APP_VERSION := 1.2.1
+APP_VERSION := 1.3.0
 #ROMFS	:=	romfs
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -62,13 +62,13 @@ CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=c++17
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lnx -lstdc++fs -lgd -lfreetype -lbz2 -lpng -lz -ljpeg -lwebp -lm
+LIBS	:= -lnx -lstdc++fs -lgd -ljpeg 
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:= $(PORTLIBS) $(LIBNX) $(CURDIR)/LibGD
+LIBDIRS	:= $(PORTLIBS) $(LIBNX)
 
 
 #---------------------------------------------------------------------------------

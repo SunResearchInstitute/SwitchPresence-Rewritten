@@ -4,7 +4,7 @@
 #include <sstream>
 #include <filesystem>
 #include <sys/stat.h>
-#include "../LibGD/include/gd.h"
+#include <gd.h>
 
 using namespace std;
 
