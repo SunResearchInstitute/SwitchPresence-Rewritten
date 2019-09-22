@@ -100,7 +100,12 @@ namespace SwitchPresence_Rewritten
             else
             {
                 listenThread.Abort();
-                if (rpc != null && !rpc.IsDisposed) rpc.Dispose();
+                if (rpc != null && !rpc.IsDisposed)
+                {
+                    rpc.ClearPresence();
+                    rpc.Dispose();
+                }
+
                 if (client != null) client.Close();
                 if (timer != null) timer.Dispose();
                 listenThread = new Thread(TryConnect);
@@ -131,7 +136,12 @@ namespace SwitchPresence_Rewritten
         {
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 0xCAFE);
 
-            if (rpc != null && !rpc.IsDisposed) rpc.Dispose();
+            if (rpc != null && !rpc.IsDisposed)
+            {
+                rpc.ClearPresence();
+                rpc.Dispose();
+            }
+
             rpc = new DiscordRpcClient(clientBox.Text);
             rpc.Initialize();
 
@@ -191,7 +201,7 @@ namespace SwitchPresence_Rewritten
                 catch (SocketException)
                 {
                     client.Close();
-                    if (rpc != null && !rpc.IsDisposed) rpc.SetPresence(null);
+                    if (rpc != null && !rpc.IsDisposed) rpc.ClearPresence();
                 }
             }
         }
@@ -254,14 +264,14 @@ namespace SwitchPresence_Rewritten
                     }
                     else
                     {
-                        if (rpc != null && !rpc.IsDisposed) rpc.SetPresence(null);
+                        if (rpc != null && !rpc.IsDisposed) rpc.ClearPresence();
                         client.Close();
                         return;
                     }
                 }
                 catch (SocketException)
                 {
-                    if (rpc != null && !rpc.IsDisposed) rpc.SetPresence(null);
+                    if (rpc != null && !rpc.IsDisposed) rpc.ClearPresence();
                     client.Close();
                     return;
                 }
@@ -287,7 +297,12 @@ namespace SwitchPresence_Rewritten
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             listenThread.Abort();
-            if (rpc != null && !rpc.IsDisposed) rpc.Dispose();
+            if (rpc != null && !rpc.IsDisposed)
+            {
+                rpc.ClearPresence();
+                rpc.Dispose();
+            }
+
             if (client != null) client.Close();
         }
 
