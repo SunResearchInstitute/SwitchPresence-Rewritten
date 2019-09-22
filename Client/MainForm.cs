@@ -10,25 +10,27 @@ using System.Drawing;
 using System.IO;
 using System.Media;
 using System.Net;
+using System.Timers;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using System.Net.NetworkInformation;
+using Timer = System.Timers.Timer;
 
 namespace SwitchPresence_Rewritten
 {
     public partial class MainForm : Form
     {
-        Thread listenThread;
+        private Thread listenThread;
         static Socket client;
         static DiscordRpcClient rpc;
-        IPAddress ipAddress;
+        private IPAddress ipAddress;
+        private PhysicalAddress macAddress;
         bool ManualUpdate = false;
-        public MainForm()
-        {
-            InitializeComponent();
-            listenThread = new Thread(TryConnect);
-        }
+        string LastGame = "";
+        private Timestamps time = null;
+        private Timer timer;
 
         [StructLayout(LayoutKind.Sequential)]
         public struct TitlePacket
@@ -41,18 +43,23 @@ namespace SwitchPresence_Rewritten
             public string name;
         }
 
+        public struct MacIpPair
+        {
+            public string MacAddress;
+            public string IpAddress;
+        }
+
+        public MainForm()
+        {
+            InitializeComponent();
+            listenThread = new Thread(TryConnect);
+        }
+
         private void ConnectButton_Click(object sender, EventArgs e)
         {
             if (connectButton.Text == "Connect")
             {
-                if (!IPAddress.TryParse(ipBox.Text, out ipAddress))
-                {
-                    Show();
-                    Activate();
-                    UpdateStatus("Invalid IP", Color.DarkRed);
-                    SystemSounds.Exclamation.Play();
-                    return;
-                }
+
                 if (string.IsNullOrWhiteSpace(clientBox.Text))
                 {
                     Show();
@@ -62,27 +69,62 @@ namespace SwitchPresence_Rewritten
                     return;
                 }
 
+
+                if (!IPAddress.TryParse(addressBox.Text, out ipAddress))
+                {
+                    try
+                    {
+                        macAddress = PhysicalAddress.Parse(addressBox.Text.ToUpper());
+                        ipAddress = IPAddress.Parse(Utils.GetIpByMac(addressBox.Text));
+                    }
+                    catch (FormatException)
+                    {
+                        Show();
+                        Activate();
+                        UpdateStatus("Invalid IP or MAC Address", Color.DarkRed);
+                        SystemSounds.Exclamation.Play();
+                        return;
+                    }
+                }
+
                 listenThread.Start();
 
                 connectButton.Text = "Disconnect";
                 connectToolStripMenuItem.Text = "Disconnect";
-                ipBox.Enabled = false;
+
+                macButton.Visible = (macAddress == null);
+                macButton.Enabled = false;
+                addressBox.Enabled = false;
                 clientBox.Enabled = false;
             }
             else
             {
+                listenThread.Abort();
                 if (rpc != null && !rpc.IsDisposed) rpc.Dispose();
                 if (client != null) client.Close();
-                listenThread.Abort();
+                if (timer != null) timer.Dispose();
                 listenThread = new Thread(TryConnect);
                 UpdateStatus("", Color.Gray);
                 connectButton.Text = "Connect";
                 connectToolStripMenuItem.Text = "Connect";
                 trayIcon.Icon = Resources.Disconnected;
                 trayIcon.Text = "SwitchPresence (Disconnected)";
-                ipBox.Enabled = true;
+
+                macAddress = null;
+                ipAddress = null;
+                macButton.Visible = false;
+                macButton.Enabled = false;
+                addressBox.Enabled = true;
                 clientBox.Enabled = true;
+                LastGame = "";
+                time = null;
             }
+        }
+
+        private void OnConnectTimeout(object source, ElapsedEventArgs e)
+        {
+            LastGame = "";
+            time = null;
         }
 
         private void TryConnect()
@@ -92,6 +134,15 @@ namespace SwitchPresence_Rewritten
             if (rpc != null && !rpc.IsDisposed) rpc.Dispose();
             rpc = new DiscordRpcClient(clientBox.Text);
             rpc.Initialize();
+
+            timer = new Timer()
+            {
+                Interval = 15000,
+                SynchronizingObject = this,
+                Enabled = false,
+            };
+            timer.Elapsed += new ElapsedEventHandler(OnConnectTimeout);
+
 #if DEBUG
             rpc.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
             //Subscribe to events
@@ -110,67 +161,57 @@ namespace SwitchPresence_Rewritten
             {
                 client = new Socket(SocketType.Stream, ProtocolType.Tcp)
                 {
-                    ReceiveTimeout = 5500
+                    ReceiveTimeout = 5500,
+                    SendTimeout = 5500,
                 };
-                IAsyncResult result = client.BeginConnect(localEndPoint, null, null);
 
                 UpdateStatus("Attemping to connect to server...", Color.Gray);
+                trayIcon.Icon = Resources.Disconnected;
                 trayIcon.Text = "SwitchPresence (Connecting...)";
+                timer.Enabled = true;
+                EnableMacButton(false);
 
-                bool success = result.AsyncWaitHandle.WaitOne(2000, true);
-                if (!success)
+                try
                 {
-                    //UpdateStatus("Could not connect to Server! Retrying...", Color.DarkRed);
-                    client.Close();
-                }
-                else
-                {
-                    client.EndConnect(result);
-                    try
+                    IAsyncResult result = client.BeginConnect(localEndPoint, null, null);
+                    bool success = result.AsyncWaitHandle.WaitOne(2000, true);
+                    if (!success)
                     {
+                        //UpdateStatus("Could not connect to Server! Retrying...", Color.DarkRed);
+                        client.Close();
+                    }
+                    else
+                    {
+                        client.EndConnect(result);
+                        timer.Enabled = false;
+
                         DataListen();
                     }
-                    catch (SocketException)
-                    {
-                        client.Close();
-                        if (rpc != null && !rpc.IsDisposed) rpc.SetPresence(null);
-                    }
+                }
+                catch (SocketException)
+                {
+                    client.Close();
+                    if (rpc != null && !rpc.IsDisposed) rpc.SetPresence(null);
                 }
             }
         }
 
-
-        private void UpdateStatus(string text, Color color)
-        {
-            MethodInvoker inv = () =>
-            {
-                statusLabel.Text = text;
-                statusLabel.ForeColor = color;
-            };
-            Invoke(inv);
-        }
-
         private void DataListen()
         {
-            string LastGame = "";
-            Timestamps time = null;
             while (true)
             {
                 try
                 {
                     byte[] bytes = new byte[800];
                     int cnt = client.Receive(bytes);
-                    if (cnt == 0)
-                    {
-                        throw new SocketException();
-                    }
                     UpdateStatus("Connected to the server!", Color.Green);
                     trayIcon.Icon = Resources.Connected;
                     trayIcon.Text = "SwitchPresence (Connected)";
+                    EnableMacButton(true);
                     TitlePacket title = Utils.ByteArrayToStructure<TitlePacket>(bytes);
                     if (title.magic == 0xffaadd23)
                     {
-                        if ((rpc != null && rpc.CurrentPresence == null) || LastGame != title.name)
+                        if (LastGame != title.name)
                         {
                             time = Timestamps.Now;
                         }
@@ -186,6 +227,7 @@ namespace SwitchPresence_Rewritten
                                 State = stateBox.Text
                             };
 
+
                             if (title.name == "NULL")
                             {
                                 ass.LargeImageText = "Home Menu";
@@ -195,16 +237,26 @@ namespace SwitchPresence_Rewritten
                             }
                             else
                             {
+
                                 ass.LargeImageText = !string.IsNullOrWhiteSpace(bigTextBox.Text) ? bigTextBox.Text : title.name;
                                 ass.LargeImageKey = !string.IsNullOrWhiteSpace(bigKeyBox.Text) ? bigKeyBox.Text : string.Format("0{0:x}", title.tid);
                                 presence.Details = $"Playing {title.name}";
+
                             }
+
                             presence.Assets = ass;
                             if (checkTime.Checked) presence.Timestamps = time;
                             rpc.SetPresence(presence);
+
                             ManualUpdate = false;
                             LastGame = title.name;
                         }
+                    }
+                    else
+                    {
+                        if (rpc != null && !rpc.IsDisposed) rpc.SetPresence(null);
+                        client.Close();
+                        return;
                     }
                 }
                 catch (SocketException)
@@ -214,6 +266,92 @@ namespace SwitchPresence_Rewritten
                     return;
                 }
             }
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            if (File.Exists("Config.json"))
+            {
+                Config cfg = JsonConvert.DeserializeObject<Config>(File.ReadAllText("Config.json"));
+                checkTime.Checked = cfg.DisplayTimer;
+                bigKeyBox.Text = cfg.BigKey;
+                bigTextBox.Text = cfg.BigText;
+                smallKeyBox.Text = cfg.SmallKey;
+                addressBox.Text = cfg.IP;
+                stateBox.Text = cfg.State;
+                clientBox.Text = cfg.Client;
+                checkTray.Checked = cfg.AllowTray;
+            }
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            listenThread.Abort();
+            if (rpc != null && !rpc.IsDisposed) rpc.Dispose();
+            if (client != null) client.Close();
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing && checkTray.Checked)
+            {
+                e.Cancel = true;
+                Hide();
+            }
+            else
+            {
+                Config cfg = new Config()
+                {
+                    IP = addressBox.Text,
+                    Client = clientBox.Text,
+                    BigKey = bigKeyBox.Text,
+                    SmallKey = smallKeyBox.Text,
+                    State = stateBox.Text,
+                    BigText = bigTextBox.Text,
+                    DisplayTimer = checkTime.Checked,
+                    AllowTray = checkTray.Checked
+                };
+                File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
+            }
+        }
+
+        private void TrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Show();
+            Activate();
+        }
+
+        private void MacButton_Click(object sender, EventArgs e)
+        {
+            string macAddress = Utils.GetMacByIp(ipAddress.ToString());
+            if (macAddress != null)
+            {
+                addressBox.Text = macAddress;
+                macButton.Visible = false;
+            }
+            else
+            {
+                MessageBox.Show("Can't convert to MAC Address! Sorry!");
+            }
+        }
+
+        private void UpdateStatus(string text, Color color)
+        {
+            MethodInvoker inv = () =>
+            {
+                statusLabel.Text = text;
+                statusLabel.ForeColor = color;
+            };
+            Invoke(inv);
+        }
+
+        private void EnableMacButton(bool enable)
+        {
+            MethodInvoker inv = () =>
+            {
+                macButton.Enabled = enable;
+            };
+            Invoke(inv);
         }
 
         private void CheckTime_CheckedChanged(object sender, EventArgs e) => ManualUpdate = true;
@@ -228,73 +366,6 @@ namespace SwitchPresence_Rewritten
 
         private void BigTextBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
 
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            if (File.Exists("Config.json"))
-            {
-                Config cfg = JsonConvert.DeserializeObject<Config>(File.ReadAllText("Config.json"));
-                checkTime.Checked = cfg.DisplayTimer;
-                bigKeyBox.Text = cfg.BigKey;
-                bigTextBox.Text = cfg.BigText;
-                smallKeyBox.Text = cfg.SmallKey;
-                ipBox.Text = cfg.IP;
-                stateBox.Text = cfg.State;
-                clientBox.Text = cfg.Client;
-                checkTray.Checked = cfg.AllowTray;
-            }
-        }
-
-        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            listenThread.Abort();
-            try
-            {
-                client.Close();
-            }
-            catch { }
-            if (rpc != null && !rpc.IsDisposed)
-                rpc.Dispose();
-        }
-
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (e.CloseReason == CloseReason.UserClosing && checkTray.Checked)
-            {
-                e.Cancel = true;
-                Hide();
-            }
-            else
-            {
-                Config cfg = new Config()
-                {
-                    IP = ipBox.Text,
-                    Client = clientBox.Text,
-                    BigKey = bigKeyBox.Text,
-                    SmallKey = smallKeyBox.Text,
-                    State = stateBox.Text,
-                    BigText = bigTextBox.Text,
-                    DisplayTimer = checkTime.Checked,
-                    AllowTray = checkTray.Checked
-                };
-                File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
-                trayIcon.Dispose();
-            }
-        }
-
-        private void TrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            Show();
-            Activate();
-        }
-
         private void TrayExitMenuItem_Click(object sender, EventArgs e) => Application.Exit();
-    }
-
-    public class Config
-    {
-        public string IP, Client, BigKey, BigText, SmallKey, State;
-        public bool DisplayTimer, AllowTray;
-
-        public Config() { }
     }
 }

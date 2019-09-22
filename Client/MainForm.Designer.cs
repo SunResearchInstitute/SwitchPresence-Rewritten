@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.ipBox = new System.Windows.Forms.TextBox();
+            this.addressBox = new System.Windows.Forms.TextBox();
             this.connectButton = new System.Windows.Forms.Button();
             this.clientBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -47,18 +47,19 @@
             this.statusLabel = new System.Windows.Forms.Label();
             this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.trayContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkTray = new System.Windows.Forms.CheckBox();
-            this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.macButton = new System.Windows.Forms.Button();
             this.trayContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // ipBox
             // 
-            this.ipBox.Location = new System.Drawing.Point(107, 61);
-            this.ipBox.Name = "ipBox";
-            this.ipBox.Size = new System.Drawing.Size(100, 20);
-            this.ipBox.TabIndex = 1;
+            this.addressBox.Location = new System.Drawing.Point(107, 61);
+            this.addressBox.Name = "ipBox";
+            this.addressBox.Size = new System.Drawing.Size(100, 20);
+            this.addressBox.TabIndex = 1;
             // 
             // connectButton
             // 
@@ -72,7 +73,7 @@
             // 
             // clientBox
             // 
-            this.clientBox.Location = new System.Drawing.Point(107, 114);
+            this.clientBox.Location = new System.Drawing.Point(107, 108);
             this.clientBox.MaxLength = 18;
             this.clientBox.Name = "clientBox";
             this.clientBox.Size = new System.Drawing.Size(100, 20);
@@ -81,19 +82,21 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(149, 45);
+            this.label1.Location = new System.Drawing.Point(107, 45);
+            this.label1.MinimumSize = new System.Drawing.Size(100, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(17, 13);
+            this.label1.Size = new System.Drawing.Size(100, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "IP";
+            this.label1.Text = "IP or MAC Address";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(134, 91);
+            this.linkLabel1.Location = new System.Drawing.Point(107, 92);
+            this.linkLabel1.MinimumSize = new System.Drawing.Size(100, 0);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(47, 13);
+            this.linkLabel1.Size = new System.Drawing.Size(100, 13);
             this.linkLabel1.TabIndex = 16;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "Client ID";
@@ -117,9 +120,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(129, 275);
+            this.label2.Location = new System.Drawing.Point(107, 275);
+            this.label2.MinimumSize = new System.Drawing.Size(100, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(56, 13);
+            this.label2.Size = new System.Drawing.Size(100, 13);
             this.label2.TabIndex = 10;
             this.label2.Text = "State Text";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -136,9 +140,10 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(115, 226);
+            this.label3.Location = new System.Drawing.Point(107, 226);
+            this.label3.MinimumSize = new System.Drawing.Size(100, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(85, 13);
+            this.label3.Size = new System.Drawing.Size(100, 13);
             this.label3.TabIndex = 8;
             this.label3.Text = "Small Image Key";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -155,11 +160,13 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(114, 142);
+            this.label4.Location = new System.Drawing.Point(107, 142);
+            this.label4.MinimumSize = new System.Drawing.Size(100, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(87, 13);
+            this.label4.Size = new System.Drawing.Size(100, 13);
             this.label4.TabIndex = 4;
             this.label4.Text = "Large Image Key";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // bigKeyBox
             // 
@@ -173,9 +180,10 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(112, 183);
+            this.label5.Location = new System.Drawing.Point(107, 186);
+            this.label5.MinimumSize = new System.Drawing.Size(100, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(90, 13);
+            this.label5.Size = new System.Drawing.Size(100, 13);
             this.label5.TabIndex = 6;
             this.label5.Text = "Large Image Text";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -213,12 +221,19 @@
             this.connectToolStripMenuItem,
             this.trayExitMenuItem});
             this.trayContextMenu.Name = "trayContextMenu";
-            this.trayContextMenu.Size = new System.Drawing.Size(181, 70);
+            this.trayContextMenu.Size = new System.Drawing.Size(120, 48);
+            // 
+            // connectToolStripMenuItem
+            // 
+            this.connectToolStripMenuItem.Name = "connectToolStripMenuItem";
+            this.connectToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.connectToolStripMenuItem.Text = "Connect";
+            this.connectToolStripMenuItem.Click += new System.EventHandler(this.ConnectButton_Click);
             // 
             // trayExitMenuItem
             // 
             this.trayExitMenuItem.Name = "trayExitMenuItem";
-            this.trayExitMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.trayExitMenuItem.Size = new System.Drawing.Size(119, 22);
             this.trayExitMenuItem.Text = "Exit";
             this.trayExitMenuItem.Click += new System.EventHandler(this.TrayExitMenuItem_Click);
             // 
@@ -232,18 +247,25 @@
             this.checkTray.Text = "Minimize to Tray";
             this.checkTray.UseVisualStyleBackColor = true;
             // 
-            // connectToolStripMenuItem
+            // macButton
             // 
-            this.connectToolStripMenuItem.Name = "connectToolStripMenuItem";
-            this.connectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.connectToolStripMenuItem.Text = "Connect";
-            this.connectToolStripMenuItem.Click += new System.EventHandler(this.ConnectButton_Click);
+            this.macButton.Enabled = false;
+            this.macButton.Location = new System.Drawing.Point(213, 60);
+            this.macButton.MinimumSize = new System.Drawing.Size(0, 22);
+            this.macButton.Name = "macButton";
+            this.macButton.Size = new System.Drawing.Size(62, 22);
+            this.macButton.TabIndex = 17;
+            this.macButton.Text = "Use MAC";
+            this.macButton.UseVisualStyleBackColor = true;
+            this.macButton.Visible = false;
+            this.macButton.Click += new System.EventHandler(this.MacButton_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(314, 455);
+            this.Controls.Add(this.macButton);
             this.Controls.Add(this.checkTray);
             this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.label5);
@@ -259,7 +281,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.clientBox);
             this.Controls.Add(this.connectButton);
-            this.Controls.Add(this.ipBox);
+            this.Controls.Add(this.addressBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -276,7 +298,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox ipBox;
+        private System.Windows.Forms.TextBox addressBox;
         private System.Windows.Forms.Button connectButton;
         private System.Windows.Forms.TextBox clientBox;
         private System.Windows.Forms.Label label1;
@@ -296,6 +318,7 @@
         private System.Windows.Forms.ToolStripMenuItem trayExitMenuItem;
         private System.Windows.Forms.CheckBox checkTray;
         private System.Windows.Forms.ToolStripMenuItem connectToolStripMenuItem;
+        private System.Windows.Forms.Button macButton;
     }
 }
 
