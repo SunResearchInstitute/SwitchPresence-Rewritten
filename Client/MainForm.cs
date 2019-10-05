@@ -59,7 +59,6 @@ namespace SwitchPresence_Rewritten
         {
             if (connectButton.Text == "Connect")
             {
-
                 if (string.IsNullOrWhiteSpace(clientBox.Text))
                 {
                     Show();
@@ -68,7 +67,6 @@ namespace SwitchPresence_Rewritten
                     SystemSounds.Exclamation.Play();
                     return;
                 }
-
 
                 if (!IPAddress.TryParse(addressBox.Text, out ipAddress))
                 {
@@ -237,7 +235,6 @@ namespace SwitchPresence_Rewritten
                                 State = stateBox.Text
                             };
 
-
                             if (title.name == "NULL")
                             {
                                 ass.LargeImageText = "Home Menu";
@@ -247,7 +244,6 @@ namespace SwitchPresence_Rewritten
                             }
                             else
                             {
-
                                 ass.LargeImageText = !string.IsNullOrWhiteSpace(bigTextBox.Text) ? bigTextBox.Text : title.name;
                                 ass.LargeImageKey = !string.IsNullOrWhiteSpace(bigKeyBox.Text) ? bigKeyBox.Text : string.Format("0{0:x}", title.tid);
                                 presence.Details = $"Playing {title.name}";
@@ -371,8 +367,6 @@ namespace SwitchPresence_Rewritten
 
         private void CheckTime_CheckedChanged(object sender, EventArgs e) => ManualUpdate = true;
 
-        private void LinkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start($"https://discordapp.com/developers/applications/{clientBox.Text}");
-
         private void BigKeyBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
 
         private void SKeyBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
@@ -382,5 +376,7 @@ namespace SwitchPresence_Rewritten
         private void BigTextBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
 
         private void TrayExitMenuItem_Click(object sender, EventArgs e) => Application.Exit();
+
+        private void LinkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start($"https://discordapp.com/developers/applications/{clientBox.Text}");
     }
 }

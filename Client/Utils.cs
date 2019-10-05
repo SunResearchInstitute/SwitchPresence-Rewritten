@@ -40,7 +40,6 @@ namespace SwitchPresence_Rewritten
 
             return pair.IpAddress ?? "";
         }
-
         public static List<MacIpPair> GetAllMacAddressesAndIPPairs()
         {
             List<MacIpPair> mip = new List<MacIpPair>();
