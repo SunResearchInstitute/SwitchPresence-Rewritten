@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <sys/stat.h>
 #include <gd.h>
+#include "menu.h"
 
 using namespace std;
 
@@ -19,6 +20,7 @@ bool isPresenceActive()
     else
         return false;
 }
+
 Result DumpIcons()
 {
     NsApplicationRecord *appRecords = new NsApplicationRecord[512];
@@ -79,5 +81,22 @@ Result getAppControlData(u64 tid, NsApplicationControlData *appControlData)
     }
 
     return 0;
+}
+
+void startErrorScreen(Result rc)
+{
+    printf(CONSOLE_RED "Error: 0x%x\n", rc);
+    printf(CONSOLE_RED "Press `+` to exit!");
+    consoleUpdate(nullptr);
+    while (appletMainLoop())
+    {
+        hidScanInput();
+        u64 kDown = hidKeysDown(CONTROLLER_P1_AUTO);
+        if (kDown & KEY_PLUS)
+        {
+            consoleExit(nullptr);
+            scene = -69;
+        }
+    }
 }
 } // namespace Utils

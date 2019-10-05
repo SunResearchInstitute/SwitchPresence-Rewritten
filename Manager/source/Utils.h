@@ -10,4 +10,5 @@ namespace Utils
     bool isPresenceActive();
     Result DumpIcons();
     Result getAppControlData(u64 tid, NsApplicationControlData *appControlData);
+    void startErrorScreen(Result rc);
 }

@@ -12,12 +12,16 @@ using namespace std;
 
 void MainMenuLoop()
 {
-    if (!Utils::isPresenceActive())
-        MainMenuItems[1] = "SwitchPresence is disabled!";
-    else
-        MainMenuItems[1] = "SwitchPresence is enabled!";
+    if (scene == 0)
+    {
+        if (!Utils::isPresenceActive())
+            MainMenuItems[1] = "SwitchPresence is disabled!";
+        else
+            MainMenuItems[1] = "SwitchPresence is enabled!";
 
-    printItems(MainMenuItems, "Main Menu");
+        printItems(MainMenuItems, "Main Menu");
+    }
+    int lastScene = scene;
     Scene *currentScene;
 
     while (appletMainLoop())
@@ -27,7 +31,7 @@ void MainMenuLoop()
         case 0:
             currentScene = new MainMenu();
             break;
-            case 1:
+        case 1:
             currentScene = new DumpResMenu();
             break;
         default:
@@ -42,7 +46,11 @@ void MainMenuLoop()
             return;
         }
         currentScene->Display(kDown);
-        delete currentScene;
+        if (lastScene != scene)
+        {
+            lastScene = scene;
+            delete currentScene;
+        }
         consoleUpdate(nullptr);
     }
 }

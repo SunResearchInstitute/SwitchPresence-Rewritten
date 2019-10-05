@@ -247,7 +247,6 @@ namespace SwitchPresence_Rewritten
                                 ass.LargeImageText = !string.IsNullOrWhiteSpace(bigTextBox.Text) ? bigTextBox.Text : title.name;
                                 ass.LargeImageKey = !string.IsNullOrWhiteSpace(bigKeyBox.Text) ? bigKeyBox.Text : string.Format("0{0:x}", title.tid);
                                 presence.Details = $"Playing {title.name}";
-
                             }
 
                             presence.Assets = ass;
