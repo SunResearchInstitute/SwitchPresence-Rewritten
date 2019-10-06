@@ -7,6 +7,7 @@
 const std::string boot2Flag = "sdmc:/atmosphere/titles/0100000000000464/flags/boot2.flag";
 namespace Utils
 {
+    void printItems(const vector<string> &items, string menuTitle);
     bool isPresenceActive();
     Result DumpIcons();
     Result getAppControlData(u64 tid, NsApplicationControlData *appControlData);

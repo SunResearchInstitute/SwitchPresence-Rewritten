@@ -19,23 +19,26 @@ void MainMenuLoop()
         else
             MainMenuItems[1] = "SwitchPresence is enabled!";
 
-        printItems(MainMenuItems, "Main Menu");
+        Utils::printItems(MainMenuItems, "Main Menu");
     }
     int lastScene = scene;
     Scene *currentScene;
 
     while (appletMainLoop())
     {
-        switch (scene)
+        if (lastScene != scene)
         {
-        case 0:
-            currentScene = new MainMenu();
-            break;
-        case 1:
-            currentScene = new DumpResMenu();
-            break;
-        default:
-            return;
+            switch (scene)
+            {
+            case 0:
+                currentScene = new MainMenu();
+                break;
+            case 1:
+                currentScene = new DumpResMenu();
+                break;
+            default:
+                return;
+            }
         }
 
         hidScanInput();
@@ -52,19 +55,5 @@ void MainMenuLoop()
             delete currentScene;
         }
         consoleUpdate(nullptr);
-    }
-}
-
-void printItems(const vector<string> &items, string menuTitle)
-{
-    printf(CONSOLE_MAGENTA "\x1b[0;%dH%s\n", (40 - ((int)menuTitle.size() / 2)), menuTitle.c_str());
-    for (int i = 0; i < (int)items.size(); i++)
-    {
-        const char *prefix = " ";
-        if (selection == i)
-            prefix = ">";
-        printf(CONSOLE_WHITE "%s%s", prefix, items[i].c_str());
-
-        printf("\n");
     }
 }

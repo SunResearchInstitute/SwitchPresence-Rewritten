@@ -12,6 +12,6 @@ void DumpResMenu::Display(u64 kDown)
     {
         scene = 0;
         printf(CONSOLE_ESC(2J));
-        printItems(MainMenuItems, "Main Menu");
+        Utils::printItems(MainMenuItems, "Main Menu");
     }
 }

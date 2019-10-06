@@ -21,7 +21,7 @@ int main(int argc, char **argv)
         Utils::startErrorScreen(rc);
 
     MainMenuLoop();
-    
+
     pmshellExit();
     pmdmntExit();
     nsExit();

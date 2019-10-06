@@ -1,6 +1,7 @@
 #pragma once
 #include "switch.h"
 #include "../menu.h"
+#include "../Utils.h"
 
 class Scene
 {

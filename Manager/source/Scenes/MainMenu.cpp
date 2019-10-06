@@ -71,7 +71,7 @@ void MainMenu::Display(u64 kDown)
             else
             {
                 u64 pid;
-                if (R_SUCCEEDED(pmshellLaunchProcess(0, PresenceTID, FsStorageId_None, &pid)))
+                if (R_SUCCEEDED(pmshellLaunchProcess(0, PresenceTID, FsStorageId::FsStorageId_None, &pid)))
                 {
                     MainMenuItems[1] = "SwitchPresence is enabled!";
                     fclose(fopen(boot2Flag.c_str(), "w"));
@@ -86,6 +86,6 @@ void MainMenu::Display(u64 kDown)
     if (needsRefresh)
     {
         printf(CONSOLE_ESC(2J));
-        printItems(MainMenuItems, "Main Menu");
+        Utils::printItems(MainMenuItems, "Main Menu");
     }
 }
