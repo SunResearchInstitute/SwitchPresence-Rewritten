@@ -12,8 +12,12 @@ using namespace std;
 
 void MainMenuLoop()
 {
+    int lastScene = scene;
+    Scene *currentScene;
     if (scene == 0)
     {
+        currentScene = new MainMenu();
+        
         if (!Utils::isPresenceActive())
             MainMenuItems[1] = "SwitchPresence is disabled!";
         else
@@ -21,8 +25,8 @@ void MainMenuLoop()
 
         Utils::printItems(MainMenuItems, "Main Menu");
     }
-    int lastScene = scene;
-    Scene *currentScene;
+    else
+        return;
 
     while (appletMainLoop())
     {
