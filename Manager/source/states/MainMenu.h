@@ -12,7 +12,6 @@ namespace states {
         public:
             virtual void calc(StateMachine*, u64);
             virtual std::string name();
-            ~MainMenu() override = default;
 
         private:
             signed int selection;
