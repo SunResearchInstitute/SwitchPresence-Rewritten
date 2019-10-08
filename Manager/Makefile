@@ -39,7 +39,9 @@ include $(DEVKITPRO)/libnx/switch_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	SwitchPresence-Rewritten-Manager
 BUILD		:=	build
-SOURCES		:=	source source/Scenes
+SOURCES		:=	source \
+				source/states \
+				source/utils
 DATA		:=	data
 INCLUDES	:=	include
 
