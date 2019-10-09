@@ -8,6 +8,13 @@ namespace states {
         "PlaceHldr"};
 
 
+    void MainMenu::enter(){
+        if(Utils::isPresenceActive())
+            MainMenuItems[1] = "SwitchPresence is enabled!";
+        else
+            MainMenuItems[1] = "SwitchPresence is disabled!";
+    }
+
     void MainMenu::calc(StateMachine* stateMachine, u64 inputs)
     {
         if (inputs & KEY_UP)
