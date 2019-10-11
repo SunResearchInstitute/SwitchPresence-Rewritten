@@ -1,17 +1,12 @@
-#include <switch.h>
 #include "Utils.h"
-#include <cstring>
-#include <sstream>
-#include <filesystem>
-#include <sys/stat.h>
-#include <gd.h>
-#include "menu.h"
 
 using namespace std;
 
 namespace Utils
 {
-void printItems(const vector<string> &items, string menuTitle)
+Result error_currentError;
+
+void printItems(const vector<string> &items, string menuTitle, int selection)
 {
     printf(CONSOLE_MAGENTA "\x1b[0;%dH%s\n", (40 - ((int)menuTitle.size() / 2)), menuTitle.c_str());
     for (int i = 0; i < (int)items.size(); i++)
@@ -95,24 +90,5 @@ Result getAppControlData(u64 tid, NsApplicationControlData *appControlData)
     }
 
     return 0;
-}
-
-void startErrorScreen(Result rc)
-{
-    char str[35];
-    sprintf(str, "Error: 0x%x", rc);
-    printf(CONSOLE_RED "\x1b[21;%d%s", center(80, (int)strlen(str)), str);
-    printf(CONSOLE_RED "\x1b[22;%dPress `+` to exit!", center(80, 17));
-    consoleUpdate(nullptr);
-    while (appletMainLoop())
-    {
-        hidScanInput();
-        u64 kDown = hidKeysDown(CONTROLLER_P1_AUTO);
-        if (kDown & KEY_PLUS)
-        {
-            consoleExit(nullptr);
-            scene = -69;
-        }
-    }
 }
 } // namespace Utils
