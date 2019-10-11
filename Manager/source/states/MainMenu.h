@@ -7,14 +7,16 @@
 
 extern std::vector<std::string> MainMenuItems;
 
-namespace states {
-    class MainMenu : public State {
-        public:
-            virtual void enter();
-            virtual void calc(StateMachine*, u64);
-            virtual std::string name();
+namespace states
+{
+class MainMenu : public State
+{
+public:
+    virtual void enter();
+    virtual void calc(StateMachine *, u64);
+    virtual std::string name();
 
-        private:
-            signed int selection;
-    };
+private:
+    signed int selection;
 };
+}; // namespace states

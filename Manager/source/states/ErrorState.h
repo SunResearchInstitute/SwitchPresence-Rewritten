@@ -5,8 +5,9 @@
 
 namespace states
 {
-    class ErrorState : public State {
-        virtual std::string name();
-        virtual void calc(StateMachine*, u64);
-    };
+class ErrorState : public State
+{
+    virtual std::string name();
+    virtual void calc(StateMachine *, u64);
 };
+}; // namespace states

@@ -1,46 +1,57 @@
 #include "statemachine.h"
 
-namespace states {
-    StateMachine::StateMachine(){
-        currentState = NULL;
+namespace states
+{
+StateMachine::StateMachine()
+{
+    currentState = NULL;
+    nextState = NULL;
+}
+
+void StateMachine::calc(u64 inputs)
+{
+    if (nextState != NULL)
+    {
+        if (currentState != NULL)
+            currentState->exit();
+
+        currentState = nextState;
         nextState = NULL;
+
+        currentState->enter();
     }
 
-    void StateMachine::calc(u64 inputs) {
-        if(nextState != NULL){
-            if(currentState != NULL)
-                currentState->exit();
+    if (currentState == NULL)
+    {
+        printf("State machine has no current state!");
+        return;
+    }
 
-            currentState = nextState;
-            nextState = NULL;
+    currentState->calc(this, inputs);
+}
 
-            currentState->enter();
-        }
+void StateMachine::pushState(State *state)
+{
+    nextState = state;
+}
 
-        if(currentState == NULL){
-            printf("State machine has no current state!");
+void StateMachine::pushState(std::string str)
+{
+    for (auto &i : states)
+    {
+        if (i->name() == str)
+        {
+            nextState = i;
             return;
         }
-
-        currentState->calc(this, inputs);
     }
+}
 
-    void StateMachine::pushState(State* state){
-        nextState = state;
+StateMachine::~StateMachine()
+{
+    for (auto &i : states)
+    {
+        delete i;
     }
-
-    void StateMachine::pushState(std::string str){
-        for (auto & i : states) {
-            if(i->name() == str){
-                nextState = i;
-                return;
-            }
-        }
-    }
-
-    StateMachine::~StateMachine() {
-        for (auto & i : states) {
-            delete i;
-        }
-    }
-};
+}
+}; // namespace states

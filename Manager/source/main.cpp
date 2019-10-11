@@ -5,11 +5,9 @@ using namespace std;
 int main(int argc, char **argv)
 {
     consoleInit(nullptr);
-
-    printf("init");
-
-    Utils::error_currentError = init();
     
+    Utils::error_currentError = init();
+
     states::StateMachine stateMachine;
 
     stateMachine.states.push_back(new states::MainMenu());
@@ -17,7 +15,7 @@ int main(int argc, char **argv)
     stateMachine.states.push_back(new states::DumpCompleteState());
     stateMachine.states.push_back(new states::ErrorState());
 
-    if(R_FAILED(Utils::error_currentError))
+    if (R_FAILED(Utils::error_currentError))
         stateMachine.pushState("error");
     else
         stateMachine.pushState("main");
@@ -42,7 +40,8 @@ int main(int argc, char **argv)
     return 0;
 }
 
-Result init(){
+Result init()
+{
     Result rc;
     rc = pmshellInitialize();
     if (R_FAILED(rc))
