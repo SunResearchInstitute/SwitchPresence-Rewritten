@@ -33,12 +33,8 @@ void MainMenu::calc(StateMachine *stateMachine, u64 inputs)
     Utils::printItems(MainMenuItems, "MainMenu", selection);
 
     if (inputs & KEY_A)
-    {
         if (selection == 0)
-        {
             stateMachine->pushState("dumpRes");
-        }
-    }
 }
 
 std::string MainMenu::name()

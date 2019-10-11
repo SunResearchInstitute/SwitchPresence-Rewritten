@@ -5,7 +5,7 @@ using namespace std;
 int main(int argc, char **argv)
 {
     consoleInit(nullptr);
-    
+
     Utils::error_currentError = init();
 
     states::StateMachine stateMachine;

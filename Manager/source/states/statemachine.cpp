@@ -50,8 +50,6 @@ void StateMachine::pushState(std::string str)
 StateMachine::~StateMachine()
 {
     for (auto &i : states)
-    {
         delete i;
-    }
 }
 }; // namespace states
