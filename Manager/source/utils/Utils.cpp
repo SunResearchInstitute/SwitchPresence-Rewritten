@@ -47,9 +47,10 @@ Result DumpIcons()
         if (!filesystem::exists(ss.str()))
         {
             NsApplicationControlData *appControlData = new NsApplicationControlData();
-            int urc = Utils::getAppControlData(appRecords[i].titleID, appControlData);
-            if (R_FAILED(urc))
-                return urc;
+            Result rc = Utils::getAppControlData(appRecords[i].titleID, appControlData);
+            if (R_FAILED(rc))
+                return rc;
+
             gdImagePtr in = gdImageCreateFromJpegPtr(sizeof(appControlData->icon), appControlData->icon);
             if (!in)
             {
