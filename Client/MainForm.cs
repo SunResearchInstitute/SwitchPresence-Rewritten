@@ -73,7 +73,7 @@ namespace SwitchPresence_Rewritten
                     try
                     {
                         macAddress = PhysicalAddress.Parse(addressBox.Text.ToUpper());
-                        ipAddress = IPAddress.Parse(Utils.GetIpByMac(addressBox.Text));
+                        IPAddress.TryParse(Utils.GetIpByMac(addressBox.Text), out ipAddress);
                     }
                     catch (FormatException)
                     {
