@@ -27,7 +27,7 @@ void MainMenu::calc(StateMachine *stateMachine, u64 inputs)
         selection = size - 1;
     if (size <= selection)
         selection = 0;
-    Utils::printItems(MainMenuItems, "MainMenu", selection);
+    Utils::printItems(MainMenuItems, "Main Menu", selection);
 
     if (inputs & KEY_A)
         switch(selection){
