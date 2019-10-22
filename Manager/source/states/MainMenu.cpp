@@ -38,19 +38,13 @@ void MainMenu::calc(StateMachine *stateMachine, u64 inputs)
                 if (Utils::isPresenceActive())
                 {
                     if (R_SUCCEEDED(pmshellTerminateProcessByTitleId(PresenceTID)))
-                    {
-                        MainMenuItems[1] = "SwitchPresence is disabled!";
                         remove(boot2Flag.c_str());
-                    }
                 }
                 else
                 {
                     u64 pid;
                     if (R_SUCCEEDED(pmshellLaunchProcess(0, PresenceTID, FsStorageId::FsStorageId_None, &pid)))
-                    {
-                        MainMenuItems[1] = "SwitchPresence is enabled!";
                         fclose(fopen(boot2Flag.c_str(), "w"));
-                    }
                 }
                 updateStatus();
                 break;
