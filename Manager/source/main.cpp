@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     {
         hidScanInput();
         u64 kDown = hidKeysDown(CONTROLLER_P1_AUTO);
-        if (kDown & KEY_PLUS)
+        if (kDown & KEY_PLUS || (kDown & KEY_B && stateMachine.currentState->name() == "main"))
             break;
 
         printf(CONSOLE_ESC(2J));
