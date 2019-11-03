@@ -18,5 +18,6 @@ public:
 
 private:
     signed int selection;
+    void updateStatus();
 };
 }; // namespace states
