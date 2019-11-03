@@ -177,7 +177,7 @@ namespace SwitchPresence_Rewritten
                 trayIcon.Icon = Resources.Disconnected;
                 trayIcon.Text = "SwitchPresence (Connecting...)";
                 timer.Enabled = true;
-                EnableMacButton(false);
+                ToggleMacButton(false);
 
                 try
                 {
@@ -215,7 +215,7 @@ namespace SwitchPresence_Rewritten
                     UpdateStatus("Connected to the server!", Color.Green);
                     trayIcon.Icon = Resources.Connected;
                     trayIcon.Text = "SwitchPresence (Connected)";
-                    EnableMacButton(true);
+                    ToggleMacButton(true);
                     TitlePacket title = Utils.ByteArrayToStructure<TitlePacket>(bytes);
                     if (title.magic == 0xffaadd23)
                     {
@@ -355,7 +355,7 @@ namespace SwitchPresence_Rewritten
             Invoke(inv);
         }
 
-        private void EnableMacButton(bool enable)
+        private void ToggleMacButton(bool enable)
         {
             MethodInvoker inv = () =>
             {

@@ -54,10 +54,10 @@
             this.trayContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
-            // ipBox
+            // addressBox
             // 
             this.addressBox.Location = new System.Drawing.Point(107, 61);
-            this.addressBox.Name = "ipBox";
+            this.addressBox.Name = "addressBox";
             this.addressBox.Size = new System.Drawing.Size(100, 20);
             this.addressBox.TabIndex = 1;
             // 
