@@ -12,7 +12,6 @@ using System.Media;
 using System.Net;
 using System.Timers;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using System.Net.NetworkInformation;
@@ -31,17 +30,6 @@ namespace SwitchPresence_Rewritten
         string LastGame = "";
         private Timestamps time = null;
         private Timer timer;
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct TitlePacket
-        {
-            [MarshalAs(UnmanagedType.U8)]
-            public ulong magic;
-            [MarshalAs(UnmanagedType.U8)]
-            public ulong tid;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 512)]
-            public string name;
-        }
 
         public struct MacIpPair
         {
@@ -210,20 +198,20 @@ namespace SwitchPresence_Rewritten
             {
                 try
                 {
-                    byte[] bytes = new byte[800];
+                    byte[] bytes = new byte[600];
                     int cnt = client.Receive(bytes);
                     UpdateStatus("Connected to the server!", Color.Green);
                     trayIcon.Icon = Resources.Connected;
                     trayIcon.Text = "SwitchPresence (Connected)";
                     ToggleMacButton(true);
-                    TitlePacket title = Utils.ByteArrayToStructure<TitlePacket>(bytes);
-                    if (title.magic == 0xffaadd23)
+                    Title title = new Title(bytes);
+                    if (title.Magic == 0xffaadd23)
                     {
-                        if (LastGame != title.name)
+                        if (LastGame != title.Name)
                         {
                             time = Timestamps.Now;
                         }
-                        if ((rpc != null && rpc.CurrentPresence == null) || LastGame != title.name || ManualUpdate)
+                        if ((rpc != null && rpc.CurrentPresence == null) || LastGame != title.Name || ManualUpdate)
                         {
                             Assets ass = new Assets
                             {
@@ -235,7 +223,7 @@ namespace SwitchPresence_Rewritten
                                 State = stateBox.Text
                             };
 
-                            if (title.name == "NULL")
+                            if (title.Name == "NULL")
                             {
                                 ass.LargeImageText = "Home Menu";
                                 ass.LargeImageText = !string.IsNullOrWhiteSpace(bigTextBox.Text) ? bigTextBox.Text : "Home Menu";
@@ -244,9 +232,9 @@ namespace SwitchPresence_Rewritten
                             }
                             else
                             {
-                                ass.LargeImageText = !string.IsNullOrWhiteSpace(bigTextBox.Text) ? bigTextBox.Text : title.name;
-                                ass.LargeImageKey = !string.IsNullOrWhiteSpace(bigKeyBox.Text) ? bigKeyBox.Text : string.Format("0{0:x}", title.tid);
-                                presence.Details = $"Playing {title.name}";
+                                ass.LargeImageText = !string.IsNullOrWhiteSpace(bigTextBox.Text) ? bigTextBox.Text : title.Name;
+                                ass.LargeImageKey = !string.IsNullOrWhiteSpace(bigKeyBox.Text) ? bigKeyBox.Text : string.Format("0{0:x}", title.Tid);
+                                presence.Details = $"Playing {title.Name}";
                             }
 
                             presence.Assets = ass;
@@ -254,7 +242,7 @@ namespace SwitchPresence_Rewritten
                             rpc.SetPresence(presence);
 
                             ManualUpdate = false;
-                            LastGame = title.name;
+                            LastGame = title.Name;
                         }
                     }
                     else

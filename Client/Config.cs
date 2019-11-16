@@ -1,7 +1,4 @@
-﻿#if DEBUG
-#endif
-
-namespace SwitchPresence_Rewritten
+﻿namespace SwitchPresence_Rewritten
 {
     public class Config
     {
