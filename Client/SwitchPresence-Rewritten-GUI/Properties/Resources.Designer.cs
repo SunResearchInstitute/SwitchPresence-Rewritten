@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SwitchPresence_Rewritten.Properties {
+namespace SwitchPresence_Rewritten_GUI.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace SwitchPresence_Rewritten.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SwitchPresence_Rewritten.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SwitchPresence_Rewritten_GUI.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

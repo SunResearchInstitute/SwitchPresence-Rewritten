@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace SwitchPresence_Rewritten
+namespace SwitchPresence_Rewritten_GUI
 {
     static class Program
     {

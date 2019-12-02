@@ -3,21 +3,22 @@
 using DiscordRPC.Logging;
 #endif
 using Newtonsoft.Json;
-using SwitchPresence_Rewritten.Properties;
+using PresenceCommon.Types;
+using SwitchPresence_Rewritten_GUI.Properties;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Media;
 using System.Net;
-using System.Timers;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
+using System.Timers;
 using System.Windows.Forms;
-using System.Net.NetworkInformation;
 using Timer = System.Timers.Timer;
 
-namespace SwitchPresence_Rewritten
+namespace SwitchPresence_Rewritten_GUI
 {
     public partial class MainForm : Form
     {
@@ -29,13 +30,7 @@ namespace SwitchPresence_Rewritten
         bool ManualUpdate = false;
         string LastGame = "";
         private Timestamps time = null;
-        private Timer timer;
-
-        public struct MacIpPair
-        {
-            public string MacAddress;
-            public string IpAddress;
-        }
+        private static Timer timer;
 
         public MainForm()
         {
@@ -204,6 +199,7 @@ namespace SwitchPresence_Rewritten
                     trayIcon.Icon = Resources.Connected;
                     trayIcon.Text = "SwitchPresence (Connected)";
                     ToggleMacButton(true);
+
                     Title title = new Title(bytes);
                     if (title.Magic == 0xffaadd23)
                     {
@@ -298,6 +294,8 @@ namespace SwitchPresence_Rewritten
             }
             else
             {
+                if (timer != null) timer.Dispose();
+
                 Config cfg = new Config()
                 {
                     IP = addressBox.Text,
