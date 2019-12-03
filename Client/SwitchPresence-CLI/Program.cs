@@ -102,7 +102,7 @@ namespace SwitchPresence_CLI
                         }
                         if ((rpc != null && rpc.CurrentPresence == null) || LastGame != title.Name)
                         {
-                            rpc.SetPresence(DataHandler.CreateDiscordPresence(title, time));
+                            rpc.SetPresence(Utils.CreateDiscordPresence(title, time));
 
                             LastGame = title.Name;
                         }

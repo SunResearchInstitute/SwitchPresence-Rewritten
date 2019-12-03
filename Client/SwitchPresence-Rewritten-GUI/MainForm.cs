@@ -3,7 +3,6 @@
 using DiscordRPC.Logging;
 #endif
 using Newtonsoft.Json;
-using PresenceCommon;
 using PresenceCommon.Types;
 using SwitchPresence_Rewritten_GUI.Properties;
 using System;
@@ -210,7 +209,7 @@ namespace SwitchPresence_Rewritten_GUI
                         }
                         if ((rpc != null && rpc.CurrentPresence == null) || LastGame != title.Name || ManualUpdate)
                         {
-                            rpc.SetPresence(DataHandler.CreateDiscordPresence(title, time, bigKeyBox.Text, bigKeyBox.Text, smallKeyBox.Text, stateBox.Text));
+                            rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, time, bigKeyBox.Text, bigKeyBox.Text, smallKeyBox.Text, stateBox.Text));
 
                             ManualUpdate = false;
                             LastGame = title.Name;
