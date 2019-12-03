@@ -6,4 +6,12 @@
     <RootNamespace>SwitchPresence_CLI</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="DiscordRichPresence" Version="1.0.121" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PresenceCommon\PresenceCommon.csproj" />
+  </ItemGroup>
+
 </Project>

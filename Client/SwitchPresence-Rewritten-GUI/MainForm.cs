@@ -3,6 +3,7 @@
 using DiscordRPC.Logging;
 #endif
 using Newtonsoft.Json;
+using PresenceCommon;
 using PresenceCommon.Types;
 using SwitchPresence_Rewritten_GUI.Properties;
 using System;
@@ -209,33 +210,7 @@ namespace SwitchPresence_Rewritten_GUI
                         }
                         if ((rpc != null && rpc.CurrentPresence == null) || LastGame != title.Name || ManualUpdate)
                         {
-                            Assets ass = new Assets
-                            {
-                                SmallImageKey = smallKeyBox.Text,
-                                SmallImageText = "Switch-Presence Rewritten"
-                            };
-                            RichPresence presence = new RichPresence
-                            {
-                                State = stateBox.Text
-                            };
-
-                            if (title.Name == "NULL")
-                            {
-                                ass.LargeImageText = "Home Menu";
-                                ass.LargeImageText = !string.IsNullOrWhiteSpace(bigTextBox.Text) ? bigTextBox.Text : "Home Menu";
-                                ass.LargeImageKey = !string.IsNullOrWhiteSpace(bigKeyBox.Text) ? bigKeyBox.Text : string.Format("0{0:x}", 0x0100000000001000);
-                                presence.Details = "In the home menu";
-                            }
-                            else
-                            {
-                                ass.LargeImageText = !string.IsNullOrWhiteSpace(bigTextBox.Text) ? bigTextBox.Text : title.Name;
-                                ass.LargeImageKey = !string.IsNullOrWhiteSpace(bigKeyBox.Text) ? bigKeyBox.Text : string.Format("0{0:x}", title.Tid);
-                                presence.Details = $"Playing {title.Name}";
-                            }
-
-                            presence.Assets = ass;
-                            if (checkTime.Checked) presence.Timestamps = time;
-                            rpc.SetPresence(presence);
+                            rpc.SetPresence(DataHandler.CreateDiscordPresence(title, time, bigKeyBox.Text, bigKeyBox.Text, smallKeyBox.Text, stateBox.Text));
 
                             ManualUpdate = false;
                             LastGame = title.Name;
