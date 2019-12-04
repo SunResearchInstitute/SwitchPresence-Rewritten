@@ -123,8 +123,6 @@ namespace SwitchPresence_CLI
             }
         }
 
-
-
         private static void OnConnectTimeout(object sender, ElapsedEventArgs e)
         {
             LastGame = "";
@@ -137,8 +135,7 @@ namespace SwitchPresence_CLI
                 client.Close();
             
             if(rpc != null && !rpc.IsDisposed)
-                rpc.Dispose();
-            
+                rpc.Dispose();   
         }
     }
 }
