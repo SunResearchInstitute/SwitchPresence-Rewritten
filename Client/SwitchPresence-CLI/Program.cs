@@ -17,19 +17,19 @@ namespace SwitchPresence_CLI
         static Timestamps time = null;
         static DiscordRpcClient rpc;
 
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
             if (args.Length < 2)
             {
                 Console.WriteLine("Usage: SwitchPresence-CLI <IP> <Client ID>");
-                return;
+                return 1;
             }
 
             if (!IPAddress.TryParse(args[0], out IPAddress iPAddress))
             {
                 Console.WriteLine("Invalid IP");
-                return;
+                return 1;
             }
 
              rpc = new DiscordRpcClient(args[1]);
@@ -37,7 +37,7 @@ namespace SwitchPresence_CLI
             if (!rpc.Initialize())
             {
                 Console.WriteLine("Unable to start RPC!");
-                return;
+                return 2;
             }
 
             IPEndPoint localEndPoint = new IPEndPoint(iPAddress, 0xCAFE);
@@ -123,8 +123,6 @@ namespace SwitchPresence_CLI
             }
         }
 
-
-
         private static void OnConnectTimeout(object sender, ElapsedEventArgs e)
         {
             LastGame = "";
@@ -137,8 +135,7 @@ namespace SwitchPresence_CLI
                 client.Close();
             
             if(rpc != null && !rpc.IsDisposed)
-                rpc.Dispose();
-            
+                rpc.Dispose();   
         }
     }
 }
