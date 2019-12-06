@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>SwitchPresence_CLI</RootNamespace>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DiscordRichPresence" Version="1.0.121" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PresenceCommon\PresenceCommon.csproj" />
+  </ItemGroup>
+
+</Project>

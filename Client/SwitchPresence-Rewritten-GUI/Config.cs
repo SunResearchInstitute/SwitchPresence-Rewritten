@@ -1,4 +1,4 @@
-﻿namespace SwitchPresence_Rewritten
+﻿namespace SwitchPresence_Rewritten_GUI
 {
     public class Config
     {

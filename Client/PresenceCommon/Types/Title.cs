@@ -1,9 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
 
-namespace SwitchPresence_Rewritten
+namespace PresenceCommon.Types
 {
-    class Title
+    public class Title
     {
         public ulong Magic { get; }
         public ulong Tid { get; }
@@ -22,7 +22,7 @@ namespace SwitchPresence_Rewritten
 
         public Title(byte[] bytes)
         {
-            TitlePacket title = Utils.ByteArrayToStructure<TitlePacket>(bytes);
+            TitlePacket title = DataHandler.ByteArrayToStructure<TitlePacket>(bytes);
             Magic = title.magic;
             Tid = title.tid;
             Name = Encoding.UTF8.GetString(title.name, 0, title.name.Length).Split('\0')[0];

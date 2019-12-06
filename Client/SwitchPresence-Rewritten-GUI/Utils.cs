@@ -1,44 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using static SwitchPresence_Rewritten.MainForm;
 
-namespace SwitchPresence_Rewritten
+namespace SwitchPresence_Rewritten_GUI
 {
     public static class Utils
     {
-        public static T ByteArrayToStructure<T>(byte[] bytes) where T : struct
+        public struct MacIpPair
         {
-            T stuff;
-            GCHandle handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
-            try
-            {
-                stuff = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
-            }
-            finally
-            {
-                handle.Free();
-            }
-            return stuff;
+            public string MacAddress;
+            public string IpAddress;
         }
 
+        //This will only work on Windows(?)
         public static string GetMacByIp(string ip)
         {
             List<MacIpPair> macIpPairs = GetAllMacAddressesAndIPPairs();
-            MacIpPair pair = macIpPairs.FirstOrDefault(x => x.IpAddress == ip);
 
-            return pair.MacAddress ?? "";
+            return macIpPairs.FirstOrDefault(x => x.IpAddress == ip).MacAddress ?? "";
         }
 
         public static string GetIpByMac(string mac)
         {
             mac = mac.ToLower();
             List<MacIpPair> macIpPairs = GetAllMacAddressesAndIPPairs();
-            MacIpPair pair = macIpPairs.FirstOrDefault(x => x.MacAddress == mac);
 
-            return pair.IpAddress ?? "";
+            return macIpPairs.FirstOrDefault(x => x.MacAddress == mac).IpAddress ?? "";
         }
         public static List<MacIpPair> GetAllMacAddressesAndIPPairs()
         {
