@@ -43,8 +43,10 @@ void MainMenu::calc(StateMachine *stateMachine, u64 inputs)
                 else
                 {
                     u64 pid;
-                    if (R_SUCCEEDED(pmshellLaunchProcess(0, PresenceTID, FsStorageId::FsStorageId_None, &pid)))
+                    if (R_SUCCEEDED(pmshellLaunchProcess(0, PresenceTID, FsStorageId::FsStorageId_None, &pid))) {
+                        mkdir(boot2FlagsDir, 0777);
                         fclose(fopen(boot2Flag.c_str(), "w"));
+                    }
                 }
                 updateStatus();
                 break;
