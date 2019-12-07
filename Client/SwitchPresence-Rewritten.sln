@@ -10,9 +10,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwitchPresence-GUI", "Switc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PresenceCommon", "PresenceCommon\PresenceCommon.csproj", "{2EF451B4-7B1C-46F6-973A-26564BEF4AD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwitchPresence-CLI", "SwitchPresence-CLI\SwitchPresence-CLI.csproj", "{7CDBBC94-5E21-474D-ABF9-AF4320E3EC1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwitchPresence-CLI", "SwitchPresence-CLI\SwitchPresence-CLI.csproj", "{7CDBBC94-5E21-474D-ABF9-AF4320E3EC1D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{2EF451B4-7B1C-46F6-973A-26564BEF4AD8} = {2EF451B4-7B1C-46F6-973A-26564BEF4AD8}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AE83EE8C-76B7-4CA3-BD70-0FA866E72562}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
 Global

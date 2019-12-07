@@ -2,3 +2,9 @@
 
 # IDE0011: Add braces
 csharp_prefer_braces = false:silent
+
+# CA1815: Override equals and operator equals on value types
+dotnet_diagnostic.CA1815.severity = none
+
+# CA1034: Nested types should not be visible
+dotnet_diagnostic.CA1034.severity = none
