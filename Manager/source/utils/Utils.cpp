@@ -23,7 +23,7 @@ void printItems(const vector<string> &items, string menuTitle, int selection)
 bool isPresenceActive()
 {
     u64 pid = 0;
-    pmdmntGetTitlePid(&pid, PresenceTID);
+    pmdmntGetTitlePid(&pid, TID);
     if (pid > 0)
         return true;
     else
