@@ -10,9 +10,9 @@
 
 #define center(p, c) ((p - c) / 2)
 
-#define PresenceTID 0x0100000000000464
-const std::string boot2FlagsDir = "sdmc:/atmosphere/titles/0100000000000464/flags/";
-const std::string boot2Flag = boot2FlagDir + "boot2.flag";
+#define TID 0x0100000000000464
+#define FLAGSDIR "sdmc:/atmosphere/titles/0100000000000464/flags/"
+#define BOOT2FLAG FLAGSDIR "boot2.flag"
 namespace Utils
 {
 extern Result error_currentError;

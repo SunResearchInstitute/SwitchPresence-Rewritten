@@ -37,15 +37,15 @@ void MainMenu::calc(StateMachine *stateMachine, u64 inputs)
             case 1:
                 if (Utils::isPresenceActive())
                 {
-                    if (R_SUCCEEDED(pmshellTerminateProcessByTitleId(PresenceTID)))
-                        remove(boot2Flag.c_str());
+                    if (R_SUCCEEDED(pmshellTerminateProcessByTitleId(TID)))
+                        remove(BOOT2FLAG);
                 }
                 else
                 {
                     u64 pid;
-                    if (R_SUCCEEDED(pmshellLaunchProcess(0, PresenceTID, FsStorageId::FsStorageId_None, &pid))) {
-                        mkdir(boot2FlagsDir, 0777);
-                        fclose(fopen(boot2Flag.c_str(), "w"));
+                    if (R_SUCCEEDED(pmshellLaunchProcess(0, TID, FsStorageId::FsStorageId_None, &pid))) {
+                        mkdir(FLAGSDIR, 0777);
+                        fclose(fopen(BOOT2FLAG, "w"));
                     }
                 }
                 updateStatus();
