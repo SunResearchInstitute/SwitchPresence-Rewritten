@@ -12,7 +12,7 @@
 #define center(p, c) ((p - c) / 2)
 
 #define TID 0x0100000000000464
-#define FLAGSDIR "sdmc:/atmosphere/titles/0100000000000464/flags/"
+#define FLAGSDIR "sdmc:/atmosphere/contents/0100000000000464/flags/"
 #define BOOT2FLAG FLAGSDIR "boot2.flag"
 namespace Utils
 {

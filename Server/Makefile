@@ -165,8 +165,8 @@ $(BUILD):
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 #---------------------------------------------------------------------------------
 dist: $(BUILD)
-	@mkdir -p dist/atmosphere/titles/0100000000000464/flags
-	@cp $(TARGET).nsp dist/atmosphere/titles/0100000000000464/exefs.nsp
+	@mkdir -p dist/atmosphere/contents/0100000000000464/flags
+	@cp $(TARGET).nsp dist/atmosphere/contents/0100000000000464/exefs.nsp
 	@cd dist; zip -r ../Sysmodule.zip ./*; cd ../
 	@rm -fr dist
 	@echo built ... dist
