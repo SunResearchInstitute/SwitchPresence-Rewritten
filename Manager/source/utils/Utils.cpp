@@ -23,7 +23,7 @@ void printItems(const vector<string> &items, string menuTitle, int selection)
 bool isPresenceActive()
 {
     u64 pid = 0;
-    pmdmntGetTitlePid(&pid, TID);
+    pmdmntGetProcessId(&pid, TID);
     if (pid > 0)
         return true;
     else
@@ -33,21 +33,21 @@ bool isPresenceActive()
 Result DumpIcons()
 {
     NsApplicationRecord *appRecords = new NsApplicationRecord[512];
-    size_t actualAppRecordCnt = 0;
+    s32 actualAppRecordCnt = 0;
     Result rc;
     rc = nsListApplicationRecord(appRecords, sizeof(NsApplicationRecord) * 512, 0, &actualAppRecordCnt);
     if (R_FAILED(rc))
         return rc;
 
     mkdir("sdmc:/Icons", 0777);
-    for (u32 i = 0; i < actualAppRecordCnt; i++)
+    for (s32 i = 0; i < actualAppRecordCnt; i++)
     {
         stringstream ss;
-        ss << "sdmc:/Icons/" << 0 << hex << appRecords[i].titleID << ".jpg";
+        ss << "sdmc:/Icons/" << 0 << hex << appRecords[i].application_id << ".jpg";
         if (!filesystem::exists(ss.str()))
         {
             NsApplicationControlData *appControlData = new NsApplicationControlData();
-            Result rc = Utils::getAppControlData(appRecords[i].titleID, appControlData);
+            Result rc = Utils::getAppControlData(appRecords[i].application_id, appControlData);
             if (R_FAILED(rc))
                 return rc;
 
@@ -83,7 +83,7 @@ Result getAppControlData(u64 tid, NsApplicationControlData *appControlData)
     memset(appControlData, 0x00, sizeof(NsApplicationControlData));
 
     Result rc;
-    rc = nsGetApplicationControlData(1, tid, appControlData, sizeof(NsApplicationControlData), &appControlDataSize);
+    rc = nsGetApplicationControlData(NsApplicationControlSource_Storage, tid, appControlData, sizeof(NsApplicationControlData), &appControlDataSize);
     if (R_FAILED(rc))
     {
         delete appControlData;

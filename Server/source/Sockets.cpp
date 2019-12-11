@@ -34,11 +34,11 @@ int setupSocketServer()
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
     if (sockfd < 0)
-        fatalSimple(MAKERESULT(Module_Discord, Error_SocketInitFailed));
+        fatalThrow(MAKERESULT(Module_Discord, Error_SocketInitFailed));
 
     int opt = 1;
     if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
-        fatalSimple(MAKERESULT(Module_Discord, Error_OptFailed));
+        fatalThrow(MAKERESULT(Module_Discord, Error_OptFailed));
 
     struct sockaddr_in servaddr;
     memset(&servaddr, 0, sizeof(servaddr));

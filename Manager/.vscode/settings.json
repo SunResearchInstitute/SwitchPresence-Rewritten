@@ -31,6 +31,24 @@
         "type_traits": "cpp",
         "tuple": "cpp",
         "typeinfo": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "atomic": "cpp",
+        "bit": "cpp",
+        "chrono": "cpp",
+        "codecvt": "cpp",
+        "cstddef": "cpp",
+        "ctime": "cpp",
+        "deque": "cpp",
+        "algorithm": "cpp",
+        "functional": "cpp",
+        "iterator": "cpp",
+        "memory": "cpp",
+        "memory_resource": "cpp",
+        "numeric": "cpp",
+        "random": "cpp",
+        "ratio": "cpp",
+        "string": "cpp",
+        "iomanip": "cpp",
+        "cinttypes": "cpp"
     }
 }

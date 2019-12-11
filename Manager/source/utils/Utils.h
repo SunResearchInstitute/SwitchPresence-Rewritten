@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <sys/stat.h>
 #include <gd.h>
+#include <vector>
 
 #define center(p, c) ((p - c) / 2)
 
@@ -17,7 +18,7 @@ namespace Utils
 {
 extern Result error_currentError;
 
-void printItems(const std::vector<std::string> &, std::string, int);
+void printItems(const std::vector<std::string> &items, std::string menuTitle, int);
 bool isPresenceActive();
 Result DumpIcons();
 Result getAppControlData(u64, NsApplicationControlData *);

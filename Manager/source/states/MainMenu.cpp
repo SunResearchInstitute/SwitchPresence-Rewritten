@@ -37,13 +37,18 @@ void MainMenu::calc(StateMachine *stateMachine, u64 inputs)
             case 1:
                 if (Utils::isPresenceActive())
                 {
-                    if (R_SUCCEEDED(pmshellTerminateProcessByTitleId(TID)))
+                    if (R_SUCCEEDED(pmshellTerminateProgram(TID)))
                         remove(BOOT2FLAG);
                 }
                 else
                 {
                     u64 pid;
-                    if (R_SUCCEEDED(pmshellLaunchProcess(0, TID, FsStorageId::FsStorageId_None, &pid))) {
+                    NcmProgramLocation programLocation
+                    {
+                        .program_id = TID,
+                        .storageID = NcmStorageId_None,
+                    };
+                    if (R_SUCCEEDED(pmshellLaunchProgram(0, &programLocation, &pid))) {
                         mkdir(FLAGSDIR, 0777);
                         fclose(fopen(BOOT2FLAG, "w"));
                     }
