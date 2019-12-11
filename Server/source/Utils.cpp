@@ -10,11 +10,11 @@ NsApplicationControlData *getAppControlData(u64 tid)
     size_t appControlDataSize = 0;
 
     Result rc;
-    rc = nsGetApplicationControlData(1, tid, appControlData, sizeof(NsApplicationControlData), &appControlDataSize);
+    rc = nsGetApplicationControlData(NsApplicationControlSource_Storage, tid, appControlData, sizeof(NsApplicationControlData), &appControlDataSize);
     if (R_FAILED(rc))
     {
         delete appControlData;
-        fatalSimple(rc);
+        fatalThrow(rc);
     }
 
     return appControlData;
@@ -28,7 +28,7 @@ string getAppName(u64 tid)
     rc = nacpGetLanguageEntry(&appControlData->nacp, &languageEntry);
     delete appControlData;
     if (R_FAILED(rc))
-        fatalSimple(rc);
+        fatalThrow(rc);
 
     if (languageEntry == nullptr)
         return string("A Game");

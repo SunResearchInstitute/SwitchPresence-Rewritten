@@ -40,7 +40,7 @@ extern "C"
         Result rc;
         rc = smInitialize();
         if (R_FAILED(rc))
-            fatalSimple(rc);
+            fatalThrow(rc);
         rc = setsysInitialize();
         if (R_SUCCEEDED(rc))
         {
@@ -49,17 +49,17 @@ extern "C"
             if (R_SUCCEEDED(rc))
                 hosversionSet(MAKEHOSVERSION(fw.major, fw.minor, fw.micro));
             else
-                fatalSimple(rc);
+                fatalThrow(rc);
             setsysExit();
         }
         else
-            fatalSimple(rc);
+            fatalThrow(rc);
         rc = pmdmntInitialize();
         if (R_FAILED(rc))
-            fatalSimple(rc);
+            fatalThrow(rc);
         rc = nsInitialize();
         if (R_FAILED(rc))
-            fatalSimple(rc);
+            fatalThrow(rc);
         
         SocketInitConfig sockConf = {
             .bsdsockets_version = 1,
@@ -73,18 +73,13 @@ extern "C"
             .udp_rx_buf_size = 0x0,
 
             .sb_efficiency = 4,
-
-            .serialized_out_addrinfos_max_size = 0x1000,
-            .serialized_out_hostent_max_size = 0x200,
-            .bypass_nsd = false,
-            .dns_timeout = 0,
         };
         rc = socketInitialize(&sockConf);
         if (R_FAILED(rc))
-            fatalSimple(rc);
+            fatalThrow(rc);
         rc = pminfoInitialize();
         if (R_FAILED(rc))
-            fatalSimple(rc);
+            fatalThrow(rc);
     }
 
     void __appExit(void)
@@ -111,10 +106,10 @@ int main(int argc, char **argv)
         Result rc;
         u64 pid;
         u64 tid;
-        rc = pmdmntGetApplicationPid(&pid);
+        rc = pmdmntGetApplicationProcessId(&pid);
         if (R_SUCCEEDED(rc))
         {
-            pminfoGetTitleId(&tid, pid);
+            pminfoGetProgramId(&tid, pid);
             src = sendData(connection, tid, Utils::getAppName(tid));
         }
         else
