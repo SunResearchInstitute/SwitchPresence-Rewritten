@@ -209,7 +209,7 @@ namespace SwitchPresence_Rewritten_GUI
                         }
                         if ((rpc != null && rpc.CurrentPresence == null) || LastGame != title.Name || ManualUpdate)
                         {
-                            rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, time, bigKeyBox.Text, bigKeyBox.Text, smallKeyBox.Text, stateBox.Text));
+                            rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, time, bigKeyBox.Text, bigTextBox.Text, smallKeyBox.Text, stateBox.Text));
 
                             ManualUpdate = false;
                             LastGame = title.Name;
