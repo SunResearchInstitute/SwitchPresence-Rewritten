@@ -10,5 +10,3 @@
 #include "states/ErrorState.h"
 #include "states/DumpResState.h"
 #include "states/DumpCompleteState.h"
-
-Result init();
