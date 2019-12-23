@@ -207,10 +207,19 @@ namespace SwitchPresence_Rewritten_GUI
                         {
                             time = Timestamps.Now;
                         }
-                        if ((rpc != null && rpc.CurrentPresence == null) || LastGame != title.Name || ManualUpdate)
+                        if ((LastGame != title.Name) || ManualUpdate)
                         {
-                            rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, time, bigKeyBox.Text, bigTextBox.Text, smallKeyBox.Text, stateBox.Text));
-
+                            if (rpc != null)
+                            {
+                                if (checkMainMenu.Checked == false && title.Name == "NULL")
+                                {
+                                    rpc.ClearPresence();
+                                }
+                                else
+                                {
+                                    rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, time, bigKeyBox.Text, bigTextBox.Text, smallKeyBox.Text, stateBox.Text));
+                                }
+                            }
                             ManualUpdate = false;
                             LastGame = title.Name;
                         }
@@ -244,6 +253,7 @@ namespace SwitchPresence_Rewritten_GUI
                 stateBox.Text = cfg.State;
                 clientBox.Text = cfg.Client;
                 checkTray.Checked = cfg.AllowTray;
+                checkMainMenu.Checked = cfg.DisplayMainMenu;
             }
         }
 
@@ -279,7 +289,8 @@ namespace SwitchPresence_Rewritten_GUI
                     State = stateBox.Text,
                     BigText = bigTextBox.Text,
                     DisplayTimer = checkTime.Checked,
-                    AllowTray = checkTray.Checked
+                    AllowTray = checkTray.Checked,
+                    DisplayMainMenu = checkMainMenu.Checked
                 };
                 File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
             }
@@ -337,5 +348,7 @@ namespace SwitchPresence_Rewritten_GUI
         private void TrayExitMenuItem_Click(object sender, EventArgs e) => Application.Exit();
 
         private void LinkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start($"https://discordapp.com/developers/applications/{clientBox.Text}");
+
+        private void CheckMainMenu_CheckedChanged(object sender, EventArgs e) => ManualUpdate = true;
     }
 }
