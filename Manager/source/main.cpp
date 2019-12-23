@@ -47,7 +47,7 @@ extern "C"
             goto error;
         rc = nsInitialize();
 
-error:
+    error:
         Utils::error_currentError = rc;
     }
 
