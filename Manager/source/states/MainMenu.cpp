@@ -35,12 +35,13 @@ void MainMenu::calc(StateMachine *stateMachine, u64 inputs)
                 stateMachine->pushState("dumpRes");
                 break;
             case 1:
-                if (Utils::isPresenceActive())
+                PresenceState state = Utils::getPresenceState();
+                if (state == PresenceState::Enabled)
                 {
                     if (R_SUCCEEDED(pmshellTerminateProgram(TID)))
                         remove(BOOT2FLAG);
                 }
-                else
+                else if (state == PresenceState::Disabled)
                 {
                     u64 pid;
                     NcmProgramLocation programLocation
@@ -59,10 +60,21 @@ void MainMenu::calc(StateMachine *stateMachine, u64 inputs)
 }
 
 void MainMenu::updateStatus(){
-    if (Utils::isPresenceActive())
-        MainMenuItems[1] = "SwitchPresence is enabled!";
-    else
+    switch (Utils::getPresenceState())
+    {
+    case PresenceState::NotFound:
+        MainMenuItems[1] = CONSOLE_RED "!!! SwitchPresence could not be found!";
+        break;
+    case PresenceState::Error:
+        MainMenuItems[1] = CONSOLE_RED "!!! Failed to retreive the state of SwitchPresence!";
+        break;
+    case PresenceState::Disabled:
         MainMenuItems[1] = "SwitchPresence is disabled!";
+        break;
+    case PresenceState::Enabled:
+        MainMenuItems[1] = "SwitchPresence is enabled!";
+        break;
+    }
 }
 
 std::string MainMenu::name()
