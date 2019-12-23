@@ -17,7 +17,7 @@
 #define FLAGSDIR CONTENTSDIR "/flags"
 #define BOOT2FLAG FLAGSDIR "/boot2.flag"
 
-enum class PresenceState 
+enum class PresenceState
 {
     NotFound,
     Error,

@@ -23,17 +23,17 @@ void printItems(const vector<string> &items, string menuTitle, int selection)
 PresenceState getPresenceState()
 {
     PresenceState state;
-
     u64 pid = 0;
-    Result rc = pmdmntGetProcessId(&pid, TID);
 
-    if (R_SUCCEEDED(rc))
+    if (R_SUCCEEDED(pmdmntGetProcessId(&pid, TID)))
+    {
         if (pid > 0)
             //note that this returns instantly
-            // because the file might not exist but still be running
+            //because the file might not exist but still be running
             return PresenceState::Enabled;
         else
             state = PresenceState::Error;
+    }
     else
         state = PresenceState::Disabled;
 
