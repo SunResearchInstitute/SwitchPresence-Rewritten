@@ -6,8 +6,6 @@ int main(int argc, char **argv)
 {
     consoleInit(nullptr);
 
-    Utils::error_currentError = init();
-
     states::StateMachine stateMachine;
 
     stateMachine.states.push_back(new states::MainMenu());
@@ -32,24 +30,31 @@ int main(int argc, char **argv)
         consoleUpdate(nullptr);
     }
 
-    nsExit();
-    pmdmntExit();
-    pmshellExit();
-
     consoleExit(nullptr);
     return 0;
 }
 
-Result init()
+extern "C"
 {
-    Result rc;
-    rc = pmshellInitialize();
-    if (R_FAILED(rc))
-        return rc;
-    rc = pmdmntInitialize();
-    if (R_FAILED(rc))
-        return rc;
-    rc = nsInitialize();
+    void userAppInit(void)
+    {
+        Result rc;
+        rc = pmshellInitialize();
+        if (R_FAILED(rc))
+            goto error;
+        rc = pmdmntInitialize();
+        if (R_FAILED(rc))
+            goto error;
+        rc = nsInitialize();
 
-    return rc;
+error:
+        Utils::error_currentError = rc;
+    }
+
+    void userAppExit(void)
+    {
+        nsExit();
+        pmdmntExit();
+        pmshellExit();
+    }
 }
