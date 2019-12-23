@@ -349,6 +349,6 @@ namespace SwitchPresence_Rewritten_GUI
 
         private void LinkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start($"https://discordapp.com/developers/applications/{clientBox.Text}");
 
-        private void checkMainMenu_CheckedChanged(object sender, EventArgs e) => ManualUpdate = true;
+        private void CheckMainMenu_CheckedChanged(object sender, EventArgs e) => ManualUpdate = true;
     }
 }
