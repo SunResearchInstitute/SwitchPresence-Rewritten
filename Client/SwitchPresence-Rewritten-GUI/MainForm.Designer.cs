@@ -51,6 +51,7 @@
             this.trayExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkTray = new System.Windows.Forms.CheckBox();
             this.macButton = new System.Windows.Forms.Button();
+            this.checkMainMenu = new System.Windows.Forms.CheckBox();
             this.trayContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -260,11 +261,25 @@
             this.macButton.Visible = false;
             this.macButton.Click += new System.EventHandler(this.MacButton_Click);
             // 
+            // checkMainMenu
+            // 
+            this.checkMainMenu.AutoSize = true;
+            this.checkMainMenu.Checked = true;
+            this.checkMainMenu.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkMainMenu.Location = new System.Drawing.Point(100, 439);
+            this.checkMainMenu.Name = "checkMainMenu";
+            this.checkMainMenu.Size = new System.Drawing.Size(170, 17);
+            this.checkMainMenu.TabIndex = 18;
+            this.checkMainMenu.Text = "Display Main Menu as a status";
+            this.checkMainMenu.UseVisualStyleBackColor = true;
+            this.checkMainMenu.CheckedChanged += new System.EventHandler(this.checkMainMenu_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(314, 455);
+            this.ClientSize = new System.Drawing.Size(314, 470);
+            this.Controls.Add(this.checkMainMenu);
             this.Controls.Add(this.macButton);
             this.Controls.Add(this.checkTray);
             this.Controls.Add(this.statusLabel);
@@ -319,6 +334,7 @@
         private System.Windows.Forms.CheckBox checkTray;
         private System.Windows.Forms.ToolStripMenuItem connectToolStripMenuItem;
         private System.Windows.Forms.Button macButton;
+        private System.Windows.Forms.CheckBox checkMainMenu;
     }
 }
 
