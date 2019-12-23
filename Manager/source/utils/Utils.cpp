@@ -20,14 +20,27 @@ void printItems(const vector<string> &items, string menuTitle, int selection)
     }
 }
 
-bool isPresenceActive()
+PresenceState getPresenceState()
 {
+    PresenceState state;
     u64 pid = 0;
-    pmdmntGetProcessId(&pid, TID);
-    if (pid > 0)
-        return true;
+
+    if (R_SUCCEEDED(pmdmntGetProcessId(&pid, TID)))
+    {
+        if (pid > 0)
+            //note that this returns instantly
+            //because the file might not exist but still be running
+            return PresenceState::Enabled;
+        else
+            state = PresenceState::Error;
+    }
     else
-        return false;
+        state = PresenceState::Disabled;
+
+    if (!filesystem::exists(PROGRAMDIR))
+        state = PresenceState::NotFound;
+
+    return state;
 }
 
 Result DumpIcons()

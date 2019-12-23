@@ -30,39 +30,53 @@ void MainMenu::calc(StateMachine *stateMachine, u64 inputs)
     Utils::printItems(MainMenuItems, "Main Menu", selection);
 
     if (inputs & KEY_A)
-        switch(selection){
-            case 0:
-                stateMachine->pushState("dumpRes");
-                break;
-            case 1:
-                if (Utils::isPresenceActive())
+        switch (selection)
+        {
+        case 0:
+            stateMachine->pushState("dumpRes");
+            break;
+        case 1:
+            PresenceState state = Utils::getPresenceState();
+            if (state == PresenceState::Enabled)
+            {
+                if (R_SUCCEEDED(pmshellTerminateProgram(TID)))
+                    remove(BOOT2FLAG);
+            }
+            else if (state == PresenceState::Disabled)
+            {
+                u64 pid;
+                NcmProgramLocation programLocation{
+                    .program_id = TID,
+                    .storageID = NcmStorageId_None,
+                };
+                if (R_SUCCEEDED(pmshellLaunchProgram(0, &programLocation, &pid)))
                 {
-                    if (R_SUCCEEDED(pmshellTerminateProgram(TID)))
-                        remove(BOOT2FLAG);
+                    mkdir(FLAGSDIR, 0777);
+                    fclose(fopen(BOOT2FLAG, "w"));
                 }
-                else
-                {
-                    u64 pid;
-                    NcmProgramLocation programLocation
-                    {
-                        .program_id = TID,
-                        .storageID = NcmStorageId_None,
-                    };
-                    if (R_SUCCEEDED(pmshellLaunchProgram(0, &programLocation, &pid))) {
-                        mkdir(FLAGSDIR, 0777);
-                        fclose(fopen(BOOT2FLAG, "w"));
-                    }
-                }
-                updateStatus();
-                break;
-    }
+            }
+            updateStatus();
+            break;
+        }
 }
 
-void MainMenu::updateStatus(){
-    if (Utils::isPresenceActive())
-        MainMenuItems[1] = "SwitchPresence is enabled!";
-    else
+void MainMenu::updateStatus()
+{
+    switch (Utils::getPresenceState())
+    {
+    case PresenceState::NotFound:
+        MainMenuItems[1] = CONSOLE_RED "!!! SwitchPresence could not be found!";
+        break;
+    case PresenceState::Error:
+        MainMenuItems[1] = CONSOLE_RED "!!! Failed to retreive the state of SwitchPresence!";
+        break;
+    case PresenceState::Disabled:
         MainMenuItems[1] = "SwitchPresence is disabled!";
+        break;
+    case PresenceState::Enabled:
+        MainMenuItems[1] = "SwitchPresence is enabled!";
+        break;
+    }
 }
 
 std::string MainMenu::name()
