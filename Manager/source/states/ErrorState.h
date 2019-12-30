@@ -10,6 +10,6 @@ class ErrorState : public State
 public:
     virtual std::string name();
     virtual void calc(StateMachine *, u64);
-    static Result ErrorState::error;
+    static Result error;
 };
 }; // namespace states
