@@ -11,7 +11,7 @@ void DumpResState::calc(states::StateMachine *stateMachine, u64)
 
     if (R_FAILED(rc))
     {
-        Utils::error_currentError = rc;
+        ErrorState::error = rc;
         stateMachine->pushState("error");
     }
     else

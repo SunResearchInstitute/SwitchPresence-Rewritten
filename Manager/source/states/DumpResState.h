@@ -3,6 +3,7 @@
 #include <string>
 #include "../utils/Utils.h"
 #include "statemachine.h"
+#include "ErrorState.h"
 
 namespace states
 {

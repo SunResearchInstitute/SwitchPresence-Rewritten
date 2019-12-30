@@ -13,7 +13,7 @@ int main(int argc, char **argv)
     stateMachine.states.push_back(new states::DumpCompleteState());
     stateMachine.states.push_back(new states::ErrorState());
 
-    if (R_FAILED(Utils::error_currentError))
+    if (R_FAILED(states::ErrorState::error))
         stateMachine.pushState("error");
     else
         stateMachine.pushState("main");
@@ -48,7 +48,7 @@ extern "C"
         rc = nsInitialize();
 
     error:
-        Utils::error_currentError = rc;
+        states::ErrorState::error = rc;
     }
 
     void userAppExit(void)

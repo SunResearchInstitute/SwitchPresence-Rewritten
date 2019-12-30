@@ -27,8 +27,6 @@ enum class PresenceState
 
 namespace Utils
 {
-extern Result error_currentError;
-
 void printItems(const std::vector<std::string> &items, std::string menuTitle, int);
 PresenceState getPresenceState();
 Result DumpIcons();
