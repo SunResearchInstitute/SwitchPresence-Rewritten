@@ -31,7 +31,11 @@ namespace PresenceCommon
                 presence.Details = $"Playing {title.Name}";
             }
             presence.Assets = assets;
-            presence.Timestamps = time;
+
+            if (time != null)
+            {
+                presence.Timestamps = time;
+            }
 
             return presence;
         }

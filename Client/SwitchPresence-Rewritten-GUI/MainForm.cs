@@ -2,13 +2,11 @@
 #if DEBUG
 using DiscordRPC.Logging;
 #endif
-using Newtonsoft.Json;
 using PresenceCommon.Types;
 using SwitchPresence_Rewritten_GUI.Properties;
 using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Media;
 using System.Net;
 using System.Net.Sockets;
@@ -239,9 +237,17 @@ namespace SwitchPresence_Rewritten_GUI
                             if (rpc != null)
                             {
                                 if (checkMainMenu.Checked == false && title.Name == "NULL")
+                                {
                                     rpc.ClearPresence();
-                                else
+                                }
+                                else if (checkTime.Checked == true)
+                                {
                                     rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, time, bigKeyBox.Text, bigTextBox.Text, smallKeyBox.Text, stateBox.Text));
+                                } else
+                                {
+                                    rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, null, bigKeyBox.Text, bigTextBox.Text, smallKeyBox.Text, stateBox.Text));
+                                }
+                                    
                             }
                             ManualUpdate = false;
                             LastGame = title.Name;
