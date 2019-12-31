@@ -31,6 +31,7 @@ namespace SwitchPresence_Rewritten_GUI
         string LastGame = "";
         private Timestamps time = null;
         private static Timer timer;
+        bool? defaultToMac = null;
 
         public MainForm()
         {
@@ -42,6 +43,7 @@ namespace SwitchPresence_Rewritten_GUI
         {
             if (connectButton.Text == "Connect")
             {
+                // Check and see if ClientID is empty
                 if (string.IsNullOrWhiteSpace(clientBox.Text))
                 {
                     Show();
@@ -51,8 +53,41 @@ namespace SwitchPresence_Rewritten_GUI
                     return;
                 }
 
-                if (!IPAddress.TryParse(addressBox.Text, out ipAddress))
+                // Check and see if we have an IP
+                bool isIP = IPAddress.TryParse(addressBox.Text, out ipAddress);
+
+                // If we have an IP, prompt to swap to MAC Address
+                if (isIP)
                 {
+                    if (!defaultToMac.HasValue)
+                    {
+                        string caption = "IP Detected";
+                        string message = "We've detected that you're using an IP to connect to your Switch. Connecting via MAC address may make it easier to reconnect to your device in case the IP changes." +
+                                         "\n\nWould you like to swap to connecting via MAC address? \n(We'll only ask this once.)";
+                        MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                        DialogResult result;
+
+                        result = MessageBox.Show(message, caption, buttons);
+                        if (result == DialogResult.Yes)
+                        {
+                            defaultToMac = true;
+                            ipToMac();
+                        }
+                        else
+                        {
+                            defaultToMac = false;
+                        }
+                    } 
+                    else if (defaultToMac == true)
+                    {
+                        ipToMac();
+                    }
+                    
+                }
+                else if (!isIP)
+                {
+                    // If in this block, means we dont have a valid IP.
+                    // Check and see if it's a MAC Address
                     try
                     {
                         macAddress = PhysicalAddress.Parse(addressBox.Text.ToUpper());
@@ -73,8 +108,6 @@ namespace SwitchPresence_Rewritten_GUI
                 connectButton.Text = "Disconnect";
                 connectToolStripMenuItem.Text = "Disconnect";
 
-                macButton.Visible = (macAddress == null);
-                macButton.Enabled = false;
                 addressBox.Enabled = false;
                 clientBox.Enabled = false;
             }
@@ -98,8 +131,6 @@ namespace SwitchPresence_Rewritten_GUI
 
                 macAddress = null;
                 ipAddress = null;
-                macButton.Visible = false;
-                macButton.Enabled = false;
                 addressBox.Enabled = true;
                 clientBox.Enabled = true;
                 LastGame = "";
@@ -160,7 +191,6 @@ namespace SwitchPresence_Rewritten_GUI
                 trayIcon.Icon = Resources.Disconnected;
                 trayIcon.Text = "SwitchPresence (Connecting...)";
                 timer.Enabled = true;
-                ToggleMacButton(false);
 
                 try
                 {
@@ -198,7 +228,6 @@ namespace SwitchPresence_Rewritten_GUI
                     UpdateStatus("Connected to the server!", Color.Green);
                     trayIcon.Icon = Resources.Connected;
                     trayIcon.Text = "SwitchPresence (Connected)";
-                    ToggleMacButton(true);
 
                     Title title = new Title(bytes);
                     if (title.Magic == 0xffaadd23)
@@ -237,6 +266,19 @@ namespace SwitchPresence_Rewritten_GUI
                     client.Close();
                     return;
                 }
+            }
+        }
+
+        private void ipToMac()
+        {
+            string macAddress = Utils.GetMacByIp(ipAddress.ToString());
+            if (macAddress != null)
+            {
+                addressBox.Text = macAddress;
+            }
+            else
+            {
+                MessageBox.Show("Can't convert to MAC Address! Sorry!");
             }
         }
 
@@ -302,35 +344,12 @@ namespace SwitchPresence_Rewritten_GUI
             Activate();
         }
 
-        private void MacButton_Click(object sender, EventArgs e)
-        {
-            string macAddress = Utils.GetMacByIp(ipAddress.ToString());
-            if (macAddress != null)
-            {
-                addressBox.Text = macAddress;
-                macButton.Visible = false;
-            }
-            else
-            {
-                MessageBox.Show("Can't convert to MAC Address! Sorry!");
-            }
-        }
-
         private void UpdateStatus(string text, Color color)
         {
             MethodInvoker inv = () =>
             {
                 statusLabel.Text = text;
                 statusLabel.ForeColor = color;
-            };
-            Invoke(inv);
-        }
-
-        private void ToggleMacButton(bool enable)
-        {
-            MethodInvoker inv = () =>
-            {
-                macButton.Enabled = enable;
             };
             Invoke(inv);
         }

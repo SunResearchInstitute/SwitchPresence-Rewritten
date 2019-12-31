@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.addressBox = new System.Windows.Forms.TextBox();
             this.connectButton = new System.Windows.Forms.Button();
             this.clientBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -50,21 +49,14 @@
             this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkTray = new System.Windows.Forms.CheckBox();
-            this.macButton = new System.Windows.Forms.Button();
             this.checkMainMenu = new System.Windows.Forms.CheckBox();
+            this.addressBox = new System.Windows.Forms.TextBox();
             this.trayContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
-            // addressBox
-            // 
-            this.addressBox.Location = new System.Drawing.Point(107, 46);
-            this.addressBox.Name = "addressBox";
-            this.addressBox.Size = new System.Drawing.Size(100, 20);
-            this.addressBox.TabIndex = 1;
-            // 
             // connectButton
             // 
-            this.connectButton.Location = new System.Drawing.Point(120, 343);
+            this.connectButton.Location = new System.Drawing.Point(60, 309);
             this.connectButton.Name = "connectButton";
             this.connectButton.Size = new System.Drawing.Size(75, 23);
             this.connectButton.TabIndex = 13;
@@ -74,7 +66,7 @@
             // 
             // clientBox
             // 
-            this.clientBox.Location = new System.Drawing.Point(107, 93);
+            this.clientBox.Location = new System.Drawing.Point(50, 80);
             this.clientBox.MaxLength = 18;
             this.clientBox.Name = "clientBox";
             this.clientBox.Size = new System.Drawing.Size(100, 20);
@@ -83,7 +75,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(107, 30);
+            this.label1.Location = new System.Drawing.Point(50, 25);
             this.label1.MinimumSize = new System.Drawing.Size(100, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(100, 13);
@@ -94,7 +86,7 @@
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(107, 77);
+            this.linkLabel1.Location = new System.Drawing.Point(50, 65);
             this.linkLabel1.MinimumSize = new System.Drawing.Size(100, 0);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(100, 13);
@@ -110,7 +102,7 @@
             this.checkTime.AutoSize = true;
             this.checkTime.Checked = true;
             this.checkTime.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkTime.Location = new System.Drawing.Point(100, 378);
+            this.checkTime.Location = new System.Drawing.Point(12, 338);
             this.checkTime.Name = "checkTime";
             this.checkTime.Size = new System.Drawing.Size(117, 17);
             this.checkTime.TabIndex = 14;
@@ -121,7 +113,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(107, 260);
+            this.label2.Location = new System.Drawing.Point(50, 226);
             this.label2.MinimumSize = new System.Drawing.Size(100, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(100, 13);
@@ -131,7 +123,7 @@
             // 
             // stateBox
             // 
-            this.stateBox.Location = new System.Drawing.Point(107, 276);
+            this.stateBox.Location = new System.Drawing.Point(50, 242);
             this.stateBox.MaxLength = 128;
             this.stateBox.Name = "stateBox";
             this.stateBox.Size = new System.Drawing.Size(100, 20);
@@ -141,7 +133,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(107, 211);
+            this.label3.Location = new System.Drawing.Point(50, 187);
             this.label3.MinimumSize = new System.Drawing.Size(100, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(100, 13);
@@ -151,7 +143,7 @@
             // 
             // smallKeyBox
             // 
-            this.smallKeyBox.Location = new System.Drawing.Point(107, 227);
+            this.smallKeyBox.Location = new System.Drawing.Point(50, 203);
             this.smallKeyBox.MaxLength = 32;
             this.smallKeyBox.Name = "smallKeyBox";
             this.smallKeyBox.Size = new System.Drawing.Size(100, 20);
@@ -161,7 +153,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(107, 127);
+            this.label4.Location = new System.Drawing.Point(50, 103);
             this.label4.MinimumSize = new System.Drawing.Size(100, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(100, 13);
@@ -171,7 +163,7 @@
             // 
             // bigKeyBox
             // 
-            this.bigKeyBox.Location = new System.Drawing.Point(107, 143);
+            this.bigKeyBox.Location = new System.Drawing.Point(50, 119);
             this.bigKeyBox.MaxLength = 32;
             this.bigKeyBox.Name = "bigKeyBox";
             this.bigKeyBox.Size = new System.Drawing.Size(100, 20);
@@ -181,7 +173,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(107, 171);
+            this.label5.Location = new System.Drawing.Point(50, 147);
             this.label5.MinimumSize = new System.Drawing.Size(100, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(100, 13);
@@ -191,7 +183,7 @@
             // 
             // bigTextBox
             // 
-            this.bigTextBox.Location = new System.Drawing.Point(107, 187);
+            this.bigTextBox.Location = new System.Drawing.Point(50, 163);
             this.bigTextBox.MaxLength = 128;
             this.bigTextBox.Name = "bigTextBox";
             this.bigTextBox.Size = new System.Drawing.Size(100, 20);
@@ -202,9 +194,9 @@
             // 
             this.statusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.statusLabel.ForeColor = System.Drawing.Color.Red;
-            this.statusLabel.Location = new System.Drawing.Point(12, 299);
+            this.statusLabel.Location = new System.Drawing.Point(0, 265);
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(290, 41);
+            this.statusLabel.Size = new System.Drawing.Size(200, 40);
             this.statusLabel.TabIndex = 12;
             this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -241,32 +233,19 @@
             // checkTray
             // 
             this.checkTray.AutoSize = true;
-            this.checkTray.Location = new System.Drawing.Point(100, 401);
+            this.checkTray.Location = new System.Drawing.Point(12, 361);
             this.checkTray.Name = "checkTray";
             this.checkTray.Size = new System.Drawing.Size(102, 17);
             this.checkTray.TabIndex = 15;
             this.checkTray.Text = "Minimize to Tray";
             this.checkTray.UseVisualStyleBackColor = true;
             // 
-            // macButton
-            // 
-            this.macButton.Enabled = false;
-            this.macButton.Location = new System.Drawing.Point(213, 45);
-            this.macButton.MinimumSize = new System.Drawing.Size(0, 22);
-            this.macButton.Name = "macButton";
-            this.macButton.Size = new System.Drawing.Size(62, 22);
-            this.macButton.TabIndex = 17;
-            this.macButton.Text = "Use MAC";
-            this.macButton.UseVisualStyleBackColor = true;
-            this.macButton.Visible = false;
-            this.macButton.Click += new System.EventHandler(this.MacButton_Click);
-            // 
             // checkMainMenu
             // 
             this.checkMainMenu.AutoSize = true;
             this.checkMainMenu.Checked = true;
             this.checkMainMenu.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkMainMenu.Location = new System.Drawing.Point(100, 424);
+            this.checkMainMenu.Location = new System.Drawing.Point(12, 384);
             this.checkMainMenu.Name = "checkMainMenu";
             this.checkMainMenu.Size = new System.Drawing.Size(170, 17);
             this.checkMainMenu.TabIndex = 18;
@@ -274,13 +253,19 @@
             this.checkMainMenu.UseVisualStyleBackColor = true;
             this.checkMainMenu.CheckedChanged += new System.EventHandler(this.CheckMainMenu_CheckedChanged);
             // 
+            // addressBox
+            // 
+            this.addressBox.Location = new System.Drawing.Point(50, 42);
+            this.addressBox.Name = "addressBox";
+            this.addressBox.Size = new System.Drawing.Size(100, 20);
+            this.addressBox.TabIndex = 1;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(314, 470);
+            this.ClientSize = new System.Drawing.Size(200, 417);
             this.Controls.Add(this.checkMainMenu);
-            this.Controls.Add(this.macButton);
             this.Controls.Add(this.checkTray);
             this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.label5);
@@ -312,8 +297,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.TextBox addressBox;
         private System.Windows.Forms.Button connectButton;
         private System.Windows.Forms.TextBox clientBox;
         private System.Windows.Forms.Label label1;
@@ -333,8 +316,8 @@
         private System.Windows.Forms.ToolStripMenuItem trayExitMenuItem;
         private System.Windows.Forms.CheckBox checkTray;
         private System.Windows.Forms.ToolStripMenuItem connectToolStripMenuItem;
-        private System.Windows.Forms.Button macButton;
         private System.Windows.Forms.CheckBox checkMainMenu;
+        private System.Windows.Forms.TextBox addressBox;
     }
 }
 
