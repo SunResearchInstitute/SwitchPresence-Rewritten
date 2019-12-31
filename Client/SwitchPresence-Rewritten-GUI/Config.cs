@@ -3,12 +3,6 @@ using System.IO;
 
 namespace SwitchPresence_Rewritten_GUI
 {
-    public class ConfigData
-    {
-        public string IP, Client, BigKey, BigText, SmallKey, State;
-        public bool DisplayTimer, AllowTray, DisplayMainMenu, SeenAutoMacPrompt, AutoToMac;
-    }
-
     public class Config : ConfigData
     {
         public void loadConfig()

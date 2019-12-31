@@ -245,7 +245,6 @@ namespace SwitchPresence_Rewritten_GUI
                                 {
                                     rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, config.DisplayTimer ? time : null, config.BigKey, config.BigText, config.SmallKey, stateBox.Text));
                                 }
-                                    
                             }
                             ManualUpdate = false;
                             LastGame = title.Name;
