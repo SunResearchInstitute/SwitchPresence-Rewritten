@@ -43,6 +43,7 @@
             this.trayExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addressBox = new System.Windows.Forms.TextBox();
             this.settingsButton = new System.Windows.Forms.Button();
+            this.showAppStrip = new System.Windows.Forms.ToolStripMenuItem();
             this.trayContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -131,21 +132,22 @@
             // 
             this.trayContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.connectToolStripMenuItem,
+            this.showAppStrip,
             this.trayExitMenuItem});
             this.trayContextMenu.Name = "trayContextMenu";
-            this.trayContextMenu.Size = new System.Drawing.Size(120, 48);
+            this.trayContextMenu.Size = new System.Drawing.Size(181, 92);
             // 
             // connectToolStripMenuItem
             // 
             this.connectToolStripMenuItem.Name = "connectToolStripMenuItem";
-            this.connectToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.connectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.connectToolStripMenuItem.Text = "Connect";
             this.connectToolStripMenuItem.Click += new System.EventHandler(this.ConnectButton_Click);
             // 
             // trayExitMenuItem
             // 
             this.trayExitMenuItem.Name = "trayExitMenuItem";
-            this.trayExitMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.trayExitMenuItem.Size = new System.Drawing.Size(180, 22);
             this.trayExitMenuItem.Text = "Exit";
             this.trayExitMenuItem.Click += new System.EventHandler(this.TrayExitMenuItem_Click);
             // 
@@ -165,6 +167,13 @@
             this.settingsButton.Text = "Settings";
             this.settingsButton.UseVisualStyleBackColor = true;
             this.settingsButton.Click += new System.EventHandler(this.settingsButton_Click);
+            // 
+            // showAppStrip
+            // 
+            this.showAppStrip.Name = "showAppStrip";
+            this.showAppStrip.Size = new System.Drawing.Size(180, 22);
+            this.showAppStrip.Text = "Show App";
+            this.showAppStrip.Click += new System.EventHandler(this.toolStripShowApp_Click);
             // 
             // MainForm
             // 
@@ -209,6 +218,7 @@
         private System.Windows.Forms.ToolStripMenuItem connectToolStripMenuItem;
         private System.Windows.Forms.TextBox addressBox;
         private System.Windows.Forms.Button settingsButton;
+        private System.Windows.Forms.ToolStripMenuItem showAppStrip;
     }
 }
 

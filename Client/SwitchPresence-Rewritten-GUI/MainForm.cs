@@ -28,6 +28,7 @@ namespace SwitchPresence_Rewritten_GUI
         private Timestamps time = null;
         private static Timer timer;
         private Config config;
+        private bool hasSeenTrayPrompt = false;
 
         public MainForm(Config cfg)
         {
@@ -59,9 +60,9 @@ namespace SwitchPresence_Rewritten_GUI
                         config.SeenAutoMacPrompt = true;
 
                         string message = "We've detected that you're using an IP to connect to your Switch. Connecting via MAC address may make it easier to reconnect to your device in case the IP changes." +
-                                         "\n\nWould you us to automatically convert IPs into MAC addresses for you? \n(We'll only ask this once.)";
+                                         "\n\nWould you us to automatically convert IPs into MAC addresses for you? (We'll only ask this once.)";
 
-                        if (MessageBox.Show(message, "IP Detected", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        if (MessageBox.Show(message, "IP Detected", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
                             config.AutoToMac = true;
                             IpToMac();
@@ -301,6 +302,14 @@ namespace SwitchPresence_Rewritten_GUI
             {
                 e.Cancel = true;
                 Hide();
+
+                // Prompt user to let them know we're hidden.
+                if (!hasSeenTrayPrompt)
+                {
+                    hasSeenTrayPrompt = true;
+                    string message = "SwitchPresence-Rewritten will now run in the tray.\nIn order to quit the app, right-click on the icon in the tray and click Exit.\n\n(You can turn this off in settings.)";
+                    MessageBox.Show(message, "Shrinking to Tray", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             else
             {
@@ -315,6 +324,12 @@ namespace SwitchPresence_Rewritten_GUI
         }
 
         private void TrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Show();
+            Activate();
+        }
+
+        private void toolStripShowApp_Click(object sender, EventArgs e)
         {
             Show();
             Activate();
