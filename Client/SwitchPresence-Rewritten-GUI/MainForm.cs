@@ -29,12 +29,13 @@ namespace SwitchPresence_Rewritten_GUI
         private string LastGame = "";
         private Timestamps time = null;
         private static Timer timer;
-        private bool HasSeenMacPrompt = false;
+        private Config config;
 
-        public MainForm()
+        public MainForm(Config cfg)
         {
             InitializeComponent();
             listenThread = new Thread(TryConnect);
+            config = cfg;
         }
 
         private void ConnectButton_Click(object sender, EventArgs e)
@@ -55,9 +56,9 @@ namespace SwitchPresence_Rewritten_GUI
                 // If we have an IP, prompt to swap to MAC Address
                 if (IPAddress.TryParse(addressBox.Text, out ipAddress))
                 {
-                    if (!HasSeenMacPrompt)
+                    if (!config.SeenAutoMacPrompt)
                     {
-                        HasSeenMacPrompt = true;
+                        config.SeenAutoMacPrompt = true;
 
                         string message = "We've detected that you're using an IP to connect to your Switch. Connecting via MAC address may make it easier to reconnect to your device in case the IP changes." +
                                          "\n\nWould you like to swap to connecting via MAC address? \n(We'll only ask this once.)";
@@ -89,6 +90,16 @@ namespace SwitchPresence_Rewritten_GUI
                         SystemSounds.Exclamation.Play();
                         return;
                     }
+                }
+
+                // Check to see if we obtained a valid IP
+                if (ipAddress == null)
+                {
+                    Show();
+                    Activate();
+                    UpdateStatus("Device with MAC wasn't found!", Color.DarkRed);
+                    SystemSounds.Exclamation.Play();
+                    return;
                 }
 
                 listenThread.Start();
@@ -263,21 +274,17 @@ namespace SwitchPresence_Rewritten_GUI
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            if (File.Exists("Config.json"))
-            {
-                Config cfg = JsonConvert.DeserializeObject<Config>(File.ReadAllText("Config.json"));
-                checkTime.Checked = cfg.DisplayTimer;
-                bigKeyBox.Text = cfg.BigKey;
-                bigTextBox.Text = cfg.BigText;
-                smallKeyBox.Text = cfg.SmallKey;
-                addressBox.Text = cfg.IP;
-                stateBox.Text = cfg.State;
-                clientBox.Text = cfg.Client;
-                checkTray.Checked = cfg.AllowTray;
-                checkMainMenu.Checked = cfg.DisplayMainMenu;
-                HasSeenMacPrompt = cfg.SeenAutoMacPrompt;
-                UseMacDefault.Checked = cfg.AutoToMac;
-            }
+            // load data from config
+            addressBox.Text = config.IP;
+            clientBox.Text = config.Client;
+            bigKeyBox.Text = config.BigKey;
+            bigTextBox.Text = config.BigText;
+            smallKeyBox.Text = config.SmallKey;
+            stateBox.Text = config.State;
+            checkTime.Checked = config.DisplayTimer;
+            checkTray.Checked = config.AllowTray;
+            checkMainMenu.Checked = config.DisplayMainMenu;
+            UseMacDefault.Checked = config.AutoToMac;
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -303,21 +310,18 @@ namespace SwitchPresence_Rewritten_GUI
             {
                 if (timer != null) timer.Dispose();
 
-                Config cfg = new Config()
-                {
-                    IP = addressBox.Text,
-                    Client = clientBox.Text,
-                    BigKey = bigKeyBox.Text,
-                    SmallKey = smallKeyBox.Text,
-                    State = stateBox.Text,
-                    BigText = bigTextBox.Text,
-                    DisplayTimer = checkTime.Checked,
-                    AllowTray = checkTray.Checked,
-                    DisplayMainMenu = checkMainMenu.Checked,
-                    SeenAutoMacPrompt = HasSeenMacPrompt,
-                    AutoToMac = UseMacDefault.Checked
-                };
-                File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
+                // make sure config is saved
+                config.IP = addressBox.Text;
+                config.Client = clientBox.Text;
+                config.BigKey = bigKeyBox.Text;
+                config.BigText = bigTextBox.Text;
+                config.SmallKey = smallKeyBox.Text;
+                config.State = stateBox.Text;
+                config.DisplayTimer = checkTime.Checked;
+                config.AllowTray = checkTray.Checked;
+                config.DisplayMainMenu = checkMainMenu.Checked;
+                config.AutoToMac = UseMacDefault.Checked;
+                config.saveConfig();
             }
         }
 
@@ -353,6 +357,6 @@ namespace SwitchPresence_Rewritten_GUI
 
         private void CheckMainMenu_CheckedChanged(object sender, EventArgs e) => ManualUpdate = true;
 
-        private void UseMacDefault_CheckedChanged(object sender, EventArgs e) => HasSeenMacPrompt = true;
+        private void UseMacDefault_CheckedChanged(object sender, EventArgs e) => config.SeenAutoMacPrompt = true;
     }
 }

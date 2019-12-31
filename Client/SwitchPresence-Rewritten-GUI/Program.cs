@@ -11,9 +11,13 @@ namespace SwitchPresence_Rewritten_GUI
         [STAThread]
         static void Main()
         {
+            // We'll load the config here to make it accessible by the whole application
+            Config cfg = new Config();
+            cfg.loadConfig();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.Run(new MainForm(cfg));
         }
     }
 }
