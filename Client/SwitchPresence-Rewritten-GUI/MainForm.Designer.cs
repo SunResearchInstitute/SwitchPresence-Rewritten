@@ -51,6 +51,7 @@
             this.checkTray = new System.Windows.Forms.CheckBox();
             this.checkMainMenu = new System.Windows.Forms.CheckBox();
             this.addressBox = new System.Windows.Forms.TextBox();
+            this.UseMacDefault = new System.Windows.Forms.CheckBox();
             this.trayContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -260,11 +261,23 @@
             this.addressBox.Size = new System.Drawing.Size(100, 20);
             this.addressBox.TabIndex = 1;
             // 
+            // UseMacDefault
+            // 
+            this.UseMacDefault.AutoSize = true;
+            this.UseMacDefault.Location = new System.Drawing.Point(12, 408);
+            this.UseMacDefault.Name = "UseMacDefault";
+            this.UseMacDefault.Size = new System.Drawing.Size(178, 17);
+            this.UseMacDefault.TabIndex = 19;
+            this.UseMacDefault.Text = "Automatically convert IP to MAC";
+            this.UseMacDefault.UseVisualStyleBackColor = true;
+            this.UseMacDefault.CheckedChanged += new System.EventHandler(this.UseMacDefault_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(200, 417);
+            this.ClientSize = new System.Drawing.Size(200, 437);
+            this.Controls.Add(this.UseMacDefault);
             this.Controls.Add(this.checkMainMenu);
             this.Controls.Add(this.checkTray);
             this.Controls.Add(this.statusLabel);
@@ -318,6 +331,7 @@
         private System.Windows.Forms.ToolStripMenuItem connectToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkMainMenu;
         private System.Windows.Forms.TextBox addressBox;
+        private System.Windows.Forms.CheckBox UseMacDefault;
     }
 }
 

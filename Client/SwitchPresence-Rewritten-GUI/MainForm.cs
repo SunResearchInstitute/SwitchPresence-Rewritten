@@ -31,7 +31,7 @@ namespace SwitchPresence_Rewritten_GUI
         string LastGame = "";
         private Timestamps time = null;
         private static Timer timer;
-        bool? defaultToMac = null;
+        bool hasBeenMacPrompted = false;
 
         public MainForm()
         {
@@ -59,8 +59,10 @@ namespace SwitchPresence_Rewritten_GUI
                 // If we have an IP, prompt to swap to MAC Address
                 if (isIP)
                 {
-                    if (!defaultToMac.HasValue)
+                    if (!hasBeenMacPrompted)
                     {
+                        hasBeenMacPrompted = true;
+
                         string caption = "IP Detected";
                         string message = "We've detected that you're using an IP to connect to your Switch. Connecting via MAC address may make it easier to reconnect to your device in case the IP changes." +
                                          "\n\nWould you like to swap to connecting via MAC address? \n(We'll only ask this once.)";
@@ -70,15 +72,15 @@ namespace SwitchPresence_Rewritten_GUI
                         result = MessageBox.Show(message, caption, buttons);
                         if (result == DialogResult.Yes)
                         {
-                            defaultToMac = true;
+                            UseMacDefault.Checked = true;
                             ipToMac();
                         }
                         else
                         {
-                            defaultToMac = false;
+                            UseMacDefault.Checked = false;
                         }
                     } 
-                    else if (defaultToMac == true)
+                    else if (UseMacDefault.Checked == true)
                     {
                         ipToMac();
                     }
@@ -296,6 +298,8 @@ namespace SwitchPresence_Rewritten_GUI
                 clientBox.Text = cfg.Client;
                 checkTray.Checked = cfg.AllowTray;
                 checkMainMenu.Checked = cfg.DisplayMainMenu;
+                hasBeenMacPrompted = cfg.Prompt;
+                UseMacDefault.Checked = cfg.DefToMac;
             }
         }
 
@@ -332,7 +336,9 @@ namespace SwitchPresence_Rewritten_GUI
                     BigText = bigTextBox.Text,
                     DisplayTimer = checkTime.Checked,
                     AllowTray = checkTray.Checked,
-                    DisplayMainMenu = checkMainMenu.Checked
+                    DisplayMainMenu = checkMainMenu.Checked,
+                    Prompt = hasBeenMacPrompted,
+                    DefToMac = UseMacDefault.Checked
                 };
                 File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
             }
@@ -369,5 +375,10 @@ namespace SwitchPresence_Rewritten_GUI
         private void LinkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start($"https://discordapp.com/developers/applications/{clientBox.Text}");
 
         private void CheckMainMenu_CheckedChanged(object sender, EventArgs e) => ManualUpdate = true;
+
+        private void UseMacDefault_CheckedChanged(object sender, EventArgs e)
+        {
+            hasBeenMacPrompted = true;
+        }
     }
 }
