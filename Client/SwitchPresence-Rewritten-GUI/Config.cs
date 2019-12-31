@@ -3,6 +3,6 @@
     public class Config
     {
         public string IP, Client, BigKey, BigText, SmallKey, State;
-        public bool DisplayTimer, AllowTray, DisplayMainMenu;
+        public bool DisplayTimer, AllowTray, DisplayMainMenu, SeenAutoMacPrompt, AutoToMac;
     }
 }
