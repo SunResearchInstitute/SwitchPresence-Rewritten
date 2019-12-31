@@ -11,7 +11,6 @@ using System.Drawing;
 using System.IO;
 using System.Media;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
 using System.Timers;
@@ -26,7 +25,6 @@ namespace SwitchPresence_Rewritten_GUI
         static Socket client;
         static DiscordRpcClient rpc;
         private IPAddress ipAddress;
-        private PhysicalAddress macAddress;
         bool ManualUpdate = false;
         string LastGame = "";
         private Timestamps time = null;
@@ -63,36 +61,26 @@ namespace SwitchPresence_Rewritten_GUI
                     {
                         hasBeenMacPrompted = true;
 
-                        string caption = "IP Detected";
                         string message = "We've detected that you're using an IP to connect to your Switch. Connecting via MAC address may make it easier to reconnect to your device in case the IP changes." +
                                          "\n\nWould you like to swap to connecting via MAC address? \n(We'll only ask this once.)";
-                        MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                        DialogResult result;
 
-                        result = MessageBox.Show(message, caption, buttons);
-                        if (result == DialogResult.Yes)
+                        if (MessageBox.Show(message, "IP Detected", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
                             UseMacDefault.Checked = true;
-                            ipToMac();
+                            IpToMac();
                         }
                         else
-                        {
                             UseMacDefault.Checked = false;
-                        }
-                    } 
-                    else if (UseMacDefault.Checked == true)
-                    {
-                        ipToMac();
                     }
-                    
+                    else if (UseMacDefault.Checked == true)
+                        IpToMac();
                 }
-                else if (!isIP)
+                else
                 {
                     // If in this block, means we dont have a valid IP.
                     // Check and see if it's a MAC Address
                     try
                     {
-                        macAddress = PhysicalAddress.Parse(addressBox.Text.ToUpper());
                         IPAddress.TryParse(Utils.GetIpByMac(addressBox.Text), out ipAddress);
                     }
                     catch (FormatException)
@@ -131,7 +119,6 @@ namespace SwitchPresence_Rewritten_GUI
                 trayIcon.Icon = Resources.Disconnected;
                 trayIcon.Text = "SwitchPresence (Disconnected)";
 
-                macAddress = null;
                 ipAddress = null;
                 addressBox.Enabled = true;
                 clientBox.Enabled = true;
@@ -243,13 +230,9 @@ namespace SwitchPresence_Rewritten_GUI
                             if (rpc != null)
                             {
                                 if (checkMainMenu.Checked == false && title.Name == "NULL")
-                                {
                                     rpc.ClearPresence();
-                                }
                                 else
-                                {
                                     rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, time, bigKeyBox.Text, bigTextBox.Text, smallKeyBox.Text, stateBox.Text));
-                                }
                             }
                             ManualUpdate = false;
                             LastGame = title.Name;
@@ -271,17 +254,13 @@ namespace SwitchPresence_Rewritten_GUI
             }
         }
 
-        private void ipToMac()
+        private void IpToMac()
         {
             string macAddress = Utils.GetMacByIp(ipAddress.ToString());
             if (macAddress != null)
-            {
                 addressBox.Text = macAddress;
-            }
             else
-            {
                 MessageBox.Show("Can't convert to MAC Address! Sorry!");
-            }
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -298,8 +277,8 @@ namespace SwitchPresence_Rewritten_GUI
                 clientBox.Text = cfg.Client;
                 checkTray.Checked = cfg.AllowTray;
                 checkMainMenu.Checked = cfg.DisplayMainMenu;
-                hasBeenMacPrompted = cfg.Prompt;
-                UseMacDefault.Checked = cfg.DefToMac;
+                hasBeenMacPrompted = cfg.SeenAutoMacPrompt;
+                UseMacDefault.Checked = cfg.AutoToMac;
             }
         }
 
@@ -337,8 +316,8 @@ namespace SwitchPresence_Rewritten_GUI
                     DisplayTimer = checkTime.Checked,
                     AllowTray = checkTray.Checked,
                     DisplayMainMenu = checkMainMenu.Checked,
-                    Prompt = hasBeenMacPrompted,
-                    DefToMac = UseMacDefault.Checked
+                    SeenAutoMacPrompt = hasBeenMacPrompted,
+                    AutoToMac = UseMacDefault.Checked
                 };
                 File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
             }
@@ -376,9 +355,6 @@ namespace SwitchPresence_Rewritten_GUI
 
         private void CheckMainMenu_CheckedChanged(object sender, EventArgs e) => ManualUpdate = true;
 
-        private void UseMacDefault_CheckedChanged(object sender, EventArgs e)
-        {
-            hasBeenMacPrompted = true;
-        }
+        private void UseMacDefault_CheckedChanged(object sender, EventArgs e) => hasBeenMacPrompted = true;
     }
 }

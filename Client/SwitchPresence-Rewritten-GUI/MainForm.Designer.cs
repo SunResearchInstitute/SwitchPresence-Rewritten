@@ -57,7 +57,7 @@
             // 
             // connectButton
             // 
-            this.connectButton.Location = new System.Drawing.Point(60, 309);
+            this.connectButton.Location = new System.Drawing.Point(88, 302);
             this.connectButton.Name = "connectButton";
             this.connectButton.Size = new System.Drawing.Size(75, 23);
             this.connectButton.TabIndex = 13;
@@ -67,7 +67,7 @@
             // 
             // clientBox
             // 
-            this.clientBox.Location = new System.Drawing.Point(50, 80);
+            this.clientBox.Location = new System.Drawing.Point(78, 73);
             this.clientBox.MaxLength = 18;
             this.clientBox.Name = "clientBox";
             this.clientBox.Size = new System.Drawing.Size(100, 20);
@@ -76,7 +76,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(50, 25);
+            this.label1.Location = new System.Drawing.Point(78, 18);
             this.label1.MinimumSize = new System.Drawing.Size(100, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(100, 13);
@@ -87,7 +87,7 @@
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(50, 65);
+            this.linkLabel1.Location = new System.Drawing.Point(78, 58);
             this.linkLabel1.MinimumSize = new System.Drawing.Size(100, 0);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(100, 13);
@@ -103,7 +103,7 @@
             this.checkTime.AutoSize = true;
             this.checkTime.Checked = true;
             this.checkTime.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkTime.Location = new System.Drawing.Point(12, 338);
+            this.checkTime.Location = new System.Drawing.Point(40, 331);
             this.checkTime.Name = "checkTime";
             this.checkTime.Size = new System.Drawing.Size(117, 17);
             this.checkTime.TabIndex = 14;
@@ -114,7 +114,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(50, 226);
+            this.label2.Location = new System.Drawing.Point(78, 219);
             this.label2.MinimumSize = new System.Drawing.Size(100, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(100, 13);
@@ -124,7 +124,7 @@
             // 
             // stateBox
             // 
-            this.stateBox.Location = new System.Drawing.Point(50, 242);
+            this.stateBox.Location = new System.Drawing.Point(78, 235);
             this.stateBox.MaxLength = 128;
             this.stateBox.Name = "stateBox";
             this.stateBox.Size = new System.Drawing.Size(100, 20);
@@ -134,7 +134,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(50, 187);
+            this.label3.Location = new System.Drawing.Point(78, 180);
             this.label3.MinimumSize = new System.Drawing.Size(100, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(100, 13);
@@ -144,7 +144,7 @@
             // 
             // smallKeyBox
             // 
-            this.smallKeyBox.Location = new System.Drawing.Point(50, 203);
+            this.smallKeyBox.Location = new System.Drawing.Point(78, 196);
             this.smallKeyBox.MaxLength = 32;
             this.smallKeyBox.Name = "smallKeyBox";
             this.smallKeyBox.Size = new System.Drawing.Size(100, 20);
@@ -154,7 +154,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(50, 103);
+            this.label4.Location = new System.Drawing.Point(78, 96);
             this.label4.MinimumSize = new System.Drawing.Size(100, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(100, 13);
@@ -164,7 +164,7 @@
             // 
             // bigKeyBox
             // 
-            this.bigKeyBox.Location = new System.Drawing.Point(50, 119);
+            this.bigKeyBox.Location = new System.Drawing.Point(78, 112);
             this.bigKeyBox.MaxLength = 32;
             this.bigKeyBox.Name = "bigKeyBox";
             this.bigKeyBox.Size = new System.Drawing.Size(100, 20);
@@ -174,7 +174,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(50, 147);
+            this.label5.Location = new System.Drawing.Point(78, 140);
             this.label5.MinimumSize = new System.Drawing.Size(100, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(100, 13);
@@ -184,7 +184,7 @@
             // 
             // bigTextBox
             // 
-            this.bigTextBox.Location = new System.Drawing.Point(50, 163);
+            this.bigTextBox.Location = new System.Drawing.Point(78, 156);
             this.bigTextBox.MaxLength = 128;
             this.bigTextBox.Name = "bigTextBox";
             this.bigTextBox.Size = new System.Drawing.Size(100, 20);
@@ -195,7 +195,7 @@
             // 
             this.statusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.statusLabel.ForeColor = System.Drawing.Color.Red;
-            this.statusLabel.Location = new System.Drawing.Point(0, 265);
+            this.statusLabel.Location = new System.Drawing.Point(28, 258);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(200, 40);
             this.statusLabel.TabIndex = 12;
@@ -234,7 +234,7 @@
             // checkTray
             // 
             this.checkTray.AutoSize = true;
-            this.checkTray.Location = new System.Drawing.Point(12, 361);
+            this.checkTray.Location = new System.Drawing.Point(40, 354);
             this.checkTray.Name = "checkTray";
             this.checkTray.Size = new System.Drawing.Size(102, 17);
             this.checkTray.TabIndex = 15;
@@ -246,7 +246,7 @@
             this.checkMainMenu.AutoSize = true;
             this.checkMainMenu.Checked = true;
             this.checkMainMenu.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkMainMenu.Location = new System.Drawing.Point(12, 384);
+            this.checkMainMenu.Location = new System.Drawing.Point(40, 377);
             this.checkMainMenu.Name = "checkMainMenu";
             this.checkMainMenu.Size = new System.Drawing.Size(170, 17);
             this.checkMainMenu.TabIndex = 18;
@@ -256,7 +256,7 @@
             // 
             // addressBox
             // 
-            this.addressBox.Location = new System.Drawing.Point(50, 42);
+            this.addressBox.Location = new System.Drawing.Point(78, 35);
             this.addressBox.Name = "addressBox";
             this.addressBox.Size = new System.Drawing.Size(100, 20);
             this.addressBox.TabIndex = 1;
@@ -264,7 +264,7 @@
             // UseMacDefault
             // 
             this.UseMacDefault.AutoSize = true;
-            this.UseMacDefault.Location = new System.Drawing.Point(12, 408);
+            this.UseMacDefault.Location = new System.Drawing.Point(40, 401);
             this.UseMacDefault.Name = "UseMacDefault";
             this.UseMacDefault.Size = new System.Drawing.Size(178, 17);
             this.UseMacDefault.TabIndex = 19;
@@ -276,7 +276,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(200, 437);
+            this.ClientSize = new System.Drawing.Size(256, 437);
             this.Controls.Add(this.UseMacDefault);
             this.Controls.Add(this.checkMainMenu);
             this.Controls.Add(this.checkTray);
