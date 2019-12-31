@@ -59,17 +59,17 @@ namespace SwitchPresence_Rewritten_GUI
                         config.SeenAutoMacPrompt = true;
 
                         string message = "We've detected that you're using an IP to connect to your Switch. Connecting via MAC address may make it easier to reconnect to your device in case the IP changes." +
-                                         "\n\nWould you like to swap to connecting via MAC address? \n(We'll only ask this once.)";
+                                         "\n\nWould you us to automatically convert IPs into MAC addresses for you? \n(We'll only ask this once.)";
 
                         if (MessageBox.Show(message, "IP Detected", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
-                            UseMacDefault.Checked = true;
+                            config.AutoToMac = true;
                             IpToMac();
                         }
                         else
-                            UseMacDefault.Checked = false;
+                            config.AutoToMac = false;
                     }
-                    else if (UseMacDefault.Checked == true)
+                    else if (config.AutoToMac == true)
                         IpToMac();
                 }
                 else
@@ -236,16 +236,13 @@ namespace SwitchPresence_Rewritten_GUI
                         {
                             if (rpc != null)
                             {
-                                if (checkMainMenu.Checked == false && title.Name == "NULL")
+                                if (!config.DisplayMainMenu && title.Name == "NULL")
                                 {
                                     rpc.ClearPresence();
                                 }
-                                else if (checkTime.Checked == true)
+                                else
                                 {
-                                    rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, time, bigKeyBox.Text, bigTextBox.Text, smallKeyBox.Text, stateBox.Text));
-                                } else
-                                {
-                                    rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, null, bigKeyBox.Text, bigTextBox.Text, smallKeyBox.Text, stateBox.Text));
+                                    rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, config.DisplayTimer ? time : null, config.BigKey, config.BigText, config.SmallKey, stateBox.Text));
                                 }
                                     
                             }
@@ -283,14 +280,7 @@ namespace SwitchPresence_Rewritten_GUI
             // load data from config
             addressBox.Text = config.IP;
             clientBox.Text = config.Client;
-            bigKeyBox.Text = config.BigKey;
-            bigTextBox.Text = config.BigText;
-            smallKeyBox.Text = config.SmallKey;
             stateBox.Text = config.State;
-            checkTime.Checked = config.DisplayTimer;
-            checkTray.Checked = config.AllowTray;
-            checkMainMenu.Checked = config.DisplayMainMenu;
-            UseMacDefault.Checked = config.AutoToMac;
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -307,7 +297,7 @@ namespace SwitchPresence_Rewritten_GUI
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing && checkTray.Checked)
+            if (e.CloseReason == CloseReason.UserClosing && config.AllowTray)
             {
                 e.Cancel = true;
                 Hide();
@@ -319,14 +309,7 @@ namespace SwitchPresence_Rewritten_GUI
                 // make sure config is saved
                 config.IP = addressBox.Text;
                 config.Client = clientBox.Text;
-                config.BigKey = bigKeyBox.Text;
-                config.BigText = bigTextBox.Text;
-                config.SmallKey = smallKeyBox.Text;
                 config.State = stateBox.Text;
-                config.DisplayTimer = checkTime.Checked;
-                config.AllowTray = checkTray.Checked;
-                config.DisplayMainMenu = checkMainMenu.Checked;
-                config.AutoToMac = UseMacDefault.Checked;
                 config.saveConfig();
             }
         }
@@ -347,22 +330,20 @@ namespace SwitchPresence_Rewritten_GUI
             Invoke(inv);
         }
 
-        private void CheckTime_CheckedChanged(object sender, EventArgs e) => ManualUpdate = true;
-
-        private void BigKeyBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
-
-        private void SKeyBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
+        private void settingsButton_Click(object sender, EventArgs e)
+        {
+            Settings settingsMenu = new Settings(config);
+            settingsMenu.ShowDialog();
+        }
 
         private void StateBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
-
-        private void BigTextBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
 
         private void TrayExitMenuItem_Click(object sender, EventArgs e) => Application.Exit();
 
         private void LinkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start($"https://discordapp.com/developers/applications/{clientBox.Text}");
 
-        private void CheckMainMenu_CheckedChanged(object sender, EventArgs e) => ManualUpdate = true;
-
         private void UseMacDefault_CheckedChanged(object sender, EventArgs e) => config.SeenAutoMacPrompt = true;
+
+        private void MainForm_Activated(object sender, EventArgs e) => ManualUpdate = true;
     }
 }

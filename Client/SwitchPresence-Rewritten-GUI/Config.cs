@@ -30,6 +30,9 @@ namespace SwitchPresence_Rewritten_GUI
             }
             else
             {
+                // A few defaults we want to set on first run go here.
+                DisplayTimer = true;
+                AllowTray = true;
                 SeenAutoMacPrompt = false;
             }
         }
