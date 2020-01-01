@@ -46,12 +46,13 @@
             this.label3 = new System.Windows.Forms.Label();
             this.largeImageText = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.quitButton = new System.Windows.Forms.Button();
             this.trayContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // connectButton
             // 
-            this.connectButton.Location = new System.Drawing.Point(41, 172);
+            this.connectButton.Location = new System.Drawing.Point(13, 172);
             this.connectButton.Name = "connectButton";
             this.connectButton.Size = new System.Drawing.Size(75, 23);
             this.connectButton.TabIndex = 13;
@@ -147,7 +148,7 @@
             // 
             // settingsButton
             // 
-            this.settingsButton.Location = new System.Drawing.Point(136, 172);
+            this.settingsButton.Location = new System.Drawing.Point(90, 172);
             this.settingsButton.Name = "settingsButton";
             this.settingsButton.Size = new System.Drawing.Size(75, 23);
             this.settingsButton.TabIndex = 20;
@@ -195,11 +196,22 @@
             this.label4.Text = "Large Image Key";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // quitButton
+            // 
+            this.quitButton.Location = new System.Drawing.Point(167, 172);
+            this.quitButton.Name = "quitButton";
+            this.quitButton.Size = new System.Drawing.Size(75, 23);
+            this.quitButton.TabIndex = 21;
+            this.quitButton.Text = "Quit";
+            this.quitButton.UseVisualStyleBackColor = true;
+            this.quitButton.Click += new System.EventHandler(this.quitButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(252, 208);
+            this.Controls.Add(this.quitButton);
             this.Controls.Add(this.settingsButton);
             this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.label2);
@@ -243,6 +255,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox largeImageText;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button quitButton;
     }
 }
 

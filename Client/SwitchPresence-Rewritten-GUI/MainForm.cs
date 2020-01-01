@@ -420,5 +420,7 @@ namespace SwitchPresence_Rewritten_GUI
         private void largeImageKey_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
 
         private void TrayExitMenuItem_Click(object sender, EventArgs e) => Application.Exit();
+
+        private void quitButton_Click(object sender, EventArgs e) => Application.Exit();
     }
 }
