@@ -21,6 +21,8 @@ namespace SwitchPresence_Rewritten_GUI
                 DisplayMainMenu = save.DisplayMainMenu;
                 SeenAutoMacPrompt = save.SeenAutoMacPrompt;
                 AutoToMac = save.AutoToMac;
+                IsFirstRun = save.IsFirstRun;
+                AllowCustomKeyText = save.AllowCustomKeyText;
             }
             else
             {
@@ -28,6 +30,8 @@ namespace SwitchPresence_Rewritten_GUI
                 DisplayTimer = true;
                 AllowTray = true;
                 SeenAutoMacPrompt = false;
+                IsFirstRun = true;
+                AllowCustomKeyText = false;
             }
         }
 
@@ -45,8 +49,10 @@ namespace SwitchPresence_Rewritten_GUI
                 AllowTray = this.AllowTray,
                 DisplayMainMenu = this.DisplayMainMenu,
                 SeenAutoMacPrompt = this.SeenAutoMacPrompt,
-                AutoToMac = this.AutoToMac
-            };
+                AutoToMac = this.AutoToMac,
+                IsFirstRun = this.IsFirstRun,
+                AllowCustomKeyText = this.AllowCustomKeyText
+        };
             File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
         }
     }

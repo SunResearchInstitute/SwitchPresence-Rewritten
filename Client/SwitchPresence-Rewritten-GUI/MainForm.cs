@@ -5,7 +5,6 @@ using DiscordRPC.Logging;
 using PresenceCommon.Types;
 using SwitchPresence_Rewritten_GUI.Properties;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Media;
 using System.Net;
@@ -19,6 +18,7 @@ namespace SwitchPresence_Rewritten_GUI
 {
     public partial class MainForm : Form
     {
+        private delegate void SafeCallDelegate(TextBox inbox, string text);
         private Thread listenThread;
         private static Socket client;
         private static DiscordRpcClient rpc;
@@ -29,12 +29,14 @@ namespace SwitchPresence_Rewritten_GUI
         private static Timer timer;
         private Config config;
         private bool hasSeenTrayPrompt = false;
+        private Settings settingsMenu;
 
         public MainForm(Config cfg)
         {
             InitializeComponent();
             listenThread = new Thread(TryConnect);
             config = cfg;
+            settingsMenu = new Settings(config);
         }
 
         private void ConnectButton_Click(object sender, EventArgs e)
@@ -42,7 +44,7 @@ namespace SwitchPresence_Rewritten_GUI
             if (connectButton.Text == "Connect")
             {
                 // Check and see if ClientID is empty
-                if (string.IsNullOrWhiteSpace(clientBox.Text))
+                if (string.IsNullOrWhiteSpace(config.Client))
                 {
                     Show();
                     Activate();
@@ -107,7 +109,8 @@ namespace SwitchPresence_Rewritten_GUI
                 connectToolStripMenuItem.Text = "Disconnect";
 
                 addressBox.Enabled = false;
-                clientBox.Enabled = false;
+                //largeImageKey.Enabled = false;
+                //largeImageText.Enabled = false;
             }
             else
             {
@@ -129,7 +132,8 @@ namespace SwitchPresence_Rewritten_GUI
 
                 ipAddress = null;
                 addressBox.Enabled = true;
-                clientBox.Enabled = true;
+                //largeImageKey.Enabled = true;
+                //largeImageText.Enabled = true;
                 LastGame = "";
                 time = null;
             }
@@ -151,7 +155,7 @@ namespace SwitchPresence_Rewritten_GUI
                 rpc.Dispose();
             }
 
-            rpc = new DiscordRpcClient(clientBox.Text);
+            rpc = new DiscordRpcClient(config.Client);
             rpc.Initialize();
 
             timer = new Timer()
@@ -243,7 +247,18 @@ namespace SwitchPresence_Rewritten_GUI
                                 }
                                 else
                                 {
-                                    rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, config.DisplayTimer ? time : null, config.BigKey, config.BigText, config.SmallKey, stateBox.Text));
+                                    if (config.AllowCustomKeyText)
+                                    {
+                                        rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, config.DisplayTimer ? time : null, largeImageKey.Text, largeImageText.Text, config.SmallKey, stateBox.Text));
+                                    } 
+                                    else
+                                    {
+                                        // because of multithreading, we need to use a wrapper to change data on the main form
+                                        changeTextFromThread(largeImageKey, $"0{title.Tid:x}");
+                                        changeTextFromThread(largeImageText, title.Name);
+                                        rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, config.DisplayTimer ? time : null, config.BigKey, config.BigText, config.SmallKey, stateBox.Text));
+                                    }
+                                    
                                 }
                             }
                             ManualUpdate = false;
@@ -266,6 +281,19 @@ namespace SwitchPresence_Rewritten_GUI
             }
         }
 
+        private void changeTextFromThread(TextBox inbox, string text)
+        {
+            if (inbox.InvokeRequired)
+            {
+                var d = new SafeCallDelegate(changeTextFromThread);
+                inbox.Invoke(d, new object[] { inbox, text });
+            } 
+            else
+            {
+                inbox.Text = text;
+            }
+        }
+
         private void IpToMac()
         {
             string macAddress = Utils.GetMacByIp(ipAddress.ToString());
@@ -279,8 +307,16 @@ namespace SwitchPresence_Rewritten_GUI
         {
             // load data from config
             addressBox.Text = config.IP;
-            clientBox.Text = config.Client;
             stateBox.Text = config.State;
+            if (config.AllowCustomKeyText)
+            {
+                largeImageKey.Text = config.BigKey;
+                largeImageText.Text = config.BigText;
+            } 
+            else
+            {
+                largeImageKey.Text = largeImageText.Text = "";
+            }
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -316,10 +352,38 @@ namespace SwitchPresence_Rewritten_GUI
 
                 // make sure config is saved
                 config.IP = addressBox.Text;
-                config.Client = clientBox.Text;
                 config.State = stateBox.Text;
+                if (config.AllowCustomKeyText)
+                {
+                    config.BigKey = largeImageKey.Text;
+                    config.BigText = largeImageText.Text;
+                }
                 config.saveConfig();
             }
+        }
+
+        private void MainForm_Activated(object sender, EventArgs e)
+        {
+            ManualUpdate = true;
+
+            if (config.IsFirstRun)
+            {
+                config.IsFirstRun = false;
+
+                // NOTE: I'm debating making a "First Run" webpage to help guide users to set things up. May improve 
+                //       user experience. If that gets set up, we'll probably link that here. -Azure
+                string message = "Thanks for using SwitchPresence-Rewritten!\nTo get started, make sure to add your Discord app's Client ID in settings and your Switch's IP is set in the main menu. Then, hit connect and watch your status pop up!";
+                if (MessageBox.Show(message, "SwitchPresence-Rewritten", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+                {
+                    // Open settings on "OK" press.
+                    settingsMenu.ShowDialog();
+                }
+            }
+
+            if (config.AllowCustomKeyText)
+                largeImageKey.Enabled = largeImageText.Enabled = true;
+            else
+                largeImageKey.Enabled = largeImageText.Enabled = false;
         }
 
         private void TrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -346,18 +410,15 @@ namespace SwitchPresence_Rewritten_GUI
 
         private void settingsButton_Click(object sender, EventArgs e)
         {
-            Settings settingsMenu = new Settings(config);
             settingsMenu.ShowDialog();
         }
 
         private void StateBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
 
+        private void largeImageText_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
+
+        private void largeImageKey_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
+
         private void TrayExitMenuItem_Click(object sender, EventArgs e) => Application.Exit();
-
-        private void LinkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start($"https://discordapp.com/developers/applications/{clientBox.Text}");
-
-        private void UseMacDefault_CheckedChanged(object sender, EventArgs e) => config.SeenAutoMacPrompt = true;
-
-        private void MainForm_Activated(object sender, EventArgs e) => ManualUpdate = true;
     }
 }
