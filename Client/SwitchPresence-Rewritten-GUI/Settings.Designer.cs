@@ -66,7 +66,7 @@
             this.showTimer.AutoSize = true;
             this.showTimer.Checked = true;
             this.showTimer.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.showTimer.Location = new System.Drawing.Point(35, 117);
+            this.showTimer.Location = new System.Drawing.Point(21, 117);
             this.showTimer.Name = "showTimer";
             this.showTimer.Size = new System.Drawing.Size(117, 17);
             this.showTimer.TabIndex = 14;
@@ -78,7 +78,7 @@
             this.shrinkToTray.AutoSize = true;
             this.shrinkToTray.Checked = true;
             this.shrinkToTray.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.shrinkToTray.Location = new System.Drawing.Point(35, 140);
+            this.shrinkToTray.Location = new System.Drawing.Point(21, 140);
             this.shrinkToTray.Name = "shrinkToTray";
             this.shrinkToTray.Size = new System.Drawing.Size(102, 17);
             this.shrinkToTray.TabIndex = 15;
@@ -90,7 +90,7 @@
             this.mainMenuStatus.AutoSize = true;
             this.mainMenuStatus.Checked = true;
             this.mainMenuStatus.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.mainMenuStatus.Location = new System.Drawing.Point(35, 163);
+            this.mainMenuStatus.Location = new System.Drawing.Point(21, 163);
             this.mainMenuStatus.Name = "mainMenuStatus";
             this.mainMenuStatus.Size = new System.Drawing.Size(170, 17);
             this.mainMenuStatus.TabIndex = 18;
@@ -100,7 +100,7 @@
             // autoToMac
             // 
             this.autoToMac.AutoSize = true;
-            this.autoToMac.Location = new System.Drawing.Point(35, 185);
+            this.autoToMac.Location = new System.Drawing.Point(21, 185);
             this.autoToMac.Name = "autoToMac";
             this.autoToMac.Size = new System.Drawing.Size(178, 17);
             this.autoToMac.TabIndex = 19;
@@ -111,7 +111,7 @@
             // cancelButton
             // 
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(38, 212);
+            this.cancelButton.Location = new System.Drawing.Point(38, 214);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 20;
@@ -121,7 +121,7 @@
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(133, 212);
+            this.saveButton.Location = new System.Drawing.Point(133, 214);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(75, 23);
             this.saveButton.TabIndex = 21;
@@ -145,20 +145,22 @@
             // 
             // clientBox
             // 
+            this.clientBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.clientBox.Location = new System.Drawing.Point(70, 24);
             this.clientBox.MaxLength = 18;
             this.clientBox.Name = "clientBox";
             this.clientBox.Size = new System.Drawing.Size(100, 20);
             this.clientBox.TabIndex = 3;
+            this.clientBox.TextChanged += new System.EventHandler(this.clientBox_TextChanged);
             // 
             // useCustomTextBox
             // 
             this.useCustomTextBox.AutoSize = true;
-            this.useCustomTextBox.Location = new System.Drawing.Point(35, 95);
+            this.useCustomTextBox.Location = new System.Drawing.Point(21, 95);
             this.useCustomTextBox.Name = "useCustomTextBox";
-            this.useCustomTextBox.Size = new System.Drawing.Size(180, 17);
+            this.useCustomTextBox.Size = new System.Drawing.Size(211, 17);
             this.useCustomTextBox.TabIndex = 21;
-            this.useCustomTextBox.Text = "Use Custom Big Image Key/Text";
+            this.useCustomTextBox.Text = "Enable Large Image Key/Text Override";
             this.useCustomTextBox.UseVisualStyleBackColor = true;
             // 
             // Settings

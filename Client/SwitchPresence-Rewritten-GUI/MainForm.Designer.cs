@@ -94,7 +94,7 @@
             // 
             this.statusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.statusLabel.ForeColor = System.Drawing.Color.Red;
-            this.statusLabel.Location = new System.Drawing.Point(25, 129);
+            this.statusLabel.Location = new System.Drawing.Point(25, 116);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(200, 40);
             this.statusLabel.TabIndex = 12;
