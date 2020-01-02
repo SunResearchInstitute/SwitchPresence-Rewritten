@@ -5,7 +5,7 @@ namespace SwitchPresence_Rewritten_GUI
 {
     public class Config : ConfigData
     {
-        public void loadConfig()
+        public void LoadConfig()
         {
             if (File.Exists("Config.json"))
             {
@@ -31,29 +31,29 @@ namespace SwitchPresence_Rewritten_GUI
                 AllowTray = true;
                 SeenAutoMacPrompt = false;
                 IsFirstRun = true;
-                AllowCustomKeyText = false;
+                AllowCustomKeyText = true;
             }
         }
 
-        public void saveConfig()
+        public void SaveConfig()
         {
             ConfigData cfg = new ConfigData()
             {
-                IP = this.IP,
-                Client = this.Client,
-                BigKey = this.BigKey,
-                SmallKey = this.SmallKey,
-                State = this.State,
-                BigText = this.BigText,
-                DisplayTimer = this.DisplayTimer,
-                AllowTray = this.AllowTray,
-                DisplayMainMenu = this.DisplayMainMenu,
-                SeenAutoMacPrompt = this.SeenAutoMacPrompt,
-                AutoToMac = this.AutoToMac,
-                IsFirstRun = this.IsFirstRun,
-                AllowCustomKeyText = this.AllowCustomKeyText
-        };
-            File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
+                IP = IP,
+                Client = Client,
+                BigKey = BigKey,
+                SmallKey = SmallKey,
+                State = State,
+                BigText = BigText,
+                DisplayTimer = DisplayTimer,
+                AllowTray = AllowTray,
+                DisplayMainMenu = DisplayMainMenu,
+                SeenAutoMacPrompt = SeenAutoMacPrompt,
+                AutoToMac = AutoToMac,
+                IsFirstRun = IsFirstRun,
+                AllowCustomKeyText = AllowCustomKeyText
+            };
+            File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg, Formatting.Indented));
         }
     }
 }

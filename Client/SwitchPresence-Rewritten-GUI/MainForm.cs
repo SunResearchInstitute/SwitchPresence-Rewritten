@@ -27,16 +27,16 @@ namespace SwitchPresence_Rewritten_GUI
         private string LastGame = "";
         private Timestamps time = null;
         private static Timer timer;
-        private Config config;
+        private readonly Config config;
         private bool hasSeenTrayPrompt = false;
-        private Settings settingsMenu;
+        private readonly SettingsForm settingsMenu;
 
         public MainForm(Config cfg)
         {
             InitializeComponent();
             listenThread = new Thread(TryConnect);
             config = cfg;
-            settingsMenu = new Settings(config);
+            settingsMenu = new SettingsForm(config);
         }
 
         private void ConnectButton_Click(object sender, EventArgs e)
@@ -249,16 +249,16 @@ namespace SwitchPresence_Rewritten_GUI
                                 {
                                     if (config.AllowCustomKeyText)
                                     {
-                                        rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, config.DisplayTimer ? time : null, largeImageKey.Text, largeImageText.Text, config.SmallKey, stateBox.Text));
-                                    } 
+                                        rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, config.DisplayTimer ? time : null, largeImageKey.Text, largeImageText.Text, smallImageKey.Text, stateBox.Text));
+                                    }
                                     else
                                     {
                                         // because of multithreading, we need to use a wrapper to change data on the main form
-                                        changeTextFromThread(largeImageKey, $"0{title.Tid:x}");
-                                        changeTextFromThread(largeImageText, title.Name);
-                                        rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, config.DisplayTimer ? time : null, config.BigKey, config.BigText, config.SmallKey, stateBox.Text));
+                                        ChangeTextFromThread(largeImageKey, $"0{title.Tid:x}");
+                                        ChangeTextFromThread(largeImageText, title.Name);
+                                        rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, config.DisplayTimer ? time : null, config.BigKey, config.BigText, smallImageKey.Text, stateBox.Text));
                                     }
-                                    
+
                                 }
                             }
                             ManualUpdate = false;
@@ -281,13 +281,13 @@ namespace SwitchPresence_Rewritten_GUI
             }
         }
 
-        private void changeTextFromThread(TextBox inbox, string text)
+        private void ChangeTextFromThread(TextBox inbox, string text)
         {
             if (inbox.InvokeRequired)
             {
-                var d = new SafeCallDelegate(changeTextFromThread);
+                var d = new SafeCallDelegate(ChangeTextFromThread);
                 inbox.Invoke(d, new object[] { inbox, text });
-            } 
+            }
             else
             {
                 inbox.Text = text;
@@ -312,7 +312,7 @@ namespace SwitchPresence_Rewritten_GUI
             {
                 largeImageKey.Text = config.BigKey;
                 largeImageText.Text = config.BigText;
-            } 
+            }
             else
             {
                 largeImageKey.Text = largeImageText.Text = "";
@@ -358,7 +358,7 @@ namespace SwitchPresence_Rewritten_GUI
                     config.BigKey = largeImageKey.Text;
                     config.BigText = largeImageText.Text;
                 }
-                config.saveConfig();
+                config.SaveConfig();
             }
         }
 
@@ -381,9 +381,9 @@ namespace SwitchPresence_Rewritten_GUI
             }
 
             if (config.AllowCustomKeyText)
-                largeImageKey.Enabled = largeImageText.Enabled = true;
+                smallImageKey.Enabled = largeImageKey.Enabled = largeImageText.Enabled = true;
             else
-                largeImageKey.Enabled = largeImageText.Enabled = false;
+                smallImageKey.Enabled = largeImageKey.Enabled = largeImageText.Enabled = false;
         }
 
         private void TrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -392,7 +392,7 @@ namespace SwitchPresence_Rewritten_GUI
             Activate();
         }
 
-        private void toolStripShowApp_Click(object sender, EventArgs e)
+        private void ToolStripShowApp_Click(object sender, EventArgs e)
         {
             Show();
             Activate();
@@ -408,19 +408,19 @@ namespace SwitchPresence_Rewritten_GUI
             Invoke(inv);
         }
 
-        private void settingsButton_Click(object sender, EventArgs e)
+        private void SettingsButton_Click(object sender, EventArgs e)
         {
             settingsMenu.ShowDialog();
         }
 
         private void StateBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
 
-        private void largeImageText_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
+        private void LargeImageText_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
 
-        private void largeImageKey_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
+        private void LargeImageKey_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
 
         private void TrayExitMenuItem_Click(object sender, EventArgs e) => Application.Exit();
 
-        private void quitButton_Click(object sender, EventArgs e) => Application.Exit();
+        private void QuitButton_Click(object sender, EventArgs e) => Application.Exit();
     }
 }

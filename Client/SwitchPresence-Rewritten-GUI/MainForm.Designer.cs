@@ -47,12 +47,14 @@
             this.largeImageText = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.quitButton = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.smallImageKey = new System.Windows.Forms.TextBox();
             this.trayContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // connectButton
             // 
-            this.connectButton.Location = new System.Drawing.Point(13, 172);
+            this.connectButton.Location = new System.Drawing.Point(85, 306);
             this.connectButton.Name = "connectButton";
             this.connectButton.Size = new System.Drawing.Size(75, 23);
             this.connectButton.TabIndex = 13;
@@ -63,7 +65,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(18, 19);
+            this.label1.Location = new System.Drawing.Point(71, 39);
             this.label1.MinimumSize = new System.Drawing.Size(100, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(100, 13);
@@ -74,7 +76,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(18, 63);
+            this.label2.Location = new System.Drawing.Point(71, 80);
             this.label2.MinimumSize = new System.Drawing.Size(100, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(100, 13);
@@ -84,7 +86,7 @@
             // 
             // stateBox
             // 
-            this.stateBox.Location = new System.Drawing.Point(18, 79);
+            this.stateBox.Location = new System.Drawing.Point(71, 98);
             this.stateBox.MaxLength = 128;
             this.stateBox.Name = "stateBox";
             this.stateBox.Size = new System.Drawing.Size(100, 20);
@@ -95,7 +97,7 @@
             // 
             this.statusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.statusLabel.ForeColor = System.Drawing.Color.Red;
-            this.statusLabel.Location = new System.Drawing.Point(25, 116);
+            this.statusLabel.Location = new System.Drawing.Point(29, 263);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(200, 40);
             this.statusLabel.TabIndex = 12;
@@ -130,7 +132,7 @@
             this.showAppStrip.Name = "showAppStrip";
             this.showAppStrip.Size = new System.Drawing.Size(128, 22);
             this.showAppStrip.Text = "Show App";
-            this.showAppStrip.Click += new System.EventHandler(this.toolStripShowApp_Click);
+            this.showAppStrip.Click += new System.EventHandler(this.ToolStripShowApp_Click);
             // 
             // trayExitMenuItem
             // 
@@ -141,34 +143,34 @@
             // 
             // addressBox
             // 
-            this.addressBox.Location = new System.Drawing.Point(18, 35);
+            this.addressBox.Location = new System.Drawing.Point(71, 55);
             this.addressBox.Name = "addressBox";
             this.addressBox.Size = new System.Drawing.Size(100, 20);
             this.addressBox.TabIndex = 1;
             // 
             // settingsButton
             // 
-            this.settingsButton.Location = new System.Drawing.Point(90, 172);
+            this.settingsButton.Location = new System.Drawing.Point(85, 335);
             this.settingsButton.Name = "settingsButton";
             this.settingsButton.Size = new System.Drawing.Size(75, 23);
             this.settingsButton.TabIndex = 20;
             this.settingsButton.Text = "Settings";
             this.settingsButton.UseVisualStyleBackColor = true;
-            this.settingsButton.Click += new System.EventHandler(this.settingsButton_Click);
+            this.settingsButton.Click += new System.EventHandler(this.SettingsButton_Click);
             // 
             // largeImageKey
             // 
-            this.largeImageKey.Location = new System.Drawing.Point(134, 35);
+            this.largeImageKey.Location = new System.Drawing.Point(71, 141);
             this.largeImageKey.MaxLength = 32;
             this.largeImageKey.Name = "largeImageKey";
             this.largeImageKey.Size = new System.Drawing.Size(100, 20);
             this.largeImageKey.TabIndex = 5;
-            this.largeImageKey.TextChanged += new System.EventHandler(this.largeImageKey_TextChanged);
+            this.largeImageKey.TextChanged += new System.EventHandler(this.LargeImageKey_TextChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(134, 63);
+            this.label3.Location = new System.Drawing.Point(71, 166);
             this.label3.MinimumSize = new System.Drawing.Size(100, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(100, 13);
@@ -178,17 +180,17 @@
             // 
             // largeImageText
             // 
-            this.largeImageText.Location = new System.Drawing.Point(134, 79);
+            this.largeImageText.Location = new System.Drawing.Point(71, 184);
             this.largeImageText.MaxLength = 128;
             this.largeImageText.Name = "largeImageText";
             this.largeImageText.Size = new System.Drawing.Size(100, 20);
             this.largeImageText.TabIndex = 7;
-            this.largeImageText.TextChanged += new System.EventHandler(this.largeImageText_TextChanged);
+            this.largeImageText.TextChanged += new System.EventHandler(this.LargeImageText_TextChanged);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(134, 19);
+            this.label4.Location = new System.Drawing.Point(71, 123);
             this.label4.MinimumSize = new System.Drawing.Size(100, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(100, 13);
@@ -198,19 +200,40 @@
             // 
             // quitButton
             // 
-            this.quitButton.Location = new System.Drawing.Point(167, 172);
+            this.quitButton.Location = new System.Drawing.Point(85, 364);
             this.quitButton.Name = "quitButton";
             this.quitButton.Size = new System.Drawing.Size(75, 23);
             this.quitButton.TabIndex = 21;
             this.quitButton.Text = "Quit";
             this.quitButton.UseVisualStyleBackColor = true;
-            this.quitButton.Click += new System.EventHandler(this.quitButton_Click);
+            this.quitButton.Click += new System.EventHandler(this.QuitButton_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(71, 209);
+            this.label5.MinimumSize = new System.Drawing.Size(100, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(100, 13);
+            this.label5.TabIndex = 22;
+            this.label5.Text = "Small Image Key";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // smallImageKey
+            // 
+            this.smallImageKey.Location = new System.Drawing.Point(71, 227);
+            this.smallImageKey.MaxLength = 32;
+            this.smallImageKey.Name = "smallImageKey";
+            this.smallImageKey.Size = new System.Drawing.Size(100, 20);
+            this.smallImageKey.TabIndex = 23;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(252, 208);
+            this.ClientSize = new System.Drawing.Size(259, 426);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.smallImageKey);
             this.Controls.Add(this.quitButton);
             this.Controls.Add(this.settingsButton);
             this.Controls.Add(this.statusLabel);
@@ -256,6 +279,8 @@
         private System.Windows.Forms.TextBox largeImageText;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button quitButton;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox smallImageKey;
     }
 }
 

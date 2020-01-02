@@ -13,7 +13,7 @@ namespace SwitchPresence_Rewritten_GUI
         {
             // We'll load the config here to make it accessible by the whole application
             Config cfg = new Config();
-            cfg.loadConfig();
+            cfg.LoadConfig();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
