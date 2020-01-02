@@ -31,4 +31,5 @@ void printItems(const std::vector<std::string> &items, std::string menuTitle, in
 PresenceState getPresenceState();
 Result DumpIcons();
 Result getAppControlData(u64, NsApplicationControlData *);
+u64 GetControllerInputs();
 } // namespace Utils

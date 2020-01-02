@@ -20,8 +20,7 @@ int main(int argc, char **argv)
 
     while (appletMainLoop())
     {
-        hidScanInput();
-        u64 kDown = hidKeysDown(CONTROLLER_P1_AUTO);
+        u64 kDown = Utils::GetControllerInputs();
         if (kDown & KEY_PLUS || (kDown & KEY_B && stateMachine.currentState->name() == "main"))
             break;
 
