@@ -100,7 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PresenceCommon\PresenceCommon.csproj">
-      <Project>{2ef451b4-7b1c-46f6-973a-26564bef4ad8}</Project>
+      <Project>{73ead2e4-0f1a-4d06-a84d-13c2ebaa03d8}</Project>
       <Name>PresenceCommon</Name>
     </ProjectReference>
   </ItemGroup>
