@@ -317,7 +317,7 @@ namespace SwitchPresence_Rewritten_GUI
                     SeenAutoMacPrompt = HasSeenMacPrompt,
                     AutoToMac = UseMacDefault.Checked
                 };
-                File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg));
+                File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg, Formatting.Indented));
             }
         }
 
