@@ -2,7 +2,6 @@
 
 namespace states
 {
-
 std::vector<std::string> MainMenuItems = {
     "Dump Icons",
     //Placeholder for enabled/disable

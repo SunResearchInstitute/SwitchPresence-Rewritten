@@ -1,10 +1,8 @@
 #include "Utils.h"
 
-using namespace std;
-
 namespace Utils
 {
-void printItems(const vector<string> &items, string menuTitle, int selection)
+void printItems(const std::vector<std::string> &items, std::string menuTitle, int selection)
 {
     printf(CONSOLE_MAGENTA "\x1b[0;%dH%s\n", (40 - ((int)menuTitle.size() / 2)), menuTitle.c_str());
     for (int i = 0; i < (int)items.size(); i++)
@@ -35,7 +33,7 @@ PresenceState getPresenceState()
     else
         state = PresenceState::Disabled;
 
-    if (!filesystem::exists(PROGRAMDIR))
+    if (!std::filesystem::exists(PROGRAMDIR))
         state = PresenceState::NotFound;
 
     return state;
@@ -56,9 +54,9 @@ Result DumpIcons()
     mkdir("sdmc:/Icons", 0777);
     for (s32 i = 0; i < actualAppRecordCnt; i++)
     {
-        stringstream ss;
-        ss << "sdmc:/Icons/" << 0 << hex << appRecords[i].application_id << ".jpg";
-        if (!filesystem::exists(ss.str()))
+        std::stringstream ss;
+        ss << "sdmc:/Icons/" << 0 << std::hex << appRecords[i].application_id << ".jpg";
+        if (!std::filesystem::exists(ss.str()))
         {
             NsApplicationControlData *appControlData = new NsApplicationControlData();
             Result rc = Utils::getAppControlData(appRecords[i].application_id, appControlData);
