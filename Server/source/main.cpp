@@ -31,6 +31,7 @@ extern "C"
     void __appInit(void)
     {
         R_ASSERT(smInitialize());
+        R_ASSERT(Utils::getSystemLanguage());
         R_ASSERT(setsysInitialize());
         SetSysFirmwareVersion fw;
         R_ASSERT(setsysGetFirmwareVersion(&fw));
