@@ -1,4 +1,5 @@
 #include "Utils.h"
+#include <cstring>
 
 namespace Utils
 {
@@ -11,12 +12,12 @@ const char *getAppName(u64 application_id)
     memset(&appControlData, 0x00, sizeof(NsApplicationControlData));
 
     if (R_FAILED(nsGetApplicationControlData(NsApplicationControlSource_Storage, application_id, &appControlData, sizeof(NsApplicationControlData), &appControlDataSize)))
-        goto Final;
+        goto final;
 
     if (R_FAILED(nacpGetLanguageEntry(&appControlData.nacp, &languageEntry)))
-        goto Final;
+        goto final;
 
-    Final:
+    final:
     if (languageEntry == nullptr)
         return "A Game";
     else

@@ -1,4 +1,8 @@
 #include "sockets.h"
+#include "Results.h"
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <cstring>
 
 int sendData(int sock, u64 tid, const char *name)
 {

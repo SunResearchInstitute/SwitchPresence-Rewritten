@@ -1,8 +1,5 @@
 #pragma once
 #include <switch.h>
-#include <string>
-#include <functional>
-#include <cstring>
 
 #define R_ASSERT(res_expr)          \
     ({                              \
