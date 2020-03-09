@@ -2,19 +2,24 @@
 
 namespace Utils
 {
-std::string getAppName(u64 tid)
+const char *getAppName(u64 application_id)
 {
     static NsApplicationControlData appControlData;
     size_t appControlDataSize = 0;
     NacpLanguageEntry *languageEntry = nullptr;
 
-    R_ASSERT(nsGetApplicationControlData(NsApplicationControlSource_Storage, tid, &appControlData, sizeof(NsApplicationControlData), &appControlDataSize));
+    memset(&appControlData, 0x00, sizeof(NsApplicationControlData));
 
-    R_ASSERT(nacpGetLanguageEntry(&appControlData.nacp, &languageEntry));
+    if (R_FAILED(nsGetApplicationControlData(NsApplicationControlSource_Storage, application_id, &appControlData, sizeof(NsApplicationControlData), &appControlDataSize)))
+        goto Final;
 
+    if (R_FAILED(nacpGetLanguageEntry(&appControlData.nacp, &languageEntry)))
+        goto Final;
+
+    Final:
     if (languageEntry == nullptr)
-        return std::string("A Game");
+        return "A Game";
     else
-        return std::string(languageEntry->name);
+        return languageEntry->name;
 }
 } // namespace Utils

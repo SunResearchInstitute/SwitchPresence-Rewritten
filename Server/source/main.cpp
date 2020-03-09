@@ -1,6 +1,9 @@
-#include "main.h"
+#include "Sockets.h"
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include "Utils.h"
 
-#define HEAP_SIZE 150000
+#define HEAP_SIZE 120000
 
 extern "C"
 {
@@ -28,7 +31,6 @@ extern "C"
     {
         R_ASSERT(smInitialize());
         R_ASSERT(setsysInitialize());
-        R_ASSERT(pminfoInitialize());
         SetSysFirmwareVersion fw;
         R_ASSERT(setsysGetFirmwareVersion(&fw));
         hosversionSet(MAKEHOSVERSION(fw.major, fw.minor, fw.micro));
@@ -36,6 +38,7 @@ extern "C"
 
         R_ASSERT(pmdmntInitialize());
         R_ASSERT(nsInitialize());
+        R_ASSERT(pminfoInitialize());
 
         constexpr SocketInitConfig sockConf = {
             .bsdsockets_version = 1,
@@ -51,7 +54,6 @@ extern "C"
             .sb_efficiency = 4,
         };
         R_ASSERT(socketInitialize(&sockConf));
-        smExit();
     }
 
     void __appExit(void)
@@ -60,6 +62,7 @@ extern "C"
         pmdmntExit();
         nsExit();
         socketExit();
+        smExit();
     }
 }
 
@@ -75,12 +78,12 @@ int main(int argc, char **argv)
     {
         Result rc;
         u64 pid;
-        u64 tid;
+        u64 program_id;
         rc = pmdmntGetApplicationProcessId(&pid);
         if (R_SUCCEEDED(rc))
         {
-            pminfoGetProgramId(&tid, pid);
-            src = sendData(connection, tid, Utils::getAppName(tid));
+            pminfoGetProgramId(&program_id, pid);
+            src = sendData(connection, program_id, Utils::getAppName(program_id));
         }
         else
         {

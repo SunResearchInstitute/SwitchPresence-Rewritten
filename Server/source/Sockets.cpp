@@ -1,10 +1,10 @@
 #include "sockets.h"
 
-int sendData(int sock, u64 tid, std::string name)
+int sendData(int sock, u64 tid, const char *name)
 {
     struct titlepacket packet;
-    packet.magic = TITLE_MAGIC;
-    strcpy(packet.name, name.c_str());
+    packet.magic = PACKETMAGIC;
+    strcpy(packet.name, name);
     packet.tid = tid;
     int rc = send(sock, &packet, sizeof(packet), 0);
 
@@ -33,6 +33,6 @@ int setupSocketServer()
     while (bind(sockfd, (struct sockaddr *)&servaddr, serv_len) < 0)
         svcSleepThread(1e+9L);
 
-    listen(sockfd, 69);
+    listen(sockfd, 20);
     return sockfd;
 }
