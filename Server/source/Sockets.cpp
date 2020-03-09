@@ -6,7 +6,7 @@
 
 int sendData(int sock, u64 tid, const char *name)
 {
-    struct titlepacket packet;
+    titlepacket packet;
     packet.magic = PACKETMAGIC;
     strcpy(packet.name, name);
     packet.tid = tid;
