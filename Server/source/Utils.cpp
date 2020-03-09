@@ -11,15 +11,14 @@ const char *getAppName(u64 application_id)
 
     memset(&appControlData, 0x00, sizeof(NsApplicationControlData));
 
-    if (R_FAILED(nsGetApplicationControlData(NsApplicationControlSource_Storage, application_id, &appControlData, sizeof(NsApplicationControlData), &appControlDataSize)))
-        return "A Game";
-
-    if (R_FAILED(nacpGetLanguageEntry(&appControlData.nacp, &languageEntry)))
-        return "A Game";
-
-    if (languageEntry == nullptr)
-        return "A Game";
-
-    return languageEntry->name;
+    if (R_SUCCEEDED(nsGetApplicationControlData(NsApplicationControlSource_Storage, application_id, &appControlData, sizeof(NsApplicationControlData), &appControlDataSize)))
+    {
+        if (R_SUCCEEDED(nacpGetLanguageEntry(&appControlData.nacp, &languageEntry)))
+        {
+            if (languageEntry != nullptr)
+                return languageEntry->name;
+        }
+    }
+    return "A Game";
 }
 } // namespace Utils
