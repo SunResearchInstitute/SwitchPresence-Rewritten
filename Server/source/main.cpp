@@ -55,6 +55,7 @@ extern "C"
             .sb_efficiency = 4,
         };
         R_ASSERT(socketInitialize(&sockConf));
+        smExit();
     }
 
     void __appExit(void)
@@ -63,7 +64,6 @@ extern "C"
         pmdmntExit();
         nsExit();
         socketExit();
-        smExit();
     }
 }
 
