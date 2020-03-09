@@ -1,8 +1,13 @@
 #pragma once
 #include <switch.h>
 #include <string>
+#include <string.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include "Results.h"
 
 #define TITLE_MAGIC 0xffaadd23
+#define PORT 0xCAFE
 
 struct titlepacket
 {

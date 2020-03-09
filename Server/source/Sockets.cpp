@@ -1,30 +1,12 @@
 #include "sockets.h"
-#include <string.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include "Results.h"
 
-using namespace std;
-
-#define PORT 0xCAFE
-
-int sendData(int sock, u64 tid, string name)
+int sendData(int sock, u64 tid, std::string name)
 {
-    //titlepacket *packet = new titlepacket();
     struct titlepacket packet;
     packet.magic = TITLE_MAGIC;
     strcpy(packet.name, name.c_str());
     packet.tid = tid;
-    /*
-    if (tid > 0)
-    {
-        NsApplicationControlData *data = Utils::getAppControlData(tid);
-        memcpy(packet->icon, data->icon, sizeof(data->icon));
-        delete data;
-    }
-    */
     int rc = send(sock, &packet, sizeof(packet), 0);
-    //delete packet;
 
     return rc;
 }
