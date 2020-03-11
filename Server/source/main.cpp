@@ -1,8 +1,10 @@
-#include "Utils.h"
 #include "Sockets.h"
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include "Utils.h"
+#include <string>
+#include "Nacp.h"
 
 #define HEAP_SIZE 120000
 
@@ -31,7 +33,7 @@ extern "C"
     void __appInit(void)
     {
         R_ASSERT(smInitialize());
-        R_ASSERT(Utils::getSystemLanguage());
+        R_ASSERT(getSystemLanguage());
         R_ASSERT(setsysInitialize());
         SetSysFirmwareVersion fw;
         R_ASSERT(setsysGetFirmwareVersion(&fw));
@@ -75,17 +77,34 @@ int main(int argc, char **argv)
     socklen_t client_len = sizeof(client_addr);
     int connection = accept(sock, (struct sockaddr *)&client_addr, &client_len);
 
-    int src;
+    u64 lastPid = 0;
+    u64 lastProgramId = 0;
+    const char *lastGame;
+
     while (true)
     {
         Result rc;
+        //Socket Result
+        int src;
         u64 pid;
         u64 program_id;
         rc = pmdmntGetApplicationProcessId(&pid);
+
         if (R_SUCCEEDED(rc))
         {
-            pminfoGetProgramId(&program_id, pid);
-            src = sendData(connection, program_id, Utils::getAppName(program_id));
+            if (lastPid != pid)
+            {
+                pminfoGetProgramId(&program_id, pid);
+                lastPid = pid;
+
+                if (program_id != lastProgramId)
+                {
+                    lastProgramId = program_id;
+                    lastGame = Utils::getAppName(program_id);
+                }
+            }
+
+            src = sendData(connection, program_id, lastGame);
         }
         else
         {
