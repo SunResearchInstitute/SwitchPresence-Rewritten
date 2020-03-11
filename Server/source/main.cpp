@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include "Utils.h"
 #include <string>
-#include "Nacp.h"
 
 #define HEAP_SIZE 120000
 
@@ -33,13 +32,12 @@ extern "C"
     void __appInit(void)
     {
         R_ASSERT(smInitialize());
-        R_ASSERT(getSystemLanguage());
         R_ASSERT(setsysInitialize());
         SetSysFirmwareVersion fw;
         R_ASSERT(setsysGetFirmwareVersion(&fw));
         hosversionSet(MAKEHOSVERSION(fw.major, fw.minor, fw.micro));
         setsysExit();
-
+        R_ASSERT(setInitialize());
         R_ASSERT(pmdmntInitialize());
         R_ASSERT(nsInitialize());
         R_ASSERT(pminfoInitialize());
@@ -63,10 +61,11 @@ extern "C"
 
     void __appExit(void)
     {
-        pminfoExit();
-        pmdmntExit();
-        nsExit();
         socketExit();
+        pminfoExit();
+        nsExit();
+        pmdmntExit();
+        setExit();
     }
 }
 

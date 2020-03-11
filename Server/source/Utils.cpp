@@ -1,6 +1,5 @@
 #include "Utils.h"
 #include <cstring>
-#include "Nacp.h"
 
 namespace Utils
 {
@@ -14,7 +13,7 @@ const char *getAppName(u64 application_id)
 
     if (R_SUCCEEDED(nsGetApplicationControlData(NsApplicationControlSource_Storage, application_id, &appControlData, sizeof(NsApplicationControlData), &appControlDataSize)))
     {
-        if (R_SUCCEEDED(getLanguageEntry(&appControlData.nacp, &languageEntry)))
+        if (R_SUCCEEDED(nacpGetLanguageEntry(&appControlData.nacp, &languageEntry)))
         {
             if (languageEntry != nullptr)
                 return languageEntry->name;
