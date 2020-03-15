@@ -52,7 +52,7 @@ all: $(COMPONENTS)
 
 
 Client:
-	msbuild.exe $@ -t:Build -p:Configuration=Release
+	msbuild.exe $@ -restore -nologo -v:m -m -t:Build -p:Configuration=Release
 
 Manager:
 	$(MAKE) -C $@
@@ -63,5 +63,5 @@ Server:
 clean:
 	$(MAKE) -C Server clean
 	$(MAKE) -C Manager clean
-	msbuild.exe Client -t:Clean -p:Configuration=Release
+	msbuild.exe Client -nologo -v:m -m -t:Clean -p:Configuration=Release
 	rm -rf $(OUT_DIR)
