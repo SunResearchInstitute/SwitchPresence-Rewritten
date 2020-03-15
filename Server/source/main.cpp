@@ -1,27 +1,21 @@
 #include "Sockets.h"
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <unistd.h>
 #include "Utils.h"
+#include <string>
 
-using namespace std;
-
-#define HEAP_SIZE 350000
+#define HEAP_SIZE 120000
 
 extern "C"
 {
     extern u32 __start__;
-
-    u32 __nx_applet_type = AppletType_None;
-
-#define INNER_HEAP_SIZE 0x60000
-    size_t nx_inner_heap_size = INNER_HEAP_SIZE;
-    char nx_inner_heap[INNER_HEAP_SIZE];
-
-    void __libnx_init_time(void);
     void __libnx_initheap(void);
     void __appInit(void);
     void __appExit(void);
+    u32 __nx_applet_type = AppletType::AppletType_None;
 
+    // setup a fake heap
     char fake_heap[HEAP_SIZE];
 
     // we override libnx internals to do a minimal init
@@ -37,31 +31,18 @@ extern "C"
 
     void __appInit(void)
     {
-        Result rc;
-        rc = smInitialize();
-        if (R_FAILED(rc))
-            fatalThrow(rc);
-        rc = setsysInitialize();
-        if (R_SUCCEEDED(rc))
-        {
-            SetSysFirmwareVersion fw;
-            rc = setsysGetFirmwareVersion(&fw);
-            if (R_SUCCEEDED(rc))
-                hosversionSet(MAKEHOSVERSION(fw.major, fw.minor, fw.micro));
-            else
-                fatalThrow(rc);
-            setsysExit();
-        }
-        else
-            fatalThrow(rc);
-        rc = pmdmntInitialize();
-        if (R_FAILED(rc))
-            fatalThrow(rc);
-        rc = nsInitialize();
-        if (R_FAILED(rc))
-            fatalThrow(rc);
-        
-        SocketInitConfig sockConf = {
+        R_ASSERT(smInitialize());
+        R_ASSERT(setsysInitialize());
+        SetSysFirmwareVersion fw;
+        R_ASSERT(setsysGetFirmwareVersion(&fw));
+        hosversionSet(MAKEHOSVERSION(fw.major, fw.minor, fw.micro));
+        setsysExit();
+        R_ASSERT(setInitialize());
+        R_ASSERT(pmdmntInitialize());
+        R_ASSERT(nsInitialize());
+        R_ASSERT(pminfoInitialize());
+
+        constexpr SocketInitConfig sockConf = {
             .bsdsockets_version = 1,
 
             .tcp_tx_buf_size = 0x800,
@@ -74,21 +55,17 @@ extern "C"
 
             .sb_efficiency = 4,
         };
-        rc = socketInitialize(&sockConf);
-        if (R_FAILED(rc))
-            fatalThrow(rc);
-        rc = pminfoInitialize();
-        if (R_FAILED(rc))
-            fatalThrow(rc);
+        R_ASSERT(socketInitialize(&sockConf));
+        smExit();
     }
 
     void __appExit(void)
     {
-        pminfoExit();
-        pmdmntExit();
-        nsExit();
         socketExit();
-        smExit();
+        pminfoExit();
+        nsExit();
+        pmdmntExit();
+        setExit();
     }
 }
 
@@ -99,18 +76,34 @@ int main(int argc, char **argv)
     socklen_t client_len = sizeof(client_addr);
     int connection = accept(sock, (struct sockaddr *)&client_addr, &client_len);
 
+    u64 lastPid = 0;
+    u64 lastProgramId = 0;
+    const char *lastGame;
 
-    int src;
     while (true)
     {
         Result rc;
+        //Socket Result
+        int src;
         u64 pid;
-        u64 tid;
+        u64 program_id;
         rc = pmdmntGetApplicationProcessId(&pid);
+
         if (R_SUCCEEDED(rc))
         {
-            pminfoGetProgramId(&tid, pid);
-            src = sendData(connection, tid, Utils::getAppName(tid));
+            if (lastPid != pid)
+            {
+                pminfoGetProgramId(&program_id, pid);
+                lastPid = pid;
+
+                if (program_id != lastProgramId)
+                {
+                    lastProgramId = program_id;
+                    lastGame = Utils::getAppName(program_id);
+                }
+            }
+
+            src = sendData(connection, program_id, lastGame);
         }
         else
         {
@@ -124,7 +117,7 @@ int main(int argc, char **argv)
             sock = setupSocketServer();
             connection = accept(sock, (struct sockaddr *)&client_addr, &client_len);
         }
-		
-		svcSleepThread(5e+9);
+
+        svcSleepThread(5e+9);
     }
 }

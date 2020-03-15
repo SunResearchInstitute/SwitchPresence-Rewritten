@@ -1,8 +1,9 @@
 #pragma once
 #include <switch.h>
-#include <string>
 
-#define TITLE_MAGIC 0xffaadd23
+
+#define PACKETMAGIC 0xFFAADD23
+#define PORT 0xCAFE
 
 struct titlepacket
 {
@@ -11,5 +12,5 @@ struct titlepacket
     char name[512];
 };
 
-int sendData(int sock, u64 tid, std::string name);
+int sendData(int sock, u64 tid, const char *name);
 int setupSocketServer();
