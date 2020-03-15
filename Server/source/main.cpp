@@ -76,29 +76,29 @@ int main(int argc, char **argv)
     socklen_t client_len = sizeof(client_addr);
     int connection = accept(sock, (struct sockaddr *)&client_addr, &client_len);
 
-    u64 lastPid = 0;
-    u64 lastProgramId = 0;
-    const char *lastGame;
+    u64 lastProcess_id = 0;
+    u64 lastProgram_id = 0;
+    const char *lastGame = "A Game";
 
     while (true)
     {
         Result rc;
         //Socket Result
         int src;
-        u64 pid;
-        u64 program_id;
-        rc = pmdmntGetApplicationProcessId(&pid);
+        u64 process_id = 0;
+        u64 program_id = 0;
+        rc = pmdmntGetApplicationProcessId(&process_id);
 
         if (R_SUCCEEDED(rc))
         {
-            if (lastPid != pid)
+            if (lastProcess_id != process_id)
             {
-                pminfoGetProgramId(&program_id, pid);
-                lastPid = pid;
+                pminfoGetProgramId(&program_id, process_id);
+                lastProcess_id = process_id;
 
-                if (program_id != lastProgramId)
+                if (program_id != lastProgram_id)
                 {
-                    lastProgramId = program_id;
+                    lastProgram_id = program_id;
                     lastGame = Utils::getAppName(program_id);
                 }
             }
@@ -110,6 +110,7 @@ int main(int argc, char **argv)
             //This is so we can make sure our connection is not broken if so, start and accept a new one
             src = sendData(connection, 0, "NULL");
         }
+
         if (src < 0)
         {
             close(connection);
