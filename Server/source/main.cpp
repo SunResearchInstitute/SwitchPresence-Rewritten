@@ -1,17 +1,12 @@
 #include "Sockets.h"
 #include "Utils.h"
 
-#define HEAP_SIZE 120000
-
 extern "C"
 {
-    extern u32 __start__;
-    void __libnx_initheap(void);
-    void __appInit(void);
-    void __appExit(void);
     u32 __nx_applet_type = AppletType::AppletType_None;
 
     // setup a fake heap
+    #define HEAP_SIZE 0x6'000
     char fake_heap[HEAP_SIZE];
 
     // we override libnx internals to do a minimal init
@@ -42,14 +37,14 @@ extern "C"
             .bsdsockets_version = 1,
 
             .tcp_tx_buf_size = 0x800,
-            .tcp_rx_buf_size = 0x1000,
+            .tcp_rx_buf_size = 0x800,
             .tcp_tx_buf_max_size = 0x2EE0,
-            .tcp_rx_buf_max_size = 0x2EE0,
+            .tcp_rx_buf_max_size = 0,
 
             .udp_tx_buf_size = 0x0,
             .udp_rx_buf_size = 0x0,
 
-            .sb_efficiency = 4,
+            .sb_efficiency = 1,
         };
         R_ASSERT(socketInitialize(&sockConf));
         smExit();
