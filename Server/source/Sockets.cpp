@@ -26,7 +26,7 @@ Result setupSocketServer()
     if (sockfd == -1)
         return MAKERESULT(Module_Discord, Error_SocketInitFailed);
 
-    int opt;
+    int opt = 1;
     if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
     {
         close(sockfd);
