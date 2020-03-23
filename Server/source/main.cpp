@@ -60,43 +60,42 @@ extern "C"
     }
 }
 
+static u64 lastProcessId = 0;
+static u64 lastProgramId = 0;
+static const char * lastGameName = "A game";
+
 int main(int argc, char **argv)
 {
     R_ASSERT(setupSocketServer());
 
-    u64 lastProcess_id = 0;
-    u64 lastProgram_id = 0;
-    const char *lastGame = "A Game";
-
     while (true)
     {
-        Result rc;
         //Socket Result
         int src;
-        u64 process_id = 0;
-        u64 program_id = 0;
-        rc = pmdmntGetApplicationProcessId(&process_id);
+        u64 processId;
+        u64 programId;
 
-        if (R_SUCCEEDED(rc))
+        if (R_SUCCEEDED(pmdmntGetApplicationProcessId(&processId)))
         {
-            if (lastProcess_id != process_id)
+            if (lastProcessId != processId)
             {
-                pminfoGetProgramId(&program_id, process_id);
-                lastProcess_id = process_id;
-
-                if (program_id != lastProgram_id)
+                lastProcessId = processId;
+                if (R_SUCCEEDED(pminfoGetProgramId(&programId, processId)))
                 {
-                    lastProgram_id = program_id;
-                    lastGame = Utils::getAppName(program_id);
+                    if (lastProgramId != programId)
+                    {
+                        lastProgramId = programId;
+                        lastGameName = Utils::getAppName(programId);
+                    }
                 }
             }
 
-            src = sendData(connection, program_id, lastGame);
+            src = sendData(programId, lastGameName);
         }
         else
         {
             //This is so we can make sure our connection is not broken if so, start and accept a new one
-            src = sendData(connection, 0, "NULL");
+            src = sendData(0, "NULL");
         }
 
         if (src < 0)

@@ -3,15 +3,15 @@
 
 namespace Utils
 {
-const char *getAppName(u64 application_id)
+const char *getAppName(u64 programId)
 {
     static NsApplicationControlData appControlData;
-    size_t appControlDataSize = 0;
-    NacpLanguageEntry *languageEntry = nullptr;
+    size_t appControlDataSize;
+    NacpLanguageEntry *languageEntry;
 
-    memset(&appControlData, 0x00, sizeof(NsApplicationControlData));
+    memset(&appControlData, 0, sizeof(NsApplicationControlData));
 
-    if (R_SUCCEEDED(nsGetApplicationControlData(NsApplicationControlSource_Storage, application_id, &appControlData, sizeof(NsApplicationControlData), &appControlDataSize)))
+    if (R_SUCCEEDED(nsGetApplicationControlData(NsApplicationControlSource_Storage, programId, &appControlData, sizeof(NsApplicationControlData), &appControlDataSize)))
     {
         if (R_SUCCEEDED(nacpGetLanguageEntry(&appControlData.nacp, &languageEntry)))
         {
