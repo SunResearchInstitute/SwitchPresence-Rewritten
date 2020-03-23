@@ -1,4 +1,4 @@
-﻿using DiscordRPC;
+using DiscordRPC;
 #if DEBUG
 using DiscordRPC.Logging;
 #endif
@@ -213,6 +213,7 @@ namespace SwitchPresence_Rewritten_GUI
 
         private void DataListen()
         {
+            ManualUpdate = true;
             while (true)
             {
                 try
