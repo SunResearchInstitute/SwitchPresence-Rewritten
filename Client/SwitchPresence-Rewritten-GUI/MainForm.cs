@@ -133,8 +133,6 @@ namespace SwitchPresence_Rewritten_GUI
 
         private void TryConnect()
         {
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 0xCAFE);
-
             if (rpc != null && !rpc.IsDisposed)
             {
                 rpc.ClearPresence();
@@ -181,6 +179,8 @@ namespace SwitchPresence_Rewritten_GUI
 
                 try
                 {
+                    IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 0xCAFE);
+
                     IAsyncResult result = client.BeginConnect(localEndPoint, null, null);
                     bool success = result.AsyncWaitHandle.WaitOne(2000, true);
                     if (!success)
@@ -195,6 +195,13 @@ namespace SwitchPresence_Rewritten_GUI
 
                         DataListen();
                     }
+                }
+                catch (ArgumentNullException)
+                {
+                    //The ip address is null because arp couldn't find the target mac address.
+                    //So we sleep and search for it again.
+                    Thread.Sleep(1000);
+                    IPAddress.TryParse(Utils.GetIpByMac(addressBox.Text), out ipAddress);
                 }
                 catch (SocketException)
                 {
