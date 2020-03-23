@@ -26,7 +26,7 @@ namespace SwitchPresence_Rewritten_GUI
         private static DiscordRpcClient rpc;
         private IPAddress ipAddress;
         private bool ManualUpdate = false;
-        private string LastGame = "";
+        private ulong LastProgramId = 0;
         private Timestamps time = null;
         private static Timer timer;
         private bool HasSeenMacPrompt = false;
@@ -120,14 +120,14 @@ namespace SwitchPresence_Rewritten_GUI
                 ipAddress = null;
                 addressBox.Enabled = true;
                 clientBox.Enabled = true;
-                LastGame = "";
+                LastProgramId = 0;
                 time = null;
             }
         }
 
         private void OnConnectTimeout(object source, ElapsedEventArgs e)
         {
-            LastGame = "";
+            LastProgramId = 0;
             time = null;
         }
 
@@ -226,11 +226,11 @@ namespace SwitchPresence_Rewritten_GUI
                     Title title = new Title(bytes);
                     if (title.Magic == 0xffaadd23)
                     {
-                        if (LastGame != title.Name)
+                        if (LastProgramId != title.ProgramId)
                         {
                             time = Timestamps.Now;
                         }
-                        if ((LastGame != title.Name) || ManualUpdate)
+                        if ((LastProgramId != title.ProgramId) || ManualUpdate)
                         {
                             if (rpc != null)
                             {
@@ -240,7 +240,7 @@ namespace SwitchPresence_Rewritten_GUI
                                     rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, time, bigKeyBox.Text, bigTextBox.Text, smallKeyBox.Text, stateBox.Text));
                             }
                             ManualUpdate = false;
-                            LastGame = title.Name;
+                            LastProgramId = title.ProgramId;
                         }
                     }
                     else
