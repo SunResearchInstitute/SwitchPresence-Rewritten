@@ -38,17 +38,17 @@ void MainMenu::calc(StateMachine *stateMachine, u64 inputs)
             PresenceState state = Utils::getPresenceState();
             if (state == PresenceState::Enabled)
             {
-                if (R_SUCCEEDED(pmshellTerminateProgram(TID)))
+                if (R_SUCCEEDED(pmshellTerminateProgram(SYSMODULE_PROGRAMID)))
                     remove(BOOT2FLAG);
             }
             else if (state == PresenceState::Disabled)
             {
-                u64 pid;
+                u64 programId;
                 NcmProgramLocation programLocation{
-                    .program_id = TID,
+                    .program_id = SYSMODULE_PROGRAMID,
                     .storageID = NcmStorageId_None,
                 };
-                if (R_SUCCEEDED(pmshellLaunchProgram(0, &programLocation, &pid)))
+                if (R_SUCCEEDED(pmshellLaunchProgram(0, &programLocation, &programId)))
                 {
                     mkdir(FLAGSDIR, 0777);
                     fclose(fopen(BOOT2FLAG, "w"));

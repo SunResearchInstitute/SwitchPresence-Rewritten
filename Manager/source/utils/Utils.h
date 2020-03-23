@@ -10,7 +10,7 @@
 
 #define center(p, c) ((p - c) / 2)
 
-#define TID 0x0100000000000464
+#define SYSMODULE_PROGRAMID 0x0100000000000464
 #define CONTENTSDIR "sdmc:/atmosphere/contents/0100000000000464"
 #define PROGRAMDIR CONTENTSDIR "/exefs.nsp"
 #define FLAGSDIR CONTENTSDIR "/flags"
@@ -29,6 +29,6 @@ namespace Utils
 void printItems(const std::vector<std::string> &items, std::string menuTitle, int);
 PresenceState getPresenceState();
 Result DumpIcons();
-Result getAppControlData(u64, NsApplicationControlData *);
+Result getAppControlData(u64 programId, NsApplicationControlData *appControlData);
 u64 GetControllerInputs();
 } // namespace Utils
