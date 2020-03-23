@@ -142,9 +142,11 @@ namespace SwitchPresence_Rewritten_GUI
             rpc = new DiscordRpcClient(clientBox.Text);
             rpc.Initialize();
 
+            //Create a timer that will be enabled when we lose connection to the server. 
+            //Once the full time has passed, it will clear the info it had of the previous game
             timer = new Timer()
             {
-                Interval = 15000,
+                Interval = 60000,
                 SynchronizingObject = this,
                 Enabled = false,
             };
