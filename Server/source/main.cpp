@@ -104,6 +104,6 @@ int main(int argc, char **argv)
             R_ASSERT(setupSocketServer());
         }
 
-        svcSleepThread(5e+9);
+        svcSleepThread(1e+9L);
     }
 }
