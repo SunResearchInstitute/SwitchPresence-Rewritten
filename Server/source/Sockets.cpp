@@ -49,13 +49,6 @@ Result setupSocketServer()
     }
 
     connection = accept(sockfd, nullptr, nullptr);
-
-    if (connection == -1)
-    {
-        close(sockfd);
-        return MAKERESULT(Module_Discord, Error_AcceptFailed);
-    }
-
     return 0;
 }
 

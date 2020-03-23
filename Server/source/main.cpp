@@ -101,7 +101,7 @@ int main(int argc, char **argv)
         if (src < 0)
         {
             closeSocketServer();
-            R_ASSERT(setupSocketServer());
+            setupSocketServer();
         }
 
         svcSleepThread(1e+9L);
