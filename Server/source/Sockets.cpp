@@ -1,42 +1,66 @@
-#include "sockets.h"
+#include "Sockets.h"
 #include "Results.h"
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 #include <cstring>
 
-int sendData(int sock, u64 tid, const char *name)
+static int sockfd = 0;
+static int connection = 0;
+
+int sendData(u64 programId, const char *name)
 {
     titlepacket packet;
     packet.magic = PACKETMAGIC;
     strcpy(packet.name, name);
-    packet.tid = tid;
-    int rc = send(sock, &packet, sizeof(packet), 0);
+    packet.programId = programId;
+    int rc = send(connection, &packet, sizeof(packet), 0);
 
     return rc;
 }
 
-int setupSocketServer()
+Result setupSocketServer()
 {
-    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
-    if (sockfd < 0)
-        fatalThrow(MAKERESULT(Module_Discord, Error_SocketInitFailed));
+    if (sockfd == -1)
+        return MAKERESULT(Module_Discord, Error_SocketInitFailed);
 
-    int opt = 1;
-    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
-        fatalThrow(MAKERESULT(Module_Discord, Error_OptFailed));
+    int opt;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
+    {
+        close(sockfd);
+        return MAKERESULT(Module_Discord, Error_OptFailed);
+    }
 
-    struct sockaddr_in servaddr;
-    memset(&servaddr, 0, sizeof(servaddr));
+    const sockaddr_in servaddr {
+        .sin_family = AF_INET,
+        .sin_port = htons(PORT),
+        .sin_addr = {INADDR_ANY},
+    };
 
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = INADDR_ANY;
-    servaddr.sin_port = htons(PORT);
-    socklen_t serv_len = sizeof(servaddr);
-
-    while (bind(sockfd, (struct sockaddr *)&servaddr, serv_len) < 0)
+    while (bind(sockfd, reinterpret_cast<const sockaddr *>(&servaddr), sizeof(servaddr)) == -1)
         svcSleepThread(1e+9L);
 
-    listen(sockfd, 20);
-    return sockfd;
+    if (listen(sockfd, 20) == -1)
+    {
+        close(sockfd);
+        return MAKERESULT(Module_Discord, Error_ListenFailed);
+    }
+
+    connection = accept(sockfd, nullptr, nullptr);
+
+    if (connection == -1)
+    {
+        close(sockfd);
+        return MAKERESULT(Module_Discord, Error_AcceptFailed);
+    }
+
+    return 0;
+}
+
+void closeSocketServer()
+{
+    close(connection);
+    close(sockfd);
 }

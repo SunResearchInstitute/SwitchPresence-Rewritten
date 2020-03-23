@@ -9,5 +9,6 @@ enum Errors
 {
     Error_SocketInitFailed = 0,
     Error_ListenFailed = 1,
-    Error_OptFailed = 2
+    Error_OptFailed = 2,
+    Error_AcceptFailed = 3,
 };

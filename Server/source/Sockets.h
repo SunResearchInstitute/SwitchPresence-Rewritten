@@ -8,9 +8,10 @@
 struct titlepacket
 {
     u32 magic;
-    u64 tid;
-    char name[512];
+    u64 programId;
+    char name[0x200];
 };
 
-int sendData(int sock, u64 tid, const char *name);
-int setupSocketServer();
+int sendData(u64 programId, const char *name);
+Result setupSocketServer();
+void closeSocketServer();

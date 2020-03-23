@@ -1,9 +1,5 @@
 #include "Sockets.h"
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <unistd.h>
 #include "Utils.h"
-#include <string>
 
 #define HEAP_SIZE 120000
 
@@ -71,10 +67,7 @@ extern "C"
 
 int main(int argc, char **argv)
 {
-    int sock = setupSocketServer();
-    struct sockaddr_in client_addr;
-    socklen_t client_len = sizeof(client_addr);
-    int connection = accept(sock, (struct sockaddr *)&client_addr, &client_len);
+    R_ASSERT(setupSocketServer());
 
     u64 lastProcess_id = 0;
     u64 lastProgram_id = 0;
@@ -113,10 +106,8 @@ int main(int argc, char **argv)
 
         if (src < 0)
         {
-            close(connection);
-            close(sock);
-            sock = setupSocketServer();
-            connection = accept(sock, (struct sockaddr *)&client_addr, &client_len);
+            closeSocketServer();
+            R_ASSERT(setupSocketServer());
         }
 
         svcSleepThread(5e+9);
