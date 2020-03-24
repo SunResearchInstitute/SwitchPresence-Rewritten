@@ -14,9 +14,7 @@ int sendData(u64 programId, const char *name)
     packet.magic = PACKETMAGIC;
     strcpy(packet.name, name);
     packet.programId = programId;
-    int rc = send(connection, &packet, sizeof(packet), 0);
-
-    return rc;
+    return send(connection, &packet, sizeof(packet), 0);
 }
 
 Result setupSocketServer()
