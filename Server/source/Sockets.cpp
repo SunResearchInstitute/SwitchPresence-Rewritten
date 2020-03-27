@@ -40,11 +40,7 @@ Result setupSocketServer()
     while (bind(sockfd, reinterpret_cast<const sockaddr *>(&servaddr), sizeof(servaddr)) == -1)
         svcSleepThread(1e+9L);
 
-    if (listen(sockfd, 20) == -1)
-    {
-        close(sockfd);
-        return MAKERESULT(Module_Discord, Error_ListenFailed);
-    }
+    listen(sockfd, 20);
 
     connection = accept(sockfd, nullptr, nullptr);
     return 0;
