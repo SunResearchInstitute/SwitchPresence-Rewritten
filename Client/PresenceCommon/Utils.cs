@@ -27,7 +27,7 @@ namespace PresenceCommon
             else
             {
                 assets.LargeImageText = !string.IsNullOrWhiteSpace(largeImageText) ? largeImageText : title.Name;
-                assets.LargeImageKey = !string.IsNullOrWhiteSpace(largeImageKey) ? largeImageKey : $"0{title.Tid:x}";
+                assets.LargeImageKey = !string.IsNullOrWhiteSpace(largeImageKey) ? largeImageKey : $"0{title.ProgramId:x}";
                 presence.Details = $"Playing {title.Name}";
             }
             presence.Assets = assets;

@@ -1,21 +1,12 @@
 #include "Sockets.h"
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <unistd.h>
 #include "Utils.h"
-#include <string>
-
-#define HEAP_SIZE 120000
 
 extern "C"
 {
-    extern u32 __start__;
-    void __libnx_initheap(void);
-    void __appInit(void);
-    void __appExit(void);
     u32 __nx_applet_type = AppletType::AppletType_None;
 
     // setup a fake heap
+    #define HEAP_SIZE 0x6'000
     char fake_heap[HEAP_SIZE];
 
     // we override libnx internals to do a minimal init
@@ -46,14 +37,14 @@ extern "C"
             .bsdsockets_version = 1,
 
             .tcp_tx_buf_size = 0x800,
-            .tcp_rx_buf_size = 0x1000,
+            .tcp_rx_buf_size = 0x800,
             .tcp_tx_buf_max_size = 0x2EE0,
-            .tcp_rx_buf_max_size = 0x2EE0,
+            .tcp_rx_buf_max_size = 0,
 
             .udp_tx_buf_size = 0x0,
             .udp_rx_buf_size = 0x0,
 
-            .sb_efficiency = 4,
+            .sb_efficiency = 1,
         };
         R_ASSERT(socketInitialize(&sockConf));
         smExit();
@@ -69,56 +60,50 @@ extern "C"
     }
 }
 
+static u64 lastProcessId = 0;
+static u64 lastProgramId = 0;
+static const char * lastGameName = "A game";
+
 int main(int argc, char **argv)
 {
-    int sock = setupSocketServer();
-    struct sockaddr_in client_addr;
-    socklen_t client_len = sizeof(client_addr);
-    int connection = accept(sock, (struct sockaddr *)&client_addr, &client_len);
-
-    u64 lastProcess_id = 0;
-    u64 lastProgram_id = 0;
-    const char *lastGame = "A Game";
+    R_ASSERT(setupSocketServer());
 
     while (true)
     {
-        Result rc;
         //Socket Result
         int src;
-        u64 process_id = 0;
-        u64 program_id = 0;
-        rc = pmdmntGetApplicationProcessId(&process_id);
+        u64 processId;
+        u64 programId;
 
-        if (R_SUCCEEDED(rc))
+        if (R_SUCCEEDED(pmdmntGetApplicationProcessId(&processId)))
         {
-            if (lastProcess_id != process_id)
+            if (lastProcessId != processId)
             {
-                pminfoGetProgramId(&program_id, process_id);
-                lastProcess_id = process_id;
-
-                if (program_id != lastProgram_id)
+                lastProcessId = processId;
+                if (R_SUCCEEDED(pminfoGetProgramId(&programId, processId)))
                 {
-                    lastProgram_id = program_id;
-                    lastGame = Utils::getAppName(program_id);
+                    if (lastProgramId != programId)
+                    {
+                        lastProgramId = programId;
+                        lastGameName = Utils::getAppName(programId);
+                    }
                 }
             }
 
-            src = sendData(connection, program_id, lastGame);
+            src = sendData(programId, lastGameName);
         }
         else
         {
             //This is so we can make sure our connection is not broken if so, start and accept a new one
-            src = sendData(connection, 0, "NULL");
+            src = sendData(0, "NULL");
         }
 
         if (src < 0)
         {
-            close(connection);
-            close(sock);
-            sock = setupSocketServer();
-            connection = accept(sock, (struct sockaddr *)&client_addr, &client_len);
+            closeSocketServer();
+            setupSocketServer();
         }
 
-        svcSleepThread(5e+9);
+        svcSleepThread(1e+9L);
     }
 }

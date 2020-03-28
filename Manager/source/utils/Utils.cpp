@@ -19,11 +19,11 @@ void printItems(const std::vector<std::string> &items, std::string menuTitle, in
 PresenceState getPresenceState()
 {
     PresenceState state;
-    u64 pid = 0;
+    u64 programId = 0;
 
-    if (R_SUCCEEDED(pmdmntGetProcessId(&pid, TID)))
+    if (R_SUCCEEDED(pmdmntGetProcessId(&programId, SYSMODULE_PROGRAMID)))
     {
-        if (pid > 0)
+        if (programId > 0)
             //note that this returns instantly
             //because the file might not exist but still be running
             return PresenceState::Enabled;
@@ -94,14 +94,14 @@ Result DumpIcons()
     return 0;
 }
 
-Result getAppControlData(u64 tid, NsApplicationControlData *appControlData)
+Result getAppControlData(u64 programId, NsApplicationControlData *appControlData)
 {
     size_t appControlDataSize = 0;
 
     memset(appControlData, 0x00, sizeof(NsApplicationControlData));
 
     Result rc;
-    rc = nsGetApplicationControlData(NsApplicationControlSource_Storage, tid, appControlData, sizeof(NsApplicationControlData), &appControlDataSize);
+    rc = nsGetApplicationControlData(NsApplicationControlSource_Storage, programId, appControlData, sizeof(NsApplicationControlData), &appControlDataSize);
     if (R_FAILED(rc))
         return rc;
 
