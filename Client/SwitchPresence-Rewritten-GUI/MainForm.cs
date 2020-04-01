@@ -237,7 +237,7 @@ namespace SwitchPresence_Rewritten_GUI
                         {
                             if (rpc != null)
                             {
-                                if (checkMainMenu.Checked == false && title.Name == "NULL")
+                                if (checkMainMenu.Checked == false && title.ProgramId == 0)
                                     rpc.ClearPresence();
                                 else
                                     rpc.SetPresence(PresenceCommon.Utils.CreateDiscordPresence(title, time, bigKeyBox.Text, bigTextBox.Text, smallKeyBox.Text, stateBox.Text));
