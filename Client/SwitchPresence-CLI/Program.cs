@@ -2,6 +2,7 @@
 using PresenceCommon;
 using PresenceCommon.Types;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Timers;
@@ -16,23 +17,27 @@ namespace SwitchPresence_CLI
         static ulong LastProgramId = 0;
         static Timestamps time = null;
         static DiscordRpcClient rpc;
+        static bool IgnoreHomeScreen = false;
 
         static int Main(string[] args)
         {
+            IList<string> argsList = new List<string>(args);
+            // allow the flag to appear anywhere
+            IgnoreHomeScreen = argsList.Remove("--ignore-home-screen");
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-            if (args.Length < 2)
+            if (argsList.Count < 2)
             {
-                Console.WriteLine("Usage: SwitchPresence-CLI <IP> <Client ID>");
+                Console.WriteLine("Usage: SwitchPresence-CLI [--ignore-home-screen] <IP> <Client ID>");
                 return 1;
             }
 
-            if (!IPAddress.TryParse(args[0], out IPAddress iPAddress))
+            if (!IPAddress.TryParse(argsList[0], out IPAddress iPAddress))
             {
                 Console.WriteLine("Invalid IP");
                 return 1;
             }
 
-             rpc = new DiscordRpcClient(args[1]);
+            rpc = new DiscordRpcClient(argsList[1]);
 
             if (!rpc.Initialize())
             {
@@ -102,7 +107,14 @@ namespace SwitchPresence_CLI
                         }
                         if ((rpc != null && rpc.CurrentPresence == null) || LastProgramId != title.ProgramId)
                         {
-                            rpc.SetPresence(Utils.CreateDiscordPresence(title, time));
+                            if (IgnoreHomeScreen && title.ProgramId == 0)
+                            {
+								rpc.ClearPresence();
+                            }
+                            else
+                            {
+                                rpc.SetPresence(Utils.CreateDiscordPresence(title, time));
+                            }
 
                             LastProgramId = title.ProgramId;
                         }
