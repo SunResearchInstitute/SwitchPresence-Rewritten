@@ -13,7 +13,7 @@ namespace SwitchPresence_CLI
     {
         static Timer timer;
         static Socket client;
-        static string LastGame = "";
+        static ulong LastProgramId = 0;
         static Timestamps time = null;
         static DiscordRpcClient rpc;
 
@@ -96,15 +96,15 @@ namespace SwitchPresence_CLI
                     Title title = new Title(bytes);
                     if (title.Magic == 0xffaadd23)
                     {
-                        if (LastGame != title.Name)
+                        if (LastProgramId != title.ProgramId)
                         {
                             time = Timestamps.Now;
                         }
-                        if ((rpc != null && rpc.CurrentPresence == null) || LastGame != title.Name)
+                        if ((rpc != null && rpc.CurrentPresence == null) || LastProgramId != title.ProgramId)
                         {
                             rpc.SetPresence(Utils.CreateDiscordPresence(title, time));
 
-                            LastGame = title.Name;
+                            LastProgramId = title.ProgramId;
                         }
                     }
                     else
@@ -125,7 +125,7 @@ namespace SwitchPresence_CLI
 
         private static void OnConnectTimeout(object sender, ElapsedEventArgs e)
         {
-            LastGame = "";
+            LastProgramId = 0;
             time = null;
         }
 
