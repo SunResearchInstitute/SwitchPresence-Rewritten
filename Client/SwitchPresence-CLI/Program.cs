@@ -1,4 +1,5 @@
-﻿using DiscordRPC;
+﻿using CommandLine;
+using DiscordRPC;
 using PresenceCommon;
 using PresenceCommon.Types;
 using System;
@@ -17,27 +18,24 @@ namespace SwitchPresence_CLI
         static ulong LastProgramId = 0;
         static Timestamps time = null;
         static DiscordRpcClient rpc;
-        static bool IgnoreHomeScreen = false;
+        static ConsoleOptions Arguments;
 
         static int Main(string[] args)
         {
-            IList<string> argsList = new List<string>(args);
-            // allow the flag to appear anywhere
-            IgnoreHomeScreen = argsList.Remove("--ignore-home-screen");
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-            if (argsList.Count < 2)
+            Parser.Default.ParseArguments<ConsoleOptions>(args)
+            .WithParsed(arguments =>
             {
-                Console.WriteLine("Usage: SwitchPresence-CLI [--ignore-home-screen] <IP> <Client ID>");
-                return 1;
-            }
-
-            if (!IPAddress.TryParse(argsList[0], out IPAddress iPAddress))
-            {
-                Console.WriteLine("Invalid IP");
-                return 1;
-            }
-
-            rpc = new DiscordRpcClient(argsList[1]);
+                if (!IPAddress.TryParse(arguments.IP, out IPAddress iPAddress))
+                {
+                    Console.WriteLine("Invalid IP");
+                    Environment.Exit(1);
+                }
+                arguments.ParsedIP = iPAddress;
+                rpc = new DiscordRpcClient(arguments.ClientID.ToString());
+                Arguments = arguments;
+            })
+            .WithNotParsed(errors => Environment.Exit(1));
 
             if (!rpc.Initialize())
             {
@@ -45,7 +43,7 @@ namespace SwitchPresence_CLI
                 return 2;
             }
 
-            IPEndPoint localEndPoint = new IPEndPoint(iPAddress, 0xCAFE);
+            IPEndPoint localEndPoint = new IPEndPoint(Arguments.ParsedIP, 0xCAFE);
 
             timer = new Timer()
             {
@@ -107,7 +105,7 @@ namespace SwitchPresence_CLI
                         }
                         if ((rpc != null && rpc.CurrentPresence == null) || LastProgramId != title.ProgramId)
                         {
-                            if (IgnoreHomeScreen && title.ProgramId == 0)
+                            if (Arguments.IgnoreHomeScreen && title.ProgramId == 0)
                             {
 								rpc.ClearPresence();
                             }
@@ -145,9 +143,9 @@ namespace SwitchPresence_CLI
         {
             if (client != null && client.Connected)
                 client.Close();
-            
+
             if(rpc != null && !rpc.IsDisposed)
-                rpc.Dispose();   
+                rpc.Dispose();
         }
     }
 }
