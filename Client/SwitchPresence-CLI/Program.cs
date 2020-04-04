@@ -107,13 +107,12 @@ namespace SwitchPresence_CLI
                         {
                             if (Arguments.IgnoreHomeScreen && title.ProgramId == 0)
                             {
-								rpc.ClearPresence();
+                                rpc.ClearPresence();
                             }
                             else
                             {
                                 rpc.SetPresence(Utils.CreateDiscordPresence(title, time));
                             }
-
                             LastProgramId = title.ProgramId;
                         }
                     }
