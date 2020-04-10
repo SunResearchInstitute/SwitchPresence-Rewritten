@@ -32,6 +32,7 @@ all: $(COMPONENTS)
 	cp $(IN_GUI_DIR)/SwitchPresence-Rewritten-GUI.exe 	$(OUT_DIR)/$(OUT_GUI_DIR)
 #	Client CLI files
 	mkdir -p $(OUT_DIR)/$(OUT_CLI_DIR)
+	cp $(IN_CLI_DIR)/CommandLine.dll 						$(OUT_DIR)/$(OUT_CLI_DIR)
 	cp $(IN_CLI_DIR)/DiscordRPC.dll 						$(OUT_DIR)/$(OUT_CLI_DIR)
 	cp $(IN_CLI_DIR)/Newtonsoft.Json.dll 					$(OUT_DIR)/$(OUT_CLI_DIR)
 	cp $(IN_CLI_DIR)/PresenceCommon.dll 					$(OUT_DIR)/$(OUT_CLI_DIR)
