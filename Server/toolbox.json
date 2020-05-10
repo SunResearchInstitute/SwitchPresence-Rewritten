@@ -1,0 +1,5 @@
+{
+	"name"  : "SwitchPresence",
+	"tid"   : "0100000000000464",
+	"requires_reboot": false
+}

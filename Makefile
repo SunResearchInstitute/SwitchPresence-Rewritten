@@ -7,7 +7,7 @@ TOPDIR ?= $(CURDIR)
 
 IN_GUI_DIR		:=	Client/SwitchPresence-Rewritten-GUI/bin/Release
 IN_CLI_DIR		:=	Client/SwitchPresence-CLI/bin/Release/netcoreapp3.1
-IN_SERVER_DIR	:=	Server/SwitchPresence-Rewritten.nsp
+IN_SERVER_DIR	:=	Server/
 IN_MANAGER_DIR	:=	Manager/SwitchPresence-Rewritten-Manager.nro
 
 OUT_DIR 		:= 	out
@@ -21,7 +21,8 @@ all: $(COMPONENTS)
 #	Sysmodule files
 	mkdir -p $(OUT_DIR)/$(OUT_SERVER_DIR)/atmosphere/contents/0100000000000464/flags
 	touch $(OUT_DIR)/$(OUT_SERVER_DIR)/atmosphere/contents/0100000000000464/flags/boot2.flag
-	cp $(IN_SERVER_DIR) 		$(OUT_DIR)/$(OUT_SERVER_DIR)/atmosphere/contents/0100000000000464/exefs.nsp
+	cp $(IN_SERVER_DIR)SwitchPresence-Rewritten.nsp 		$(OUT_DIR)/$(OUT_SERVER_DIR)/atmosphere/contents/0100000000000464/exefs.nsp
+	cp $(IN_SERVER_DIR)toolbox.json 		$(OUT_DIR)/$(OUT_SERVER_DIR)/atmosphere/contents/0100000000000464/toolbox.json
 #	Manager files
 	cp $(IN_MANAGER_DIR) 		$(OUT_DIR)/$(OUT_MANAGER_DIR)/SwitchPresence-Rewritten-Manager.nro
 #	Client GUI files
