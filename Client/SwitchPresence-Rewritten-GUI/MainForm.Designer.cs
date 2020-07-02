@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.connectButton = new System.Windows.Forms.Button();
             this.clientBox = new System.Windows.Forms.TextBox();
@@ -44,15 +43,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.bigTextBox = new System.Windows.Forms.TextBox();
             this.statusLabel = new System.Windows.Forms.Label();
-            this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.trayContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.trayExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkTray = new System.Windows.Forms.CheckBox();
             this.checkMainMenu = new System.Windows.Forms.CheckBox();
             this.addressBox = new System.Windows.Forms.TextBox();
             this.UseMacDefault = new System.Windows.Forms.CheckBox();
-            this.trayContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // connectButton
@@ -201,52 +194,12 @@
             this.statusLabel.TabIndex = 12;
             this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // trayIcon
-            // 
-            this.trayIcon.ContextMenuStrip = this.trayContextMenu;
-            this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
-            this.trayIcon.Text = "SwitchPresence (Disconnected)";
-            this.trayIcon.Visible = true;
-            this.trayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TrayIcon_MouseDoubleClick);
-            // 
-            // trayContextMenu
-            // 
-            this.trayContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.connectToolStripMenuItem,
-            this.trayExitMenuItem});
-            this.trayContextMenu.Name = "trayContextMenu";
-            this.trayContextMenu.Size = new System.Drawing.Size(120, 48);
-            // 
-            // connectToolStripMenuItem
-            // 
-            this.connectToolStripMenuItem.Name = "connectToolStripMenuItem";
-            this.connectToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
-            this.connectToolStripMenuItem.Text = "Connect";
-            this.connectToolStripMenuItem.Click += new System.EventHandler(this.ConnectButton_Click);
-            // 
-            // trayExitMenuItem
-            // 
-            this.trayExitMenuItem.Name = "trayExitMenuItem";
-            this.trayExitMenuItem.Size = new System.Drawing.Size(119, 22);
-            this.trayExitMenuItem.Text = "Exit";
-            this.trayExitMenuItem.Click += new System.EventHandler(this.TrayExitMenuItem_Click);
-            // 
-            // checkTray
-            // 
-            this.checkTray.AutoSize = true;
-            this.checkTray.Location = new System.Drawing.Point(40, 354);
-            this.checkTray.Name = "checkTray";
-            this.checkTray.Size = new System.Drawing.Size(102, 17);
-            this.checkTray.TabIndex = 15;
-            this.checkTray.Text = "Minimize to Tray";
-            this.checkTray.UseVisualStyleBackColor = true;
-            // 
             // checkMainMenu
             // 
             this.checkMainMenu.AutoSize = true;
             this.checkMainMenu.Checked = true;
             this.checkMainMenu.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkMainMenu.Location = new System.Drawing.Point(40, 377);
+            this.checkMainMenu.Location = new System.Drawing.Point(40, 351);
             this.checkMainMenu.Name = "checkMainMenu";
             this.checkMainMenu.Size = new System.Drawing.Size(170, 17);
             this.checkMainMenu.TabIndex = 18;
@@ -264,7 +217,7 @@
             // UseMacDefault
             // 
             this.UseMacDefault.AutoSize = true;
-            this.UseMacDefault.Location = new System.Drawing.Point(40, 401);
+            this.UseMacDefault.Location = new System.Drawing.Point(40, 375);
             this.UseMacDefault.Name = "UseMacDefault";
             this.UseMacDefault.Size = new System.Drawing.Size(178, 17);
             this.UseMacDefault.TabIndex = 19;
@@ -279,7 +232,6 @@
             this.ClientSize = new System.Drawing.Size(256, 437);
             this.Controls.Add(this.UseMacDefault);
             this.Controls.Add(this.checkMainMenu);
-            this.Controls.Add(this.checkTray);
             this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.bigTextBox);
@@ -303,7 +255,6 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.trayContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -324,11 +275,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox bigTextBox;
         private System.Windows.Forms.Label statusLabel;
-        private System.Windows.Forms.NotifyIcon trayIcon;
-        private System.Windows.Forms.ContextMenuStrip trayContextMenu;
-        private System.Windows.Forms.ToolStripMenuItem trayExitMenuItem;
-        private System.Windows.Forms.CheckBox checkTray;
-        private System.Windows.Forms.ToolStripMenuItem connectToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkMainMenu;
         private System.Windows.Forms.TextBox addressBox;
         private System.Windows.Forms.CheckBox UseMacDefault;

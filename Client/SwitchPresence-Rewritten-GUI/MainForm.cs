@@ -94,7 +94,6 @@ namespace SwitchPresence_Rewritten_GUI
                 listenThread.Start();
 
                 connectButton.Text = "Disconnect";
-                connectToolStripMenuItem.Text = "Disconnect";
 
                 addressBox.Enabled = false;
                 clientBox.Enabled = false;
@@ -113,9 +112,6 @@ namespace SwitchPresence_Rewritten_GUI
                 listenThread = new Thread(TryConnect);
                 UpdateStatus("", Color.Gray);
                 connectButton.Text = "Connect";
-                connectToolStripMenuItem.Text = "Connect";
-                trayIcon.Icon = Resources.Disconnected;
-                trayIcon.Text = "SwitchPresence (Disconnected)";
 
                 ipAddress = null;
                 addressBox.Enabled = true;
@@ -175,8 +171,6 @@ namespace SwitchPresence_Rewritten_GUI
                 };
 
                 UpdateStatus("Attemping to connect to server...", Color.Gray);
-                trayIcon.Icon = Resources.Disconnected;
-                trayIcon.Text = "SwitchPresence (Connecting...)";
                 timer.Enabled = true;
 
                 try
@@ -223,8 +217,6 @@ namespace SwitchPresence_Rewritten_GUI
                     byte[] bytes = new byte[600];
                     int cnt = client.Receive(bytes);
                     UpdateStatus("Connected to the server!", Color.Green);
-                    trayIcon.Icon = Resources.Connected;
-                    trayIcon.Text = "SwitchPresence (Connected)";
 
                     Title title = new Title(bytes);
                     if (title.Magic == 0xffaadd23)
@@ -283,7 +275,6 @@ namespace SwitchPresence_Rewritten_GUI
                 addressBox.Text = cfg.IP;
                 stateBox.Text = cfg.State;
                 clientBox.Text = cfg.Client;
-                checkTray.Checked = cfg.AllowTray;
                 checkMainMenu.Checked = cfg.DisplayMainMenu;
                 HasSeenMacPrompt = cfg.SeenAutoMacPrompt;
                 UseMacDefault.Checked = cfg.AutoToMac;
@@ -304,31 +295,22 @@ namespace SwitchPresence_Rewritten_GUI
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing && checkTray.Checked)
-            {
-                e.Cancel = true;
-                Hide();
-            }
-            else
-            {
-                if (timer != null) timer.Dispose();
+            if (timer != null) timer.Dispose();
 
-                Config cfg = new Config()
-                {
-                    IP = addressBox.Text,
-                    Client = clientBox.Text,
-                    BigKey = bigKeyBox.Text,
-                    SmallKey = smallKeyBox.Text,
-                    State = stateBox.Text,
-                    BigText = bigTextBox.Text,
-                    DisplayTimer = checkTime.Checked,
-                    AllowTray = checkTray.Checked,
-                    DisplayMainMenu = checkMainMenu.Checked,
-                    SeenAutoMacPrompt = HasSeenMacPrompt,
-                    AutoToMac = UseMacDefault.Checked
-                };
-                File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg, Formatting.Indented));
-            }
+            Config cfg = new Config()
+            {
+                IP = addressBox.Text,
+                Client = clientBox.Text,
+                BigKey = bigKeyBox.Text,
+                SmallKey = smallKeyBox.Text,
+                State = stateBox.Text,
+                BigText = bigTextBox.Text,
+                DisplayTimer = checkTime.Checked,
+                DisplayMainMenu = checkMainMenu.Checked,
+                SeenAutoMacPrompt = HasSeenMacPrompt,
+                AutoToMac = UseMacDefault.Checked
+            };
+            File.WriteAllText("Config.json", JsonConvert.SerializeObject(cfg, Formatting.Indented));
         }
 
         private void TrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -357,7 +339,6 @@ namespace SwitchPresence_Rewritten_GUI
 
         private void BigTextBox_TextChanged(object sender, EventArgs e) => ManualUpdate = true;
 
-        private void TrayExitMenuItem_Click(object sender, EventArgs e) => Application.Exit();
 
         private void LinkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start($"https://discordapp.com/developers/applications/{clientBox.Text}");
 

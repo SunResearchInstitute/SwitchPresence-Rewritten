@@ -59,25 +59,5 @@ namespace SwitchPresence_Rewritten_GUI.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon Connected {
-            get {
-                object obj = ResourceManager.GetObject("Connected", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon Disconnected {
-            get {
-                object obj = ResourceManager.GetObject("Disconnected", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
     }
 }
