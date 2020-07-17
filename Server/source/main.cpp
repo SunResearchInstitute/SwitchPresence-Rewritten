@@ -95,7 +95,7 @@ int main(int argc, char **argv)
         else
         {
             //This is so we can make sure our connection is not broken if so, start and accept a new one
-            src = sendData(0, "NULL");
+            src = sendData(0, "SNULL");
         }
 
         if (src < 0)
