@@ -9,7 +9,7 @@ namespace PresenceCommon.Types
         public ulong ProgramId { get; }
         public string Name { get; }
 
-        [StructLayout(LayoutKind.Sequential, Size = 524)]
+        [StructLayout(LayoutKind.Sequential, Size = 528)]
         private struct TitlePacket
         {
             [MarshalAs(UnmanagedType.U8)]

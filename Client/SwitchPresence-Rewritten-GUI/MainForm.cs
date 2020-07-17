@@ -220,8 +220,7 @@ namespace SwitchPresence_Rewritten_GUI
             {
                 try
                 {
-                    byte[] bytes = new byte[600];
-                    int cnt = client.Receive(bytes);
+                    byte[] bytes = PresenceCommon.Utils.ReceiveExactly(client, 528);
                     UpdateStatus("Connected to the server!", Color.Green);
                     trayIcon.Icon = Resources.Connected;
                     trayIcon.Text = "SwitchPresence (Connected)";

@@ -1,5 +1,6 @@
 ﻿using DiscordRPC;
 using PresenceCommon.Types;
+using System.Net.Sockets;
 
 namespace PresenceCommon
 {
@@ -34,6 +35,23 @@ namespace PresenceCommon
             presence.Timestamps = time;
 
             return presence;
+        }
+
+        public static byte[] ReceiveExactly(Socket handler, int length)
+        {
+            var buffer = new byte[length];
+            var receivedLength = 0;
+            while (receivedLength < length)
+            {
+                int nextLength = handler.Receive(buffer, receivedLength, length - receivedLength, SocketFlags.None);
+                if (nextLength == 0)
+                {
+                    //Throw an exception? Something else?
+                    //The socket's never going to receive more data
+                }
+                receivedLength += nextLength;
+            }
+            return buffer;
         }
     }
 }
