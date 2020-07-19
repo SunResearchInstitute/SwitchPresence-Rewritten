@@ -9,7 +9,7 @@ struct titlepacket
 {
     u32 magic;
     u64 programId;
-    char name[0x200];
+    char name[612];
 };
 
 int sendData(u64 programId, const char *name);
