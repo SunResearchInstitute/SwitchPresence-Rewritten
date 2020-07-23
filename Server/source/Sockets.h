@@ -1,13 +1,12 @@
 #pragma once
 #include <switch.h>
 
-
 #define PACKETMAGIC 0xFFAADD23
 #define PORT 0xCAFE
 
-struct titlepacket
+PACKED struct titlepacket
 {
-    u32 magic;
+    u64 magic;
     u64 programId;
     char name[612];
 };
