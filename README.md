@@ -7,4 +7,4 @@ General homebrew installing information can be found [here](https://switch.homeb
 You will also need to install [PresenceClient](https://github.com/Sun-Research-University/PresenceClient/blob/master/README.md#setup)
 
 # Support
-If you still need further asstiance you can find us on [Discord](https://link.sunthecourier.net/discord)!
+If you still need further asstiance you can find us on [Discord](https://link.headpat.services/discord)!
