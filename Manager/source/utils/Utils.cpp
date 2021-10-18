@@ -108,13 +108,13 @@ Result getAppControlData(u64 programId, NsApplicationControlData *appControlData
     return 0;
 }
 
-u64 GetControllerInputs()
+u64 GetControllerInputs(PadState* pad)
 {
-    hidScanInput();
-    u64 kDown = 0;
-    for (u8 controller = 0; controller < 10; controller++)
-        kDown |= hidKeysDown(static_cast<HidControllerID>(controller));
+//    hidScanInput();
+    
+    padUpdate(pad);
 
+    u64 kDown = padGetButtonsDown(pad);
     return kDown;
 }
 } // namespace Utils

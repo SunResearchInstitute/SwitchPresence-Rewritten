@@ -3,6 +3,11 @@
 int main(int argc, char **argv)
 {
     consoleInit(nullptr);
+    PadState pad;
+
+    padConfigureInput(1, HidNpadStyleSet_NpadStandard);
+
+    padInitializeDefault(&pad);
 
     states::StateMachine stateMachine;
 
@@ -18,8 +23,8 @@ int main(int argc, char **argv)
 
     while (appletMainLoop())
     {
-        u64 kDown = Utils::GetControllerInputs();
-        if (kDown & KEY_PLUS || (kDown & KEY_B && stateMachine.currentState->name() == "main"))
+        u64 kDown = Utils::GetControllerInputs(&pad);
+        if (kDown & HidNpadButton_Plus || (kDown & HidNpadButton_B && stateMachine.currentState->name() == "main"))
             break;
 
         printf(CONSOLE_ESC(2J));
